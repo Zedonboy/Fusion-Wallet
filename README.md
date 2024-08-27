@@ -2,6 +2,8 @@
 
 Fusion Wallet is a Mobile Wallet for the IC ecosystem. A wallet for the Future. A web3 Gateway for Dapp Interaction
 
+follow here [text](https://x.com/fusion_wlt)
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.

@@ -1,6 +1,6 @@
 # fusion_wallet
 
-A new Flutter project.
+Fusion Wallet is a Mobile Wallet for the IC ecosystem. A wallet for the Future. A web3 Gateway for Dapp Interaction
 
 ## Getting Started
 

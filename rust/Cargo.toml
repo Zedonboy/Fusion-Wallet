@@ -1,0 +1,21 @@
+[package]
+name = "rust_lib_fusion_wallet"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "staticlib"]
+
+[dependencies]
+flutter_rust_bridge = "=2.3.0"
+bip32 = "0.5.2"
+tiny-bip39 = "1.0.0"
+bitcoin_hashes = "0.14.0"
+bs58 = "0.5.1"
+tiny-keccak = { version = "2.0.2", features = ["keccak"] }
+hex = "0.4.3"
+ic-agent = "0.37.1"
+k256 = "0.13.3"
+alloy = {version = "0.2.1", features = ["provider-http", "contract"]}
+reqwest = { version = "0.10" }
+serde_json = "1.0.127"

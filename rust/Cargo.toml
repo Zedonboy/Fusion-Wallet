@@ -1,0 +1,26 @@
+[package]
+name = "rust_lib_fusion_wallet"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "staticlib"]
+
+[dependencies]
+flutter_rust_bridge = "=2.7.0"
+bip32 = "0.5.2"
+tiny-bip39 = "2.0.0"
+hex = "0.4.3"
+ic-agent = "0.39.1"
+candid = "0.10.12"
+k256 = "0.13.4"
+serde = { version = "1.0", features = ["derive"] }
+reqwest = { version = "0.12.9", features = ["rustls-tls", "json"], default-features = false}
+serde_json = "1.0.133"
+bitcoin = "0.32.5"
+icrc-ledger-types = "0.1.6"
+crc32fast = "1.4.2"
+# tokio = { version = "1.41.1", features = ["full"] }
+# lazy_static = "1.5.0"
+anyhow = "1.0"
+

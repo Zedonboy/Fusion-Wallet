@@ -11,5 +11,5 @@ jobs:
 
       - name: Build SampleApplication
         run:  |
-            echo $ANDROID_HOME
+            ls -a $ANDROID_HOME
             zipalign --no-daemon build

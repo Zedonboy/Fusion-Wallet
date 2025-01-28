@@ -8,6 +8,8 @@ jobs:
     steps:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
+        with:
+            packages: 'cmdline-tools'
 
       - name: Build SampleApplication
         run:  zipalign --no-daemon build

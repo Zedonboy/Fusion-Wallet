@@ -11,5 +11,7 @@ jobs:
 
       - name: Build SampleApplication
         run:  |
-            ls -a $ANDROID_HOME/build-tools/35.0.0
-            zipalign.sh --no-daemon build
+            LATEST_BUILD_TOOLS=$(ls $ANDROID_HOME/build-tools | sort -V | tail -n 1)
+            ZIPALIGN="$ANDROID_HOME/build-tools/$LATEST_BUILD_TOOLS/zipalign"
+    
+            echo "Using zipalign from: $ZIPALIGN"

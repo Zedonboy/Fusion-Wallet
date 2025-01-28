@@ -56,8 +56,8 @@ jobs:
           echo "${{ secrets.ANDROID_KEY_ALIAS }}" > key_alias.txt
           echo "${{ secrets.ANDROID_KEY_PASSWORD }}" > key_password.txt
 
-          # Use full path to zipalign
-          export ZIPALIGN=$ANDROID_HOME/build-tools/35.0.0/zipalign
+          LATEST_BUILD_TOOLS=$(ls $ANDROID_HOME/build-tools | sort -V | tail -n 1)
+          ZIPALIGN="$ANDROID_HOME/build-tools/$LATEST_BUILD_TOOLS/zipalign"
 
           for apk in build/app/outputs/flutter-apk/*-release.apk; do
             [ -f "$apk" ] || continue
@@ -72,7 +72,7 @@ jobs:
               "$apk" \
               $(cat key_alias.txt)
 
-            zipalign -v 4 \
+            $ZIPALIGN -v 4 \
               "$apk" \
               "build/app/outputs/flutter-apk/$signed_name"
           done

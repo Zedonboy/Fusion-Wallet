@@ -78,6 +78,22 @@ jobs:
               "$apk" \
               "build/app/outputs/flutter-apk/$signed_name"
           done
+      - name: Sign App Bundle
+        run: |
+            # We can reuse the keystore and password files from APK signing
+            jarsigner -verbose \
+              -keystore keystore.jks \
+              -storepass $(cat keystore_password.txt) \
+              -keypass $(cat key_password.txt) \
+              build/app/outputs/bundle/release/app-release.aab \
+              $(cat key_alias.txt)
+  
+            # Create a directory for the signed bundle
+            mkdir -p build/app/outputs/bundle/release/signed
+            
+            # Move the signed bundle
+            mv build/app/outputs/bundle/release/app-release.aab \
+              build/app/outputs/bundle/release/signed/app-release-signed.aab
 
       - name: Upload Signed APK as artifact
         uses: actions/upload-artifact@v3
@@ -89,7 +105,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: app-release.aab
-          path: build/app/outputs/bundle/release/app-release.aab
+          path: build/app/outputs/bundle/release/signed/app-release-signed.aab
 
   release:
     runs-on: ubuntu-latest
@@ -115,6 +131,6 @@ jobs:
             ${{ github.event.inputs.release_note }}
           files: |
             build/apk/*-signed.apk
-            build/aab/app-release.aab
+            build/aab/app-release-signed.aab
           tag_name: ${{ github.event.inputs.tag_name }} # Use the dynamic tag_name input
           name: Release ${{ github.event.inputs.tag_name }} # Use the dynamic tag_name input

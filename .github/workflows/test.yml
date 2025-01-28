@@ -8,8 +8,8 @@ jobs:
     steps:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
-        with:
-            packages: 'build-tools'
 
       - name: Build SampleApplication
-        run:  zipalign --no-daemon build
+        run:  |
+            echo $ANDROID_HOME
+            zipalign --no-daemon build

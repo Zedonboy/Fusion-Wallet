@@ -41,7 +41,8 @@ class _SplashScreenState extends State<SplashScreen> {
               SizedBox(
                 height: 100,
               ),
-              SvgPicture.asset("assets/svg/splash.svg"),
+              Image.asset("assets/images/splash_banner.png"),
+              // SvgPicture.asset("assets/svg/banner.svg"),
               Column(
                 children: [
                   GestureDetector(

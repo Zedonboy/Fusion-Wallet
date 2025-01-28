@@ -1,0 +1,13 @@
+name: Test
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Build SampleApplication
+        run: ./zipalign --no-daemon build

@@ -10,4 +10,4 @@ jobs:
         uses: android-actions/setup-android@v3
 
       - name: Build SampleApplication
-        run: ./zipalign --no-daemon build
+        run:  zipalign --no-daemon build

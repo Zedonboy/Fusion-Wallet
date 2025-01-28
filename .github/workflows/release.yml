@@ -37,7 +37,10 @@ jobs:
           distribution: 'zulu' # Use Zulu OpenJDK
           java-version: '17' # Java 11 is required for signing
 
-      - name: Build APK
+      - name: Build for APK ABIs
+        run: flutter build apk --split-per-abi
+
+      - name: Build for APK
         run: flutter build apk --release
 
       - name: Build App Bundle
@@ -45,27 +48,34 @@ jobs:
 
       - name: Sign APK
         run: |
-          echo "${{ secrets.ANDROID_KEYSTORE }}" > keystore.jks
+          echo "${{ secrets.ANDROID_KEYSTORE }}" | base64 -d > keystore.jks
           echo "${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" > keystore_password.txt
           echo "${{ secrets.ANDROID_KEY_ALIAS }}" > key_alias.txt
           echo "${{ secrets.ANDROID_KEY_PASSWORD }}" > key_password.txt
 
-          jarsigner -verbose \
-            -keystore keystore.jks \
-            -storepass $(cat keystore_password.txt) \
-            -keypass $(cat key_password.txt) \
-            build/app/outputs/flutter-apk/app-release-unsigned.apk \
-            $(cat key_alias.txt)
+          for apk in build/app/outputs/flutter-apk/*-release.apk; do
+            [ -f "$apk" ] || continue
+      
+            filename=$(basename "$apk")
+            signed_name="${filename%.*}-signed.apk"
+      
+            jarsigner -verbose \
+              -keystore keystore.jks \
+              -storepass $(cat keystore_password.txt) \
+              -keypass $(cat key_password.txt) \
+              "$apk" \
+              $(cat key_alias.txt)
 
-          zipalign -v 4 \
-            build/app/outputs/flutter-apk/app-release-unsigned.apk \
-            build/app/outputs/flutter-apk/app-release-signed.apk
+            zipalign -v 4 \
+              "$apk" \
+              "build/app/outputs/flutter-apk/$signed_name"
+          done
 
       - name: Upload Signed APK as artifact
         uses: actions/upload-artifact@v3
         with:
-          name: app-release-signed.apk
-          path: build/app/outputs/flutter-apk/app-release-signed.apk
+          name: signed-apk
+          path: build/app/outputs/flutter-apk/*-signed.apk
 
       - name: Upload App Bundle as artifact
         uses: actions/upload-artifact@v3
@@ -81,7 +91,7 @@ jobs:
       - name: Download Signed APK artifact
         uses: actions/download-artifact@v3
         with:
-          name: app-release-signed.apk
+          name: signed-apk
           path: build/apk
 
       - name: Download App Bundle artifact
@@ -89,37 +99,14 @@ jobs:
         with:
           name: app-release.aab
           path: build/aab
-
-      - name: Create GitHub Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Release Signed APKs
+        uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.event.inputs.tag_name }} # Use the dynamic tag_name input
-          release_name: Release ${{ github.event.inputs.tag_name }} # Use the dynamic tag_name input
           body: |
             ## Release Notes
             ${{ github.event.inputs.release_note }}
-          draft: false
-          prerelease: false
-
-      - name: Upload Signed APK to Release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: build/apk/app-release-signed.apk
-          asset_name: app-release-signed.apk
-          asset_content_type: application/vnd.android.package-archive
-
-      - name: Upload App Bundle to Release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: build/aab/app-release.aab
-          asset_name: app-release.aab
-          asset_content_type: application/octet-stream
+          files: |
+            build/apk/*-signed.apk
+            build/apk/app-release-signed.apk
+          tag_name: ${{ github.event.inputs.tag_name }} # Use the dynamic tag_name input
+          name: Release ${{ github.event.inputs.tag_name }} # Use the dynamic tag_name input

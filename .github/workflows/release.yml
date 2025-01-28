@@ -11,6 +11,8 @@ on:
         description: 'Release notes for this version'
         required: true
         default: 'Initial release'
+permissions:
+  contents: write
 
 jobs:
   build:

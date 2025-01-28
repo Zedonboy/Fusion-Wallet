@@ -35,7 +35,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu' # Use Zulu OpenJDK
-          java-version: '11' # Java 11 is required for signing
+          java-version: '17' # Java 11 is required for signing
 
       - name: Build APK
         run: flutter build apk --release

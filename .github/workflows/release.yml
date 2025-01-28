@@ -116,3 +116,4 @@ jobs:
             build/apk/app-release-signed.apk
           tag_name: ${{ github.event.inputs.tag_name }} # Use the dynamic tag_name input
           name: Release ${{ github.event.inputs.tag_name }} # Use the dynamic tag_name input
+          token: ${{secrets.APP_TOKEN}}

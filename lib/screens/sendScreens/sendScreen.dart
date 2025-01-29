@@ -1,5 +1,3 @@
-import 'dart:convert';
-import 'dart:ffi';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -219,9 +217,10 @@ class _SendScreenState extends State<SendScreen> {
                 child: Container(
                   height: 40,
                   width: 40,
+                  clipBehavior: Clip.antiAlias,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: inputFieldBackgroundColor.value,
+                    color: lightColor,
                   ),
                   child:
                       appController.token_image_map[widget.token.tokenAddress],

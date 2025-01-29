@@ -7,7 +7,6 @@ import 'package:fusion_wallet/constants/colors.dart';
 import 'package:fusion_wallet/controllers/appController.dart';
 import 'package:fusion_wallet/localization/language_constants.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart';
 class SwapScreen extends StatefulWidget {
   const SwapScreen({super.key});
 

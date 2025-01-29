@@ -109,7 +109,7 @@ class AppController extends GetxController {
     });
   }
   void check_token_on_ic() {
-     var icService = this.ic_service!;
+     var icService = ic_service!;
     var address = active_wallet.value!.toIcpPrincipal();
      Future.wait(tokens_map.values.map((token) async {
         BigInt balance;

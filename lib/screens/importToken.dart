@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:fusion_wallet/common_widgets/bottomRectangularbtn.dart';
 import 'package:fusion_wallet/common_widgets/commonWidgets.dart';
 import 'package:fusion_wallet/common_widgets/inputField.dart';
 import 'package:fusion_wallet/controllers/utils.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../constants/colors.dart';
 import '../../controllers/appController.dart';

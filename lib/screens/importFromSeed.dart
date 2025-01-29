@@ -87,7 +87,7 @@ class _ImportFromSeedState extends State<ImportFromSeed> {
                             ),
                           ),
                           Text(
-                            'Import From Seed',
+                            'Import From Seed Phrase',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: Colors.white,
@@ -336,6 +336,10 @@ class _ImportFromSeedState extends State<ImportFromSeed> {
   }
 
   verifyFields() async {
+    if(!isCheck.value) {
+      mnemonicError.value = "Accept Terms";
+      return;
+    }
     importLoader.value = true;
     setState(() {});
     if (mnemonicController.text.trim() == '') {

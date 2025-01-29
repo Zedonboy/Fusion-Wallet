@@ -7,7 +7,6 @@ import 'package:fusion_wallet/controllers/appController.dart';
 import 'package:fusion_wallet/controllers/extensions.dart';
 import 'package:fusion_wallet/controllers/utils.dart';
 import 'package:fusion_wallet/localization/language_constants.dart';
-import 'package:fusion_wallet/screens/importToken.dart';
 import 'package:fusion_wallet/screens/receiveScreen.dart';
 import 'package:fusion_wallet/screens/selectToken.dart';
 import 'package:fusion_wallet/screens/sendScreens/sendScreen.dart';

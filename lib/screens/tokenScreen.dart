@@ -1,14 +1,11 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fusion_wallet/common_widgets/RecentTransactions.dart';
 import 'package:fusion_wallet/constants/colors.dart';
 import 'package:fusion_wallet/controllers/appController.dart';
-import 'package:fusion_wallet/controllers/extensions.dart';
 import 'package:fusion_wallet/controllers/utils.dart';
 import 'package:fusion_wallet/localization/language_constants.dart';
-import 'package:fusion_wallet/screens/importToken.dart';
 import 'package:fusion_wallet/screens/receiveScreen.dart';
 import 'package:fusion_wallet/screens/sendScreens/sendScreen.dart';
 import 'package:fusion_wallet/screens/swapScreen.dart';
@@ -16,7 +13,6 @@ import 'package:fusion_wallet/src/rust/api/wallet.dart';
 import 'package:fusion_wallet/src/rust/api/wallet_service.dart';
 import 'package:get/get.dart';
 
-import '../../common_widgets/inputField.dart';
 
 // import '../nfts/nftsScreen.dart';
 class TokenScreen extends StatefulWidget {
@@ -106,9 +102,11 @@ class _TokenScreenState extends State<TokenScreen> {
                 child: Container(
                   height: 40,
                   width: 40,
+                  clipBehavior: Clip.antiAlias,
+
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: inputFieldBackgroundColor.value,
+                    color: lightColor,
                   ),
                   child:
                       appController.token_image_map[widget.token.tokenAddress],
@@ -265,99 +263,99 @@ class _TokenScreenState extends State<TokenScreen> {
                       ],
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      Get.to(() => SwapScreen());
-                    },
-                    child: Column(
-                      children: [
-                        Container(
-                          height: 56,
-                          width: 56,
-                          padding: EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                              color: appController.isDark.value == true
-                                  ? Color(0xFF1A2B56)
-                                  : primaryAltColor.value,
-                              borderRadius: BorderRadius.circular(15)),
-                          child: Center(
-                              child: SvgPicture.asset("assets/svgs/swap.svg",
-                                  height: 28,
-                                  width: 28,
-                                  color: appController.isDark.value == true
-                                      ? Color(0xFFA2BBFF)
-                                      : primaryAltBackgroundColor.value)),
-                        ),
-                        SizedBox(
-                          height: 12,
-                        ),
-                        Text(
-                          getTranslated(context, "Swap") ?? "Swap",
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: appController.isDark.value == true
-                                ? Color(0xffFDFCFD)
-                                : primaryAltColor.value,
-                            fontFamily: "dmsans",
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      // Get.bottomSheet(
-                      //     clipBehavior: Clip.antiAlias,
-                      //     isScrollControlled: true,
-                      //     backgroundColor: primaryAltBackgroundColor.value,
-                      //     shape: OutlineInputBorder(
-                      //         borderSide: BorderSide.none,
-                      //         borderRadius: BorderRadius.only(
-                      //             topRight: Radius.circular(32),
-                      //             topLeft: Radius.circular(32))),
-                      //     selectTokenForBuy());
-                    },
-                    child: Column(
-                      children: [
-                        Container(
-                          height: 56,
-                          width: 56,
-                          padding: EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                              color: appController.isDark.value == true
-                                  ? Color(0xFF1A2B56)
-                                  : primaryAltColor.value,
-                              borderRadius: BorderRadius.circular(15)),
-                          child: Center(
-                              child: SvgPicture.asset(
-                            "assets/svgs/bolt.svg",
-                            height: 28,
-                            width: 28,
-                            color: appController.isDark.value == true
-                                ? Color(0xFFA2BBFF)
-                                : primaryAltBackgroundColor.value,
-                          )),
-                        ),
-                        SizedBox(
-                          height: 12,
-                        ),
-                        Text(
-                          getTranslated(context, "Fusion") ?? "Fusion",
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: appController.isDark.value == true
-                                ? Color(0xffFDFCFD)
-                                : primaryAltColor.value,
-                            fontFamily: "dmsans",
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  // GestureDetector(
+                  //   onTap: () {
+                  //     Get.to(() => SwapScreen());
+                  //   },
+                  //   child: Column(
+                  //     children: [
+                  //       Container(
+                  //         height: 56,
+                  //         width: 56,
+                  //         padding: EdgeInsets.all(16),
+                  //         decoration: BoxDecoration(
+                  //             color: appController.isDark.value == true
+                  //                 ? Color(0xFF1A2B56)
+                  //                 : primaryAltColor.value,
+                  //             borderRadius: BorderRadius.circular(15)),
+                  //         child: Center(
+                  //             child: SvgPicture.asset("assets/svgs/swap.svg",
+                  //                 height: 28,
+                  //                 width: 28,
+                  //                 color: appController.isDark.value == true
+                  //                     ? Color(0xFFA2BBFF)
+                  //                     : primaryAltBackgroundColor.value)),
+                  //       ),
+                  //       SizedBox(
+                  //         height: 12,
+                  //       ),
+                  //       Text(
+                  //         getTranslated(context, "Swap") ?? "Swap",
+                  //         textAlign: TextAlign.start,
+                  //         style: TextStyle(
+                  //           fontSize: 16,
+                  //           fontWeight: FontWeight.w600,
+                  //           color: appController.isDark.value == true
+                  //               ? Color(0xffFDFCFD)
+                  //               : primaryAltColor.value,
+                  //           fontFamily: "dmsans",
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
+                  // GestureDetector(
+                  //   onTap: () {
+                  //     // Get.bottomSheet(
+                  //     //     clipBehavior: Clip.antiAlias,
+                  //     //     isScrollControlled: true,
+                  //     //     backgroundColor: primaryAltBackgroundColor.value,
+                  //     //     shape: OutlineInputBorder(
+                  //     //         borderSide: BorderSide.none,
+                  //     //         borderRadius: BorderRadius.only(
+                  //     //             topRight: Radius.circular(32),
+                  //     //             topLeft: Radius.circular(32))),
+                  //     //     selectTokenForBuy());
+                  //   },
+                  //   child: Column(
+                  //     children: [
+                  //       Container(
+                  //         height: 56,
+                  //         width: 56,
+                  //         padding: EdgeInsets.all(16),
+                  //         decoration: BoxDecoration(
+                  //             color: appController.isDark.value == true
+                  //                 ? Color(0xFF1A2B56)
+                  //                 : primaryAltColor.value,
+                  //             borderRadius: BorderRadius.circular(15)),
+                  //         child: Center(
+                  //             child: SvgPicture.asset(
+                  //           "assets/svgs/bolt.svg",
+                  //           height: 28,
+                  //           width: 28,
+                  //           color: appController.isDark.value == true
+                  //               ? Color(0xFFA2BBFF)
+                  //               : primaryAltBackgroundColor.value,
+                  //         )),
+                  //       ),
+                  //       SizedBox(
+                  //         height: 12,
+                  //       ),
+                  //       Text(
+                  //         getTranslated(context, "Fusion") ?? "Fusion",
+                  //         textAlign: TextAlign.start,
+                  //         style: TextStyle(
+                  //           fontSize: 16,
+                  //           fontWeight: FontWeight.w600,
+                  //           color: appController.isDark.value == true
+                  //               ? Color(0xffFDFCFD)
+                  //               : primaryAltColor.value,
+                  //           fontFamily: "dmsans",
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
                   // GestureDetector(
                   //   onTap: (){
                   // Get.to(NftsScreen());

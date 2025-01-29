@@ -72,8 +72,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
               children: [
                 Container(
                     height: 28,
+                    clipBehavior: Clip.antiAlias,
                     width: 28,
-                    decoration: BoxDecoration(shape: BoxShape.circle),
+                    decoration: BoxDecoration(shape: BoxShape.circle, color: lightColor),
                     child: appController
                         .token_image_map[widget.token.tokenAddress]),
                 SizedBox(
@@ -281,11 +282,12 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Image.asset(
-                            "assets/images/share.png",
-                            height: 20,
-                            width: 20,
-                          ),
+                          // Image.asset(
+                          //   "assets/images/share.png",
+                          //   height: 20,
+                          //   width: 20,
+                          // ),
+                          Icon(Icons.share, color: primaryAltColor.value,),
                           SizedBox(
                             width: 8,
                           ),

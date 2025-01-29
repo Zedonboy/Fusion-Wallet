@@ -1,3 +1,14 @@
+/*
+ * Fusion Wallet - A non-custodial cryptocurrency wallet
+ * Copyright (C) 2025 Fusion Wallet
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ */
+
+
 import 'package:credential_manager/credential_manager.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -19,9 +30,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../constants/colors.dart';
 import '../../controllers/appController.dart';
-// import '../commonWidgets/bottomNav/bottomNavBar.dart';
-// import '../commonWidgets/commonWidgets.dart';
-// import '../commonWidgets/navCustom.dart';
 
 class ImportFromSeed extends StatefulWidget {
   final String pin;

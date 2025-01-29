@@ -8,7 +8,7 @@ class DummyHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 20),
@@ -168,7 +168,7 @@ class DummyHomeScreen extends StatelessWidget {
   }
 
   Widget _tokenCard(String symbol, String name, String amount, String price,
-      String worth, String image_url) {
+      String worth, String imageUrl) {
     return Container(
       height: 72,
       padding: EdgeInsets.all(12),
@@ -187,7 +187,7 @@ class DummyHomeScreen extends StatelessWidget {
               color: Color(0xFF1A2B56),
             ),
             child: Center(
-              child: FutureAdaptiveImage(imageUrl: image_url),
+              child: FutureAdaptiveImage(imageUrl: imageUrl),
             ),
           ),
           SizedBox(width: 12),

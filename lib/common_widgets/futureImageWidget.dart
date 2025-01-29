@@ -13,7 +13,7 @@ class FutureAdaptiveImage extends StatelessWidget {
   final Widget? loadingWidget;
 
   const FutureAdaptiveImage({
-    Key? key,
+    super.key,
     required this.imageUrl,
     this.width,
     this.height,
@@ -21,7 +21,7 @@ class FutureAdaptiveImage extends StatelessWidget {
     this.color,
     this.fallbackAsset = 'assets/images/usd.png',
     this.loadingWidget,
-  }) : super(key: key);
+  });
 
   Future<Widget> _processImage() async {
     try {

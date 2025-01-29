@@ -13,10 +13,10 @@ class RecentTransfers extends StatelessWidget {
   final List<SimpleTransaction> transfers;
 
   const RecentTransfers({
-    Key? key,
+    super.key,
     this.isLoading = false,
     this.transfers = const [],
-  }) : super(key: key);
+  });
 
   int nanosToMillis(BigInt nanos) {
     return (nanos ~/ BigInt.from(1000000)).toInt();
@@ -305,7 +305,7 @@ class RecentTransfers extends StatelessWidget {
         children: [
           SvgPicture.asset('assets/svg/noTransactions.svg'),
           SizedBox(height: 16),
-          Container(
+          SizedBox(
             width: Get.width,
             child: Text(
               'No Transaction History',

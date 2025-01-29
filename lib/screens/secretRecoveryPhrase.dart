@@ -9,7 +9,7 @@ import 'package:page_transition/page_transition.dart';
 import '../../constants/colors.dart';
 
 class SecretRecoveryPharase extends StatefulWidget {
-  SecretRecoveryPharase({super.key});
+  const SecretRecoveryPharase({super.key});
 
   @override
   State<SecretRecoveryPharase> createState() => _SecretRecoveryPharaseState();
@@ -120,7 +120,7 @@ class _SecretRecoveryPharaseState extends State<SecretRecoveryPharase> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Container(
+                          SizedBox(
                             width: double.infinity,
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
@@ -195,7 +195,7 @@ class _SecretRecoveryPharaseState extends State<SecretRecoveryPharase> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Container(
+                          SizedBox(
                             width: double.infinity,
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
@@ -270,7 +270,7 @@ class _SecretRecoveryPharaseState extends State<SecretRecoveryPharase> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Container(
+                          SizedBox(
                             width: double.infinity,
                             child: Row(
                               mainAxisSize: MainAxisSize.min,

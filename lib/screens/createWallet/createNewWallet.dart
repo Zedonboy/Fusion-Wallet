@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_switch/flutter_switch.dart';
-import 'package:fusion_wallet/common_widgets/bottomNavBar.dart';
 import 'package:fusion_wallet/common_widgets/bottomRectangularbtn.dart';
 import 'package:fusion_wallet/common_widgets/commonWidgets.dart';
 import 'package:fusion_wallet/common_widgets/inputField.dart';

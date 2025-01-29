@@ -12,7 +12,7 @@ import 'package:fusion_wallet/src/rust/api/wallet.dart';
 import 'package:get/get.dart';
 
 class SelectTokenScreen extends StatefulWidget {
-  const SelectTokenScreen({Key? key}) : super(key: key);
+  const SelectTokenScreen({super.key});
 
   @override
   State<SelectTokenScreen> createState() => _SelectTokenScreenState();
@@ -78,7 +78,7 @@ class _SelectTokenScreenState extends State<SelectTokenScreen> {
                         width: 8,
                       ),
                       Text(
-                        "${getTranslated(context, "Manage Token") ?? "Manage Token"}",
+                        getTranslated(context, "Manage Token") ?? "Manage Token",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 15,

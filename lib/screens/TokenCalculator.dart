@@ -31,7 +31,7 @@ class _TokenCalculatorState extends State<TokenCalculator> {
     super.initState();
     // Add listeners to controllers to handle real-time conversion
     topAmountController.addListener(() {
-      if (!topAmountController.text.isEmpty) {
+      if (topAmountController.text.isNotEmpty) {
         calculateConversion(true);
       } else {
         bottomAmountController.text = '';
@@ -244,7 +244,7 @@ class _TokenCalculatorState extends State<TokenCalculator> {
           Obx(
             () => Stack(
               children: [
-                Container(
+                SizedBox(
                   height: 320,
                   width: Get.width,
                   child: Column(

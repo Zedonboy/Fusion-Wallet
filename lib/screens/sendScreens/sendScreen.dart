@@ -41,13 +41,13 @@ class _SendScreenState extends State<SendScreen> {
   RxList<SimpleTransaction> txs = RxList.empty();
 
   void fetch_transactions() async {
-    final ic_service = appController.ic_service;
+    final icService = appController.ic_service;
     final addr = appController.active_wallet.value!.toIcpPrincipal();
     try {
-      final n_txes = await ic_service?.getLatestTransactions(
+      final nTxes = await icService?.getLatestTransactions(
           token: widget.token, accountAddr: addr);
       isLoading.value = false;
-      txs.value = n_txes ?? [];
+      txs.value = nTxes ?? [];
     } catch (err) {
       isLoading.value = false;
     }
@@ -316,7 +316,7 @@ class _SendScreenState extends State<SendScreen> {
                           });
                         },
                         child: Text(
-                          "${getTranslated(context, "Paste") ?? "Paste"}",
+                          getTranslated(context, "Paste") ?? "Paste",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 9,
@@ -390,17 +390,17 @@ class _SendScreenState extends State<SendScreen> {
                             borderRadius: BorderRadius.circular(5)),
                         child: InkWell(
                           onTap: () {
-                            final big_bal = appController
+                            final bigBal = appController
                                     .token_data_map[widget.token.tokenAddress]
                                     ?.balance ??
                                 BigInt.zero;
 
                             amountC.text = normalizeBalance(
-                                big_bal, widget.token.tokenDecimal ?? 8);
+                                bigBal, widget.token.tokenDecimal ?? 8);
                           },
                           child: Center(
                             child: Text(
-                              "${getTranslated(context, "MAX") ?? "MAX"}",
+                              getTranslated(context, "MAX") ?? "MAX",
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 9,
@@ -442,7 +442,7 @@ class _SendScreenState extends State<SendScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "${getTranslated(context, "Recent transfers") ?? "Recent transfers"}",
+                    getTranslated(context, "Recent transfers") ?? "Recent transfers",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 15,

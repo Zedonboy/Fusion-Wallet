@@ -1,4 +1,5 @@
 import 'package:credential_manager/credential_manager.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -11,6 +12,8 @@ import 'package:fusion_wallet/screens/homeScreen.dart';
 import 'package:fusion_wallet/src/rust/api/wallet.dart';
 import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,7 +25,7 @@ import '../../controllers/appController.dart';
 
 class ImportFromSeed extends StatefulWidget {
   final String pin;
-  ImportFromSeed({super.key, required this.pin});
+  const ImportFromSeed({super.key, required this.pin});
 
   @override
   State<ImportFromSeed> createState() => _ImportFromSeedState();
@@ -121,37 +124,37 @@ class _ImportFromSeedState extends State<ImportFromSeed> {
                     /*SizedBox(
                       height: 150,
                     ),*/
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Sign in with biometric',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontFamily: 'Archivo',
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        FlutterSwitch(
-                          width: 50.0,
-                          height: 25.0,
-                          valueFontSize: 20.0,
-                          toggleSize: 20.0,
-                          value: appController.enabledBiometric.value,
-                          borderRadius: 30.0,
-                          toggleColor: lightColor,
-                          activeColor: primaryAltColor.value,
-                          inactiveColor: labelColor.value,
-                          padding: 2.0,
-                          showOnOff: false,
-                          onToggle: (val) {
-                            appController.enabledBiometric.value = val;
-                            enableBiometric(context, val);
-                          },
-                        ),
-                      ],
-                    ),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: [
+                    //     Text(
+                    //       'Sign in with biometric',
+                    //       style: TextStyle(
+                    //         color: Colors.white,
+                    //         fontSize: 16,
+                    //         fontFamily: 'Archivo',
+                    //         fontWeight: FontWeight.w600,
+                    //       ),
+                    //     ),
+                    //     FlutterSwitch(
+                    //       width: 50.0,
+                    //       height: 25.0,
+                    //       valueFontSize: 20.0,
+                    //       toggleSize: 20.0,
+                    //       value: appController.enabledBiometric.value,
+                    //       borderRadius: 30.0,
+                    //       toggleColor: lightColor,
+                    //       activeColor: primaryAltColor.value,
+                    //       inactiveColor: labelColor.value,
+                    //       padding: 2.0,
+                    //       showOnOff: false,
+                    //       onToggle: (val) {
+                    //         appController.enabledBiometric.value = val;
+                    //         enableBiometric(context, val);
+                    //       },
+                    //     ),
+                    //   ],
+                    // ),
                     SizedBox(
                       height: 24,
                     ),
@@ -217,7 +220,7 @@ class _ImportFromSeedState extends State<ImportFromSeed> {
                       TextSpan(
                         children: [
                           TextSpan(
-                            text: 'Byproceeding, you agree to these ',
+                            text: 'By proceeding, you agree to these ',
                             style: TextStyle(
                               color: labelColorPrimaryShade.value,
                               fontSize: 12,
@@ -226,7 +229,7 @@ class _ImportFromSeedState extends State<ImportFromSeed> {
                             ),
                           ),
                           TextSpan(
-                            text: 'Term and Conditions.',
+                            text: 'Terms and Conditions.',
                             style: TextStyle(
                               color: primaryAltColor.value,
                               fontSize: 12,
@@ -234,6 +237,14 @@ class _ImportFromSeedState extends State<ImportFromSeed> {
                               fontWeight: FontWeight.w400,
                               decoration: TextDecoration.underline,
                             ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () async {
+                                final Uri url =
+                                    Uri.parse('https://fusionwallet.me/terms');
+                                if (!await launchUrl(url)) {
+                                  throw Exception('Could not launch $url');
+                                }
+                              },
                           ),
                         ],
                       ),
@@ -313,7 +324,7 @@ class _ImportFromSeedState extends State<ImportFromSeed> {
       try {
         await credentialManager.savePasswordCredentials(
           PasswordCredential(
-             username: 'fusion_wallet_user',
+            username: 'fusion_wallet_user',
             password: widget.pin,
           ),
         );

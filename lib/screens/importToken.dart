@@ -120,7 +120,7 @@ class _ImportTokenState extends State<ImportToken> {
                 ),
                 Column(
                   children: [
-                    Container(
+                    SizedBox(
                       height: 48,
                       child: BottomRectangularBtn(
                           color: primaryColor.value,
@@ -151,12 +151,12 @@ class _ImportTokenState extends State<ImportToken> {
       addressErr.value = 'Please add token address';
     } else {
       importLoader.value = true;
-      final ic_service = appController.ic_service!;
-      final index_id = indexController.text.trim() == "" ? null : indexController.text;
-      final ledger_id = addressController.text;
+      final icService = appController.ic_service!;
+      final indexId = indexController.text.trim() == "" ? null : indexController.text;
+      final ledgerId = addressController.text;
       try {
-        final wallet_token = await ic_service.getToken(canisterId: ledger_id, indexCanister: index_id);
-        appController.addToken(wallet_token);
+        final walletToken = await icService.getToken(canisterId: ledgerId, indexCanister: indexId);
+        appController.addToken(walletToken);
         showToast("Imported successfully");
         
       } catch (e) {

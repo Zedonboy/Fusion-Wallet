@@ -9,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../constants/colors.dart';
 
 class ResetApp extends StatefulWidget {
-  ResetApp({super.key});
+  const ResetApp({super.key});
 
   @override
   State<ResetApp> createState() => _ResetAppState();

@@ -730,8 +730,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                     wToken
                                                                         .tokenAddress];
                                                             if (tokenData ==
-                                                                null)
+                                                                null) {
                                                               return "---";
+                                                            }
                                                             return tokenData
                                                                 .formattedPrice;
                                                           }(),
@@ -763,8 +764,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                     wToken
                                                                         .tokenAddress];
                                                             if (tokenData ==
-                                                                null)
+                                                                null) {
                                                               return "---";
+                                                            }
                                                             return calculateUsdWorth(
                                                                 tokenData
                                                                     .balance,

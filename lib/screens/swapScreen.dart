@@ -126,7 +126,7 @@ class _SwapScreenState extends State<SwapScreen> {
                 children: [
 
                   Text(
-                    "${getTranslated(context,"Swap Tokens" )??"Swap Tokens"}",
+                    getTranslated(context,"Swap Tokens" )??"Swap Tokens",
                     textAlign: TextAlign.start,
                     style: TextStyle(
                       fontSize: 15,
@@ -152,7 +152,7 @@ class _SwapScreenState extends State<SwapScreen> {
               
                 Stack(
                   children: [
-                    Container(
+                    SizedBox(
                       height: 320,
                       width: Get.width,
                       child: Column(
@@ -435,7 +435,7 @@ class _SwapScreenState extends State<SwapScreen> {
               
               
                               Text(
-                                "${getTranslated(context,"Swap Details" )??"Swap Details"}",
+                                getTranslated(context,"Swap Details" )??"Swap Details",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: 15,
@@ -497,7 +497,7 @@ class _SwapScreenState extends State<SwapScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "${getTranslated(context,"Slippage Tolerance" )??"Slippage Tolerance"}",
+                            getTranslated(context,"Slippage Tolerance" )??"Slippage Tolerance",
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 13,
@@ -944,7 +944,7 @@ Expanded(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "${getTranslated(context,"You Pay" )??"You Pay"}",
+                      getTranslated(context,"You Pay" )??"You Pay",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 12,
@@ -955,7 +955,7 @@ Expanded(
                       ),
                     ),
                     Text(
-                      "${getTranslated(context,"You Get" )??"You Get"}",
+                      getTranslated(context,"You Get" )??"You Get",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 12,
@@ -1066,7 +1066,7 @@ Expanded(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "${getTranslated(context,"From" )??"From"}",
+                      getTranslated(context,"From" )??"From",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 12,
@@ -1077,7 +1077,7 @@ Expanded(
                       ),
                     ),
                     Text(
-                      "${getTranslated(context,"To" )??"To"}",
+                      getTranslated(context,"To" )??"To",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 12,
@@ -1170,7 +1170,7 @@ Expanded(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "${getTranslated(context,"Routing Fee" )??"Routing Fee"}",
+                      getTranslated(context,"Routing Fee" )??"Routing Fee",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 12,
@@ -1181,7 +1181,7 @@ Expanded(
                       ),
                     ),
                     Text(
-                      "${getTranslated(context,"Slippage Tolerance" )??"Slippage Tolerance"}",
+                      getTranslated(context,"Slippage Tolerance" )??"Slippage Tolerance",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 12,
@@ -1270,7 +1270,7 @@ Expanded(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "${getTranslated(context,"Quote" )??"Quote"}",
+                      getTranslated(context,"Quote" )??"Quote",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 12,
@@ -1381,7 +1381,7 @@ Expanded(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "${getTranslated(context,"Swap has been completed" )??"Swap has been completed"}",
+                getTranslated(context,"Swap has been completed" )??"Swap has been completed",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 20,
@@ -1399,20 +1399,20 @@ Expanded(
           RichText(
             textAlign: TextAlign.center,
             text: TextSpan(
-              text: '${getTranslated(context,"You just swapped" )??"You just swapped"}',
+              text: getTranslated(context,"You just swapped" )??"You just swapped",
               style: TextStyle(fontSize: 14, color: lightTextColor.value, fontFamily: 'Spectral', fontWeight: FontWeight.w400),
               children: <TextSpan>[
                 TextSpan(
                   text: ' 0.5 SOL ',
                   style: TextStyle(fontSize: 13, color: headingColor.value, fontFamily: 'dmsans', fontWeight: FontWeight.w600),
                 ),
-                TextSpan(text: '${getTranslated(context,"to get" )??"to get"}'),
+                TextSpan(text: getTranslated(context,"to get" )??"to get"),
                 TextSpan(
                   text: ' 8.3 ETH ',
                   style: TextStyle(fontSize: 13, color: headingColor.value, fontFamily: 'dmsans', fontWeight: FontWeight.w600),
                 ),
 
-                TextSpan(text: '${getTranslated(context,"successfully." )??"successfully."}'),
+                TextSpan(text: getTranslated(context,"successfully." )??"successfully."),
               ],
             ),
           ),
@@ -1463,7 +1463,7 @@ Expanded(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "${getTranslated(context,"Slippage Settings" )??"Slippage Settings"}",
+                getTranslated(context,"Slippage Settings" )??"Slippage Settings",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 20,
@@ -1488,7 +1488,7 @@ Expanded(
           RichText(
             textAlign: TextAlign.start,
             text: TextSpan(
-              text: '${getTranslated(context,"Your transaction will fail if the price changes more than the slippage. The recommended default is" )??"Your transaction will fail if the price changes more than the slippage. The recommended default is"}',
+              text: getTranslated(context,"Your transaction will fail if the price changes more than the slippage. The recommended default is" )??"Your transaction will fail if the price changes more than the slippage. The recommended default is",
               style: TextStyle(fontSize: 14, color: lightTextColor.value, fontFamily: 'Spectral', fontWeight: FontWeight.w400),
               children: <TextSpan>[
                 TextSpan(
@@ -1509,7 +1509,7 @@ Expanded(
 
 
           SizedBox(height: 32,),
-          Container(
+          SizedBox(
             width: 197,
             height: 40,
             child: Row(

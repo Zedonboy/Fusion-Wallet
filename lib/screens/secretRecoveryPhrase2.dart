@@ -27,10 +27,10 @@ class _SecretRecoveryPharase2State extends State<SecretRecoveryPharase2> {
   }
 
   getMnemonic() async {
-    List<String> _mnemonicList = widget.mnemonic.split(" ");
-    print(_mnemonicList.length);
-    print(_mnemonicList);
-    mnemonicWidget(_mnemonicList);
+    List<String> mnemonicList = widget.mnemonic.split(" ");
+    print(mnemonicList.length);
+    print(mnemonicList);
+    mnemonicWidget(mnemonicList);
 
   }
   @override
@@ -125,14 +125,14 @@ class _SecretRecoveryPharase2State extends State<SecretRecoveryPharase2> {
               SizedBox(
                 height: 24,
               ),
-              Container(
+              SizedBox(
                 width: Get.width,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Container(
+                    SizedBox(
                       width: double.infinity,
                       child: Wrap(
                         alignment: WrapAlignment.center,
@@ -156,13 +156,13 @@ class _SecretRecoveryPharase2State extends State<SecretRecoveryPharase2> {
       ),
     );
   }
-  mnemonicWidget(List<String> _mnemonicList) {
+  mnemonicWidget(List<String> mnemonicList) {
     /*List<String> _mnemonicList = _mnemonic.split(" ");
     print(_mnemonicList.length);
     print(_mnemonicList);*/
     mnemonicListWidget.value = [];
     setState(() {
-      for (int index = 0; index < _mnemonicList.length; index++) {
+      for (int index = 0; index < mnemonicList.length; index++) {
         mnemonicListWidget.add(Container(
           height: 40,
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -187,7 +187,7 @@ class _SecretRecoveryPharase2State extends State<SecretRecoveryPharase2> {
               ),
               SizedBox(width: 4),
               Text(
-                '${_mnemonicList[index]}',
+                mnemonicList[index],
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 16,

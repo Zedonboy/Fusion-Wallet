@@ -33,10 +33,10 @@ class _TokenScreenState extends State<TokenScreen> {
   List<SimpleTransaction> transaction_list = [];
 
   fetch_transactions() async {
-    final ic_service = appController.ic_service;
+    final icService = appController.ic_service;
     final addr = appController.active_wallet.value!.toIcpPrincipal();
     try {
-      final txs = await ic_service?.getLatestTransactions(
+      final txs = await icService?.getLatestTransactions(
           token: widget.token, accountAddr: addr);
       setState(() {
         is_loading = false;

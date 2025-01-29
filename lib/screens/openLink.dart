@@ -11,7 +11,7 @@ import '../../controllers/appController.dart';
 class OpenLink extends StatefulWidget {
   final String fromPage;
 
-  OpenLink({@required this.url, this.fromPage = ''});
+  const OpenLink({super.key, @required this.url, this.fromPage = ''});
 
   final String? url;
 
@@ -89,7 +89,7 @@ class _OpenLinkState extends State<OpenLink> {
         },
         onContextMenuActionItemClicked: (contextMenuItemClicked) async {
           var id = (Platform.isAndroid) ? contextMenuItemClicked.androidId : contextMenuItemClicked.iosId;
-          print("onContextMenuActionItemClicked: " + id.toString() + " " + contextMenuItemClicked.title);
+          print("onContextMenuActionItemClicked: $id ${contextMenuItemClicked.title}");
         });
 
     pullToRefreshController = PullToRefreshController(
@@ -186,7 +186,7 @@ class _OpenLinkState extends State<OpenLink> {
                 }
                 setState(() {
                   this.progress = progress / 100;
-                  urlController.text = this.url;
+                  urlController.text = url;
                 });
               },
               onUpdateVisitedHistory: (controller, url, androidIsReload) {

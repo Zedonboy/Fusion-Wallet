@@ -110,11 +110,9 @@ String normalizeBalance(BigInt value, int decimals) {
   // Convert to decimal string
   String valueStr = value.toString();
   if (valueStr.length <= decimals) {
-    valueStr = "0." + "0" * (decimals - valueStr.length) + valueStr;
+    valueStr = "0.${"0" * (decimals - valueStr.length)}$valueStr";
   } else {
-    valueStr = valueStr.substring(0, valueStr.length - decimals) +
-        "." +
-        valueStr.substring(valueStr.length - decimals);
+    valueStr = "${valueStr.substring(0, valueStr.length - decimals)}.${valueStr.substring(valueStr.length - decimals)}";
   }
 
   // Remove trailing zeros after decimal

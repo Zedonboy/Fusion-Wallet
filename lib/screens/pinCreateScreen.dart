@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_switch/flutter_switch.dart';
-import 'package:fusion_wallet/common_widgets/commonWidgets.dart';
 import 'package:fusion_wallet/common_widgets/customNamPad.dart';
 import 'package:fusion_wallet/constants/colors.dart';
 import 'package:fusion_wallet/controllers/appController.dart';

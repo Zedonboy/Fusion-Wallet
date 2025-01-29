@@ -65,7 +65,7 @@ class _ConformationScreenState extends State<ConformationScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "${getTranslated(context, "Confirmation") ?? "Confirmation"}",
+                          getTranslated(context, "Confirmation") ?? "Confirmation",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 16,
@@ -98,7 +98,7 @@ class _ConformationScreenState extends State<ConformationScreen> {
                       height: 32,
                     ),
                     Text(
-                      "${getTranslated(context, "Confirm Transfer") ?? "Confirm Transfer"}",
+                      getTranslated(context, "Confirm Transfer") ?? "Confirm Transfer",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 24,
@@ -111,7 +111,7 @@ class _ConformationScreenState extends State<ConformationScreen> {
                       height: 12,
                     ),
                     Text(
-                      "${getTranslated(context, "We care about your privacy.  Please make sure that you want to transfer money.") ?? "We care about your privacy.  Please make sure that you want to transfer money."}",
+                      getTranslated(context, "We care about your privacy.  Please make sure that you want to transfer money.") ?? "We care about your privacy.  Please make sure that you want to transfer money.",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 14,
@@ -198,9 +198,9 @@ class _ConformationScreenState extends State<ConformationScreen> {
 
                               Text(
                                 (){
-                                  final transfer_amt = BigInt.from(widget.amount * pow(10, widget.token.tokenDecimal ?? 0));
+                                  final transferAmt = BigInt.from(widget.amount * pow(10, widget.token.tokenDecimal ?? 0));
                                   final price = appController.token_data_map[widget.token.tokenAddress]?.price ?? -1;
-                                  return calculateUsdWorth(transfer_amt, widget.token.tokenDecimal ?? 8, price);
+                                  return calculateUsdWorth(transferAmt, widget.token.tokenDecimal ?? 8, price);
                                 }(),
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
@@ -228,7 +228,7 @@ class _ConformationScreenState extends State<ConformationScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    "${getTranslated(context, "Transfer Fee") ?? "Transfer Fee"}",
+                                    getTranslated(context, "Transfer Fee") ?? "Transfer Fee",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       fontSize: 14,
@@ -273,7 +273,7 @@ class _ConformationScreenState extends State<ConformationScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    "${getTranslated(context, "Total to be sent") ?? "Totak"}",
+                                    getTranslated(context, "Total to be sent") ?? "Totak",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       fontSize: 14,
@@ -319,7 +319,7 @@ class _ConformationScreenState extends State<ConformationScreen> {
                         ),
                         Positioned(
                             top: -38,
-                            child: Container(
+                            child: SizedBox(
                               width: Get.width - 44,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -374,8 +374,8 @@ class _ConformationScreenState extends State<ConformationScreen> {
 
   void start_sending() async {
     isSending.value = true;
-    final ic_service = appController.ic_service;
-    if (ic_service == null) {
+    final icService = appController.ic_service;
+    if (icService == null) {
       showToast("Error IC subcomponent is invalid");
       return;
     }
@@ -384,7 +384,7 @@ class _ConformationScreenState extends State<ConformationScreen> {
         BigInt.from(widget.amount * pow(10, widget.token.tokenDecimal ?? 8));
 
     try {
-      final block_height = await ic_service.send(
+      final blockHeight = await icService.send(
           token: widget.token, to: widget.to_addr, amount: total);
 
       Get.back();
@@ -411,10 +411,10 @@ class _ConformationScreenState extends State<ConformationScreen> {
         canAuthenticateWithBiometrics || await auth.isDeviceSupported();
     if (canAuthenticate) {
       try {
-        bool did_auth = await auth.authenticate(
+        bool didAuth = await auth.authenticate(
             localizedReason: "Confirm your identity",
             options: AuthenticationOptions(biometricOnly: true));
-        if (did_auth) {
+        if (didAuth) {
           start_sending();
         }
       } catch (e) {
@@ -468,7 +468,7 @@ class _ConformationScreenState extends State<ConformationScreen> {
             height: 16,
           ),
           Text(
-            "${getTranslated(context, "Transaction Completed") ?? "Transaction Completed"}",
+            getTranslated(context, "Transaction Completed") ?? "Transaction Completed",
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 20,
@@ -481,7 +481,7 @@ class _ConformationScreenState extends State<ConformationScreen> {
             height: 10,
           ),
           Text(
-            "${getTranslated(context, "Your transaction has been completed, view details in transaction history.") ?? "Your transaction has been completed, view details in transaction history."}",
+            getTranslated(context, "Your transaction has been completed, view details in transaction history.") ?? "Your transaction has been completed, view details in transaction history.",
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 14,

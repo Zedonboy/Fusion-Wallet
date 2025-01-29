@@ -1,12 +1,8 @@
-import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fusion_wallet/common_widgets/bottomNavBar.dart';
 import 'package:fusion_wallet/controllers/appController.dart';
 import 'package:fusion_wallet/screens/homeScreen.dart';
-import 'package:fusion_wallet/screens/importFromSeed.dart';
 import 'package:fusion_wallet/screens/pinCreateScreen.dart';
 import 'package:fusion_wallet/screens/pinScreen.dart';
 import 'package:fusion_wallet/src/rust/api/wallet.dart';

@@ -53,7 +53,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                   width: 8,
                 ),
                 Text(
-                  "${getTranslated(context, "Receive") ?? "Receive"}",
+                  getTranslated(context, "Receive") ?? "Receive",
                   textAlign: TextAlign.start,
                   style: TextStyle(
                     fontSize: 15,
@@ -178,7 +178,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
               height: 32,
             ),
             Text(
-              "${getTranslated(context, "Send only the specified coins to this deposit address. This address does NOT support deposit of non-fungible token.") ?? "Send only the specified coins to this deposit address. This address does NOT support deposit of non-fungible token."}",
+              getTranslated(context, "Send only the specified coins to this deposit address. This address does NOT support deposit of non-fungible token.") ?? "Send only the specified coins to this deposit address. This address does NOT support deposit of non-fungible token.",
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 12,
@@ -199,7 +199,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
             ),
             if (widget.token.tokenAddress == "ryjl3-tyaaa-aaaaa-aaaba-cai") ...[
               Text(
-                "${getTranslated(context, "For ICP Account ID Only") ?? "For ICP Account ID Only"}",
+                getTranslated(context, "For ICP Account ID Only") ?? "For ICP Account ID Only",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14,

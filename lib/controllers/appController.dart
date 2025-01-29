@@ -56,14 +56,14 @@ class AppController extends GetxController {
     try {
       // Get encrypted data from secure storage
       final encryptedData = await storage.read(key: 'encrypted_mnemonic');
-      final base_64_iv = await storage.read(key: "key_iv");
-      if (encryptedData == null || base_64_iv == null) {
+      final base64Iv = await storage.read(key: "key_iv");
+      if (encryptedData == null || base64Iv == null) {
         return null;
       }
 
       // Convert encryption key to required format
       final key = encrypt.Key.fromBase16(encryptionKey);
-      final iv = encrypt.IV.fromBase64(base_64_iv);
+      final iv = encrypt.IV.fromBase64(base64Iv);
       final encrypter = encrypt.Encrypter(encrypt.AES(key));
 
       // Decrypt the data
@@ -109,17 +109,17 @@ class AppController extends GetxController {
     });
   }
   void check_token_on_ic() {
-     var ic_service = this.ic_service!;
+     var icService = this.ic_service!;
     var address = active_wallet.value!.toIcpPrincipal();
      Future.wait(tokens_map.values.map((token) async {
-        var balance;
-        var price;
+        BigInt balance;
+        double price;
 
         try {
           // here i get a int number(which is a floating point(actual price) * 100)
-          final coinbase_price = await ic_service.getPrice(token: token);
+          final coinbasePrice = await icService.getPrice(token: token);
 
-          price = coinbase_price;
+          price = coinbasePrice;
 
           // ignore: empty_catches
         } catch (err) {
@@ -127,9 +127,9 @@ class AppController extends GetxController {
         }
 
         try {
-          final ic_balance =
-              await ic_service.getBalance(token: token, account: address);
-          balance = ic_balance;
+          final icBalance =
+              await icService.getBalance(token: token, account: address);
+          balance = icBalance;
 
           // ignore: empty_catches
         } catch (e) {
@@ -156,13 +156,13 @@ class AppController extends GetxController {
     if (tokens_map.containsKey(token.tokenAddress)) return;
 
     Future.microtask(() {
-      final image_data = FutureAdaptiveImage(
+      final imageData = FutureAdaptiveImage(
         imageUrl: token.imageUrl ?? 'assets/images/usd.png',
         width: 40,
         height: 40,
         fit: BoxFit.contain,
       );
-      token_image_map[token.tokenAddress] = image_data;
+      token_image_map[token.tokenAddress] = imageData;
       token_image_map.refresh();
     });
 

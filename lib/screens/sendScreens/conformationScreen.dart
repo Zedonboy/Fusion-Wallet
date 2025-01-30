@@ -1,3 +1,14 @@
+/*
+ * Fusion Wallet - A non-custodial cryptocurrency wallet
+ * Copyright (C) 2025 Fusion Wallet
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ */
+
+
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -64,7 +75,8 @@ class _ConformationScreenState extends State<ConformationScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          getTranslated(context, "Confirmation") ?? "Confirmation",
+                          getTranslated(context, "Confirmation") ??
+                              "Confirmation",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 16,
@@ -97,7 +109,8 @@ class _ConformationScreenState extends State<ConformationScreen> {
                       height: 32,
                     ),
                     Text(
-                      getTranslated(context, "Confirm Transfer") ?? "Confirm Transfer",
+                      getTranslated(context, "Confirm Transfer") ??
+                          "Confirm Transfer",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 24,
@@ -110,7 +123,9 @@ class _ConformationScreenState extends State<ConformationScreen> {
                       height: 12,
                     ),
                     Text(
-                      getTranslated(context, "We care about your privacy.  Please make sure that you want to transfer money.") ?? "We care about your privacy.  Please make sure that you want to transfer money.",
+                      getTranslated(context,
+                              "We care about your privacy.  Please make sure that you want to transfer money.") ??
+                          "We care about your privacy.  Please make sure that you want to transfer money.",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 14,
@@ -196,10 +211,17 @@ class _ConformationScreenState extends State<ConformationScreen> {
                               // SizedBox(height: 6,),
 
                               Text(
-                                (){
-                                  final transferAmt = BigInt.from(widget.amount * pow(10, widget.token.tokenDecimal ?? 0));
-                                  final price = appController.token_data_map[widget.token.tokenAddress]?.price ?? -1;
-                                  return calculateUsdWorth(transferAmt, widget.token.tokenDecimal ?? 8, price);
+                                () {
+                                  final transferAmt = BigInt.from(widget
+                                          .amount *
+                                      pow(10, widget.token.tokenDecimal ?? 0));
+                                  final price = appController
+                                          .token_data_map[
+                                              widget.token.tokenAddress]
+                                          ?.price ??
+                                      -1;
+                                  return calculateUsdWorth(transferAmt,
+                                      widget.token.tokenDecimal ?? 8, price);
                                 }(),
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
@@ -227,7 +249,8 @@ class _ConformationScreenState extends State<ConformationScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    getTranslated(context, "Transfer Fee") ?? "Transfer Fee",
+                                    getTranslated(context, "Transfer Fee") ??
+                                        "Transfer Fee",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       fontSize: 14,
@@ -272,7 +295,9 @@ class _ConformationScreenState extends State<ConformationScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    getTranslated(context, "Total to be sent") ?? "Totak",
+                                    getTranslated(
+                                            context, "Total to be sent") ??
+                                        "Totak",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       fontSize: 14,
@@ -326,9 +351,10 @@ class _ConformationScreenState extends State<ConformationScreen> {
                                   Container(
                                     height: 75,
                                     width: 75,
+                                    clipBehavior: Clip.antiAlias,
                                     decoration: BoxDecoration(
                                         shape: BoxShape.circle,
-                                        color: inputFieldBackgroundColor2.value,
+                                        color: lightColor,
                                         border: Border.all(
                                             width: 1,
                                             color:
@@ -383,8 +409,15 @@ class _ConformationScreenState extends State<ConformationScreen> {
         BigInt.from(widget.amount * pow(10, widget.token.tokenDecimal ?? 8));
 
     try {
-      final blockHeight = await icService.send(
-          token: widget.token, to: widget.to_addr, amount: total);
+      // checking if its an ICP with Account Id token Transfer
+      if (widget.token.tokenAddress == "ryjl3-tyaaa-aaaaa-aaaba-cai" &&
+          WalletContext.verifyAccountId(text: widget.to_addr)) {
+        final blockHeigh =
+            await icService.icpAccountIdSend(to: widget.to_addr, amount: total);
+      } else {
+        final blockHeight = await icService.send(
+            token: widget.token, to: widget.to_addr, amount: total);
+      }
 
       Get.back();
       Get.bottomSheet(
@@ -467,7 +500,8 @@ class _ConformationScreenState extends State<ConformationScreen> {
             height: 16,
           ),
           Text(
-            getTranslated(context, "Transaction Completed") ?? "Transaction Completed",
+            getTranslated(context, "Transaction Completed") ??
+                "Transaction Completed",
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 20,
@@ -480,7 +514,9 @@ class _ConformationScreenState extends State<ConformationScreen> {
             height: 10,
           ),
           Text(
-            getTranslated(context, "Your transaction has been completed, view details in transaction history.") ?? "Your transaction has been completed, view details in transaction history.",
+            getTranslated(context,
+                    "Your transaction has been completed, view details in transaction history.") ??
+                "Your transaction has been completed, view details in transaction history.",
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 14,
@@ -492,11 +528,11 @@ class _ConformationScreenState extends State<ConformationScreen> {
           SizedBox(
             height: 32,
           ),
-          BottomRectangularBtn(
-              onTapFunc: () {
-                // Get.to(TransactionScreen());
-              },
-              btnTitle: "View History"),
+          // BottomRectangularBtn(
+          //     onTapFunc: () {
+          //       // Get.to(TransactionScreen());
+          //     },
+          //     btnTitle: "View History"),
           SizedBox(
             height: 8,
           ),
@@ -505,11 +541,8 @@ class _ConformationScreenState extends State<ConformationScreen> {
               color: Colors.transparent,
               onTapFunc: () {
                 Get.back();
-                Get.back();
-                Get.back();
-                Get.back();
               },
-              btnTitle: "Home"),
+              btnTitle: "Ok"),
           SizedBox(
             height: 16,
           ),

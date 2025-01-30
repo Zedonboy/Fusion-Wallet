@@ -245,7 +245,7 @@ class _ImportFromSeedState extends State<ImportFromSeed> {
                             recognizer: TapGestureRecognizer()
                               ..onTap = () async {
                                 final Uri url =
-                                    Uri.parse('https://fusionwallet.me/terms');
+                                    Uri.parse('https://github.com/Zedonboy/Fusion-Wallet/blob/main/terms.md');
                                 if (!await launchUrl(url)) {
                                   throw Exception('Could not launch $url');
                                 }

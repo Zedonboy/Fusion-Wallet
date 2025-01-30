@@ -20,7 +20,7 @@ import 'package:fusion_wallet/localization/language_constants.dart';
 import 'package:fusion_wallet/screens/receiveScreen.dart';
 import 'package:fusion_wallet/screens/sendScreens/sendScreen.dart';
 import 'package:fusion_wallet/src/rust/api/wallet.dart';
-import 'package:fusion_wallet/src/rust/api/wallet_service.dart';
+import 'package:fusion_wallet/src/rust/api/ic_wallet_service.dart';
 import 'package:get/get.dart';
 
 
@@ -221,12 +221,7 @@ class _TokenScreenState extends State<TokenScreen> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      var addr = switch (widget.token.network) {
-                        WalletTokenNetWork.bitcoin =>
-                          appController.active_wallet.value?.toBitcoinAddress(),
-                        WalletTokenNetWork.internetComputer =>
-                          appController.active_wallet.value?.toIcpPrincipal(),
-                      };
+                      var addr = appController.active_wallet.value?.toIcpPrincipal();
 
                       if (addr == null) {
                         showToast("No Address or Principal ID found");

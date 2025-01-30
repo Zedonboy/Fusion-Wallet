@@ -6,7 +6,7 @@ on:
       tag_name:
         description: 'Tag name for this release (e.g., v1.0.0)'
         required: true
-        default: 'v1.0.0'
+        default: '1.0.0'
       release_note:
         description: 'Release notes for this version'
         required: true
@@ -40,13 +40,13 @@ jobs:
           java-version: '17' # Java 11 is required for signing
 
       - name: Build for APK ABIs
-        run: flutter build apk --split-per-abi
+        run: flutter build apk --split-per-abi --build-name=${{github.event.inputs.tag_name}}
 
       - name: Build for APK
-        run: flutter build apk --release
+        run: flutter build apk --release --build-name=${{github.event.inputs.tag_name}}
 
       - name: Build App Bundle
-        run: flutter build appbundle --release
+        run: flutter build appbundle --release --build-name=${{github.event.inputs.tag_name}}
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3

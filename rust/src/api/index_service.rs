@@ -3,6 +3,8 @@ use candid::{decode_args, encode_args, encode_one, CandidType, Decode, Deseriali
 use ic_agent::Agent;
 use icrc_ledger_types::icrc1::account::Account;
 
+use super::{utils::format_amount, ic_wallet_service::SimpleTransaction};
+
 
 #[derive(CandidType, Deserialize)]
 pub(super) struct GetAccountTransactionsArgs {
@@ -79,11 +81,7 @@ pub(super) struct GetTransactionsErr {
     pub(super) message: String
 }
 
-#[derive(CandidType, Deserialize)]
-pub(super) enum GetTransactionsResult {
-    Ok(GetTransactions),
-    Err(GetTransactionsErr)
-}
+pub(super) type GetTransactionsResult = Result<GetTransactions, GetTransactionsErr>;
 
 #[derive(CandidType, Deserialize)]
 pub(super) struct Status {
@@ -123,8 +121,56 @@ impl IcIndexService {
             .await?;
 
         let (result,): (GetTransactionsResult,) = decode_args(&response)?;
+        
         Ok(result)
     }
+
+    pub(super) fn transaction_to_simple(tx: TransactionWithId, owner: String, decimal : u8, symbol : &str) -> Option<SimpleTransaction> {
+    
+        match tx.transaction {
+            Transaction { transfer: Some(t), timestamp, .. } => {
+                let kind = if t.from.to_string() == owner {
+                    "send".to_string()
+                } else {
+                    "receive".to_string()
+                };
+
+                let party = if kind == "send" {t.to.to_string()} else {t.from.to_string()};
+
+                Some(SimpleTransaction {
+                    kind,
+                    amount: format_amount(&t.amount, decimal),
+                    to: party,
+                    timestamp,
+                    symbol: symbol.to_string()
+                })
+            },
+            Transaction { mint: Some(m), timestamp, .. } => Some(SimpleTransaction {
+                kind: "mint".to_string(),
+                amount: format_amount(&m.amount, decimal),
+                to: m.to.to_string(),
+                timestamp,
+                symbol: symbol.to_string()
+            }),
+            Transaction { burn: Some(b), timestamp, .. } => Some(SimpleTransaction {
+                kind: "burn".to_string(),
+                amount: format_amount(&b.amount, decimal),
+                to: b.from.to_string(), // Using 'from' as 'to' for burn transactions
+                timestamp,
+                symbol: symbol.to_string()
+            }),
+            Transaction { approve: Some(a), timestamp, .. } => Some(SimpleTransaction {
+                kind: "approve".to_string(),
+                amount: format_amount(&a.amount, decimal),
+                to: a.spender.to_string(),
+                timestamp,
+                symbol: symbol.to_string()
+            }),
+            _ => None
+        }
+    }
+
+   
 
     // pub(super) async fn get_status(&self) -> anyhow::Result<Status> {
     //     let response = self.ic_agent

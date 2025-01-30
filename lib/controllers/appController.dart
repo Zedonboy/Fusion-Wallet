@@ -1,3 +1,14 @@
+/*
+ * Fusion Wallet - A non-custodial cryptocurrency wallet
+ * Copyright (C) 2025 Fusion Wallet
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ */
+
+
 import 'dart:async';
 import 'dart:convert';
 
@@ -5,8 +16,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fusion_wallet/common_widgets/futureImageWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:fusion_wallet/controllers/utils.dart';
+import 'package:fusion_wallet/src/rust/api/ic_wallet_service.dart';
 import 'package:fusion_wallet/src/rust/api/wallet.dart';
-import 'package:fusion_wallet/src/rust/api/wallet_service.dart';
+
 import 'package:get/get.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,6 +32,7 @@ class AppController extends GetxController {
   // RxList<WalletToken> tokens = WalletContext.getInitialSupportedTokens().obs;
   IcWalletService? ic_service;
   var token_image_map = RxMap<String, Widget>();
+  Timer? _balanceTimer;
 
   /// Single map to hold all token data
   var token_data_map = RxMap<String, TokenData>();
@@ -46,6 +59,8 @@ class AppController extends GetxController {
 
   void listen_wallet() {
     ever(active_wallet, (data) {
+      // Cancel existing timer when wallet changes
+      stop_balance_monitor();
       ic_service = data?.createIcService();
       start_balance_monitor();
     });
@@ -102,53 +117,77 @@ class AppController extends GetxController {
     }
   }
 
-  void load() {
+  Future<void> loadPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    // Load biometric preference
+    enabledBiometric.value = prefs.getBool('FingerPrintEnable') ?? false;
+  }
+
+  void load() async {
+    await loadPreferences();
     loadSavedTokens().then((_) {
       token_image_map.value = createTokenImageMap(tokens_map.values.toList());
       listen_wallet();
     });
   }
+
   void check_token_on_ic() {
-     var icService = ic_service!;
+    var icService = ic_service!;
+    var httpService = WalletContext.createHttpService();
     var address = active_wallet.value!.toIcpPrincipal();
-     Future.wait(tokens_map.values.map((token) async {
-        BigInt balance;
-        double price;
 
-        try {
-          // here i get a int number(which is a floating point(actual price) * 100)
-          final coinbasePrice = await icService.getPrice(token: token);
+    Future.wait(tokens_map.values.map((token) async {
+      bool wasUpdated = false;
 
-          price = coinbasePrice;
-
-          // ignore: empty_catches
-        } catch (err) {
-          price = -1.0;
+      try {
+        // Get price from coinbase
+        final coinbasePrice = await httpService.getPrice(token: token);
+        if (coinbasePrice > 0) {
+          // Only update if we got a valid price
+          final currentData = token_data_map[token.tokenAddress];
+          final newBalance = currentData?.balance ?? BigInt.from(-1);
+          token_data_map[token.tokenAddress] =
+              TokenData(balance: newBalance, price: coinbasePrice);
+          wasUpdated = true;
         }
+      } catch (err) {
+        print("Error fetching price for ${token.symbol}: $err");
+      }
 
-        try {
-          final icBalance =
-              await icService.getBalance(token: token, account: address);
-          balance = icBalance;
-
-          // ignore: empty_catches
-        } catch (e) {
-          
-          balance = BigInt.from(-1);
-        }
-
+      try {
+        // Get balance from IC
+        final icBalance =
+            await icService.getBalance(token: token, account: address);
+        final currentData = token_data_map[token.tokenAddress];
         token_data_map[token.tokenAddress] =
-            TokenData(balance: balance, price: price);
-      })).then((_) {
+            TokenData(balance: icBalance, price: currentData?.price ?? -1.0);
+        wasUpdated = true;
+      } catch (e) {
+        print("Error fetching balance for ${token.symbol}: $e");
+      }
+
+      return wasUpdated;
+    })).then((results) {
+      // Only refresh if at least one token was updated successfully
+      if (results.any((wasUpdated) => wasUpdated)) {
         token_data_map.refresh();
-      });
+      }
+    });
+  }
+
+  void stop_balance_monitor() {
+    _balanceTimer?.cancel();
+    _balanceTimer = null;
   }
 
   void start_balance_monitor() {
+    // Cancel any existing timer
+    _balanceTimer?.cancel();
+
     check_token_on_ic();
-    Timer.periodic(Duration(seconds: 15), (timer) {
+    _balanceTimer = Timer.periodic(Duration(seconds: 15), (timer) {
       print("Timer: Checking balance");
-     check_token_on_ic();
+      check_token_on_ic();
     });
   }
 
@@ -175,9 +214,7 @@ class AppController extends GetxController {
   // Add to AppController class:
   Future<void> saveTokens() async {
     final prefs = await SharedPreferences.getInstance();
-    final tokenList = tokens_map.values
-        .map((t) => t.toString())
-        .toList();
+    final tokenList = tokens_map.values.map((t) => t.toString()).toList();
     await prefs.setString('saved_tokens', jsonEncode(tokenList));
   }
 

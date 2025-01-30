@@ -1,6 +1,18 @@
+/*
+ * Fusion Wallet - A non-custodial cryptocurrency wallet
+ * Copyright (C) 2025 Fusion Wallet
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ */
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fusion_wallet/screens/pinScreen.dart';
 import 'package:fusion_wallet/screens/splashScreen.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,6 +29,14 @@ class ResetApp extends StatefulWidget {
 class _ResetAppState extends State<ResetApp> {
   bool userFaceId = true;
   bool isPasscode = true;
+
+  clear_app_data() async {
+    final storage = FlutterSecureStorage();
+    await storage.deleteAll();
+    SharedPreferences sharedPref = await SharedPreferences.getInstance();
+    await sharedPref.clear();
+    Get.offAll(SplashScreen());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -122,13 +142,16 @@ class _ResetAppState extends State<ResetApp> {
               Column(
                 children: [
                   GestureDetector(
-                    onTap: () async {
+                    onTap: () {
+                      Get.to(PinScreen(onPinConfirm: (data) {
+                        clear_app_data();
+                      }, isSignin: false, onBiometric: (auth) {
+                        if(auth) {
+                          clear_app_data();
+                        }
+                      },));
                       // Get.to(Transactions());
-                      final storage = FlutterSecureStorage();
-                      await storage.deleteAll();
-                      SharedPreferences sharedPref = await SharedPreferences.getInstance();
-                      await sharedPref.clear();
-                      Get.offAll(SplashScreen());
+                      
                     },
                     child: Container(
                       height: 50,
@@ -140,7 +163,7 @@ class _ResetAppState extends State<ResetApp> {
                           Text(
                             'Continue',
                             style: TextStyle(
-                              color: lightTextColor.value,
+                              color: textDarkColor.value,
                               fontSize: 16,
                               fontFamily: 'Poppins',
                               fontWeight: FontWeight.w700,

@@ -22,10 +22,18 @@ import 'package:fusion_wallet/screens/DummyHomeScreen.dart';
 import 'package:fusion_wallet/screens/splashScreen.dart';
 import 'package:fusion_wallet/src/rust/frb_generated.dart';
 import 'package:get/get.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 Future<void> main() async {
   await RustLib.init();
   WidgetsFlutterBinding.ensureInitialized();
+  PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
+  String appName = packageInfo.appName;
+  String packageName = packageInfo.packageName;
+  String version = packageInfo.version;
+  String buildNumber = packageInfo.buildNumber;
+  print("version ${version}, packageName ${packageName} buildNumber ${buildNumber}");
   runApp(const MyApp());
 }
 

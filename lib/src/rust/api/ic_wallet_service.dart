@@ -43,8 +43,6 @@ abstract class IcWalletService implements RustOpaqueInterface {
       required String accountAddr,
       int? maxResults});
 
-  Future<double> getPrice({required WalletToken token});
-
   Future<WalletToken> getToken(
       {required String canisterId, String? indexCanister});
 

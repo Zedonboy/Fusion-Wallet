@@ -1,9 +1,19 @@
+/*
+ * Fusion Wallet - A non-custodial cryptocurrency wallet
+ * Copyright (C) 2025 Fusion Wallet
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ */
+
+
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fusion_wallet/constants/colors.dart';
 import 'package:fusion_wallet/controllers/utils.dart';
-import 'package:fusion_wallet/src/rust/api/wallet_service.dart';
+import 'package:fusion_wallet/src/rust/api/ic_wallet_service.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -140,15 +150,15 @@ class RecentTransfers extends StatelessWidget {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    transaction.kind == 'Send' ? 'To:' : 'From:',
-                    style: TextStyle(
-                      color: subtextColor.value,
-                      fontSize: 12,
-                      fontFamily: 'DM Sans',
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
+                  // Text(
+                  //   transaction.kind == 'send' ? 'To:' : 'From:',
+                  //   style: TextStyle(
+                  //     color: subtextColor.value,
+                  //     fontSize: 12,
+                  //     fontFamily: 'DM Sans',
+                  //     fontWeight: FontWeight.w400,
+                  //   ),
+                  // ),
                   SizedBox(width: 2),
                   Material(
                     color: Colors.transparent,
@@ -158,17 +168,7 @@ class RecentTransfers extends StatelessWidget {
                       splashColor: Colors.grey.withOpacity(0.1),
                       highlightColor: Colors.grey.withOpacity(0.05),
                       onTap: () {
-                        Clipboard.setData(ClipboardData(text: transaction.to))
-                            .then((_) {
-                          Get.snackbar(
-                            "Copied",
-                            "Address is copied successfully",
-                            backgroundColor: Colors.green.withOpacity(0.8),
-                            colorText: Colors.white,
-                            duration: Duration(seconds: 2),
-                            snackPosition: SnackPosition.BOTTOM,
-                          );
-                        });
+                        copyToClipboard(transaction.to);
                       },
                       child: Padding(
                         padding:
@@ -269,7 +269,7 @@ class RecentTransfers extends StatelessWidget {
                   Text(
                     DateFormat('d MMM, y hh:mm a').format(
                         DateTime.fromMillisecondsSinceEpoch(
-                            nanosToMillis(transaction.timestamp))),
+                            transaction.timestamp.toInt())),
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 12,

@@ -1,36 +1,54 @@
+/**
+ * Copyright (C) 2025 Fusion Wallet
+ * 
+ * This file is part of Fusion Wallet.
+ * 
+ * Fusion Wallet is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Fusion Wallet is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Fusion Wallet.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 use std::{
-    borrow::BorrowMut,
     str::FromStr,
-    sync::{Arc, Mutex, Once},
+    sync::{Arc},
 };
 
 use anyhow::{bail, Error, Ok};
 use bip32::{
-    secp256k1::ecdsa::{SigningKey, VerifyingKey},
-    ChildNumber, DerivationPath, ExtendedPrivateKey, ExtendedPublicKey, PrivateKey, XPrv,
+    secp256k1::ecdsa::{SigningKey},
+    DerivationPath, ExtendedPrivateKey, XPrv,
 };
 use bip39::{Mnemonic, Seed};
-use bitcoin::NetworkKind;
+// use bitcoin::NetworkKind;
 use candid::Principal;
 use flutter_rust_bridge::frb;
 use ic_agent::{identity::Secp256k1Identity, Identity};
+use ic_ledger_types::AccountIdentifier;
 use k256::{
     ecdsa::Signature,
     sha2::{Digest, Sha256},
     SecretKey,
 };
+use reqwest::Client;
 use serde::{Deserialize, Serialize};
 
 use super::{
-    constants::IC_HOST_URL,
-    utils::{AccountIdentifier, Subaccount},
-    wallet_service::ICWalletService,
+    constants::IC_HOST_URL, http_service::HttpWalletService, ic_wallet_service::ICWalletService
 };
-// use lazy_static::lazy_static;
+use lazy_static::lazy_static;
 
-// lazy_static! {
-//     static ref CLIENT: Arc<reqwest::Client> = Arc::new(reqwest::Client::new());
-// }
+lazy_static! {
+    static ref CLIENT: Arc<reqwest::Client> = Arc::new(reqwest::Client::new());
+}
 
 pub fn generate_seed_phrase() -> String {
     let mnenmomic = Mnemonic::new(bip39::MnemonicType::Words12, bip39::Language::English);
@@ -88,24 +106,26 @@ impl Wallet {
         let mnemonic = Mnemonic::from_phrase(&seed_phrase, bip39::Language::English)?;
         let seed = Seed::new(&mnemonic, "");
         let root = XPrv::new(seed.clone())?;
+       
         Ok(Self {
             seed: Some(seed),
-            key: root,
+            key: root
         })
     }
 
     fn from_private_key(key: ExtendedPrivateKey<SigningKey>) -> Self {
-        Wallet { key, seed: None }
+        
+        Wallet { key, seed: None}
     }
 
-    #[flutter_rust_bridge::frb(sync)]
-    pub fn to_bitcoin_address(&self) -> anyhow::Result<String> {
-        let pk = self.key.public_key().to_bytes();
-        let bpk = bitcoin::PublicKey::from_slice(&pk).unwrap();
-        let b_addr = bitcoin::Address::p2pkh(bpk, NetworkKind::Main);
+    // #[flutter_rust_bridge::frb(sync)]
+    // pub fn to_bitcoin_address(&self) -> anyhow::Result<String> {
+    //     let pk = self.key.public_key().to_bytes();
+    //     let bpk = bitcoin::PublicKey::from_slice(&pk).unwrap();
+    //     let b_addr = bitcoin::Address::p2pkh(bpk, NetworkKind::Main);
 
-        Ok(b_addr.to_string())
-    }
+    //     Ok(b_addr.to_string())
+    // }
 
     #[flutter_rust_bridge::frb(sync)]
     pub fn to_icp_principal(&self) -> anyhow::Result<String> {
@@ -120,7 +140,7 @@ impl Wallet {
     pub fn to_account_identifier(&self) -> anyhow::Result<String> {
         let principal_str = self.to_icp_principal()?;
         let owner = Principal::from_text(principal_str)?;
-        let account_id = AccountIdentifier::new(&owner, &Subaccount([0; 32]));
+        let account_id = AccountIdentifier::new(&owner, &ic_ledger_types::Subaccount([0; 32]));
         Ok(account_id.to_hex())
     }
 
@@ -131,11 +151,14 @@ impl Wallet {
         let agent = ic_agent::Agent::builder()
             .with_url(IC_HOST_URL)
             .with_identity(identity)
+            .with_arc_http_middleware(CLIENT.clone())
             .build()?;
         let arc_agent = Arc::new(agent);
         let service = ICWalletService::new(arc_agent);
         Ok(service)
     }
+
+
 
     fn ascii_to_hardened_derivation_path(input: &str) -> anyhow::Result<DerivationPath> {
         let path_string = input
@@ -194,9 +217,7 @@ impl IWalletService for Wallet {
     }
 }
 
-pub struct WalletContext {
-    pub seed_phrase: String,
-}
+pub struct WalletContext {}
 
 impl WalletContext {
     #[flutter_rust_bridge::frb(sync)]
@@ -220,9 +241,9 @@ impl WalletContext {
                 token_decimal: Some(8),
                 image_url: Some("assets/images/icp.png".to_string()),
                 token_name: "Internet Computer".to_string(),
-                index_canister: None,
+                index_canister: Some("qhbym-qaaaa-aaaaa-aaafq-cai".to_string()),
                 transfer_fee: 10000,
-                gov_canister: None
+                gov_canister: Some("rrkah-fqaaa-aaaaa-aaaaq-cai".to_string())
             },
             WalletToken {
                 symbol: "ckETH".to_string(),
@@ -274,6 +295,17 @@ impl WalletContext {
     #[flutter_rust_bridge::frb(sync)]
     pub fn get_all_supported_tokens() -> Vec<WalletToken> {
         vec![
+            WalletToken {
+                symbol: "ICP".to_string(),
+                network: WalletTokenNetWork::InternetComputer,
+                token_address: "ryjl3-tyaaa-aaaaa-aaaba-cai".to_string(),
+                token_decimal: Some(8),
+                image_url: Some("assets/images/icp.png".to_string()),
+                token_name: "Internet Computer".to_string(),
+                index_canister: Some("qhbym-qaaaa-aaaaa-aaafq-cai".to_string()),
+                transfer_fee: 10000,
+                gov_canister: Some("rrkah-fqaaa-aaaaa-aaaaq-cai".to_string())
+            },
             WalletToken {
                 symbol: "ckBTC".to_string(),
                 network: WalletTokenNetWork::InternetComputer,
@@ -793,6 +825,11 @@ impl WalletContext {
     }
 
     #[flutter_rust_bridge::frb(sync)]
+    pub fn create_http_service() -> HttpWalletService {
+        HttpWalletService::new(CLIENT.clone())
+    }
+
+    #[flutter_rust_bridge::frb(sync)]
     pub fn verify_mnemonic(mnemonic: &str) -> bool {
         let result = Mnemonic::validate(mnemonic, bip39::Language::English);
         result.is_ok()
@@ -801,6 +838,12 @@ impl WalletContext {
     #[flutter_rust_bridge::frb(sync)]
     pub fn verify_principal(text: &str) -> bool {
         let result = Principal::from_text(text);
+        result.is_ok()
+    }
+
+    #[flutter_rust_bridge::frb(sync)]
+    pub fn verify_account_id(text: &str) -> bool {
+        let result = AccountIdentifier::from_hex(text);
         result.is_ok()
     }
 }

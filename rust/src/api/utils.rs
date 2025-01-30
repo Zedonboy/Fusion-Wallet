@@ -68,86 +68,37 @@ impl TokenMetadata {
 }
 
 pub(super) fn format_amount(amount: &Nat, decimals: u8) -> String {
-    let mut amount_str = amount.to_string();
+
+    let value: u128 = amount.0.clone().try_into().unwrap();
+    if decimals == 0 {
+        return value.to_string();
+    }
+
+    let divisor = 10u128.pow(decimals as u32);
+    let integer_part = value / divisor;
+    let fractional_part = value % divisor;
+
+    // If fractional part is 0, return just the integer part
+    if fractional_part == 0 {
+        return integer_part.to_string();
+    }
+
+    // Convert fractional part to string and pad with leading zeros if necessary
+    let mut fractional_str = fractional_part.to_string();
+    let padding_needed = decimals as usize - fractional_str.len();
     
-    // Handle zero amount
-    if amount == &Nat::from(0u8) {
-        return "0".to_string();
+    if padding_needed > 0 {
+        fractional_str = "0".repeat(padding_needed) + &fractional_str;
     }
 
-    // Add leading zeros if needed
-    while amount_str.len() <= decimals as usize {
-        amount_str.insert(0, '0');
-    }
-    
-    // Insert decimal point
-    let decimal_idx = amount_str.len() - decimals as usize;
-    amount_str.insert(decimal_idx, '.');
-    
-    // Remove trailing zeros
-    while amount_str.ends_with('0') && amount_str.contains('.') {
-        amount_str.pop();
-    }
-    // Remove decimal if not needed
-    if amount_str.ends_with('.') {
-        amount_str.pop();
+    // Trim trailing zeros
+    while fractional_str.ends_with('0') {
+        fractional_str.pop();
     }
 
-    // If number starts with decimal, add leading zero
-    if amount_str.starts_with('.') {
-        amount_str.insert(0, '0');
+    if fractional_str.is_empty() {
+        integer_part.to_string()
+    } else {
+        format!("{}.{}", integer_part, fractional_str)
     }
-    
-    amount_str
-}
-
-/// Subaccount is an arbitrary 32-byte byte array.
-/// Ledger uses subaccounts to compute account address, which enables one
-/// principal to control multiple ledger accounts.
-#[derive(
-    CandidType, Serialize, Deserialize, Clone, Copy, Hash, Debug, PartialEq, Eq, PartialOrd, Ord,
-)]
-pub(super) struct Subaccount(pub [u8; 32]);
-
-impl From<Principal> for Subaccount {
-    fn from(principal: Principal) -> Self {
-        let mut subaccount = [0; 32];
-        let principal = principal.as_slice();
-        subaccount[0] = principal.len().try_into().unwrap();
-        subaccount[1..1 + principal.len()].copy_from_slice(principal);
-        Subaccount(subaccount)
-    }
-}
-
-/// AccountIdentifier is a 32-byte array.
-/// The first 4 bytes is a big-endian encoding of a CRC32 checksum of the last 28 bytes.
-#[derive(
-    CandidType, Serialize, Deserialize, Clone, Copy, Hash, Debug, PartialEq, Eq, PartialOrd, Ord,
-)]
-pub(super) struct AccountIdentifier([u8; 32]);
-
-impl AccountIdentifier {
-    /// Creates a new account identifier from a principal and subaccount.
-    pub(super) fn new(owner: &Principal, subaccount: &Subaccount) -> Self {
-        let mut hasher = sha2::Sha224::new();
-        hasher.update(b"\x0Aaccount-id");
-        hasher.update(owner.as_slice());
-        hasher.update(&subaccount.0[..]);
-        let hash: [u8; 28] = hasher.finalize().into();
-
-        let mut hasher = crc32fast::Hasher::new();
-        hasher.update(&hash);
-        let crc32_bytes = hasher.finalize().to_be_bytes();
-
-        let mut result = [0u8; 32];
-        result[0..4].copy_from_slice(&crc32_bytes[..]);
-        result[4..32].copy_from_slice(hash.as_ref());
-        Self(result)
-    }
-
-    /// Convert AccountIdentifier into hex string.
-    pub(super) fn to_hex(&self) -> String {
-        hex::encode(self.0)
-    }
-
 }

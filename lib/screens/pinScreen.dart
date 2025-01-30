@@ -1,3 +1,14 @@
+/*
+ * Fusion Wallet - A non-custodial cryptocurrency wallet
+ * Copyright (C) 2025 Fusion Wallet
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ */
+
+
 import 'package:credential_manager/credential_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -42,10 +53,9 @@ class _PinScreenState extends State<PinScreen>
 
     if (widget.isSignin) {
       _checkCredentials();
-    } else {
+    } else if(appController.enabledBiometric.value) {
       _checkBiometrics();
     }
-
   }
 
   Future<void> _checkBiometrics() async {
@@ -67,16 +77,13 @@ class _PinScreenState extends State<PinScreen>
     final CredentialManager credentialManager = CredentialManager();
     if (!credentialManager.isSupportedPlatform) return;
     try {
-       await credentialManager.init(
+      await credentialManager.init(
         preferImmediatelyAvailableCredentials: false,
       );
 
-      
       Credentials credential = await credentialManager.getCredentials(
         fetchOptions: FetchOptionsAndroid(passwordCredential: true),
       );
-
-     
 
       if (credential.passwordCredential == null) return;
       var pin = credential.passwordCredential!.password;
@@ -200,7 +207,9 @@ class _PinScreenState extends State<PinScreen>
                     ),
                   ],
                 ),
-                SizedBox(height: 32,),
+                SizedBox(
+                  height: 32,
+                ),
                 Column(
                   children: [
                     CustomNumPad(
@@ -228,17 +237,20 @@ class _PinScreenState extends State<PinScreen>
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          getTranslated(context, "Forgot PIN?") ??
-                              "Forgot PIN?",
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                            color: headingColor.value,
-                            fontFamily: "dmsans",
+                        TextButton(
+                          onPressed: () {
+                            Get.back();
+                          },
+                          child: Text(
+                            getTranslated(context, "Cancel") ?? "Cancel",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: primaryAltColor.value,
+                              fontFamily: "dmsans",
+                            ),
                           ),
-                        ),
+                        )
                       ],
                     ),
                     SizedBox(

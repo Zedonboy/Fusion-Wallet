@@ -1,3 +1,14 @@
+/*
+ * Fusion Wallet - A non-custodial cryptocurrency wallet
+ * Copyright (C) 2025 Fusion Wallet
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ */
+
+
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -16,7 +27,7 @@ import 'package:fusion_wallet/localization/language_constants.dart';
 import 'package:fusion_wallet/screens/TokenCalculator.dart';
 import 'package:fusion_wallet/screens/sendScreens/conformationScreen.dart';
 import 'package:fusion_wallet/src/rust/api/wallet.dart';
-import 'package:fusion_wallet/src/rust/api/wallet_service.dart';
+import 'package:fusion_wallet/src/rust/api/ic_wallet_service.dart';
 import 'package:get/get.dart';
 
 // import '../codeScanner.dart';
@@ -43,7 +54,7 @@ class _SendScreenState extends State<SendScreen> {
     final addr = appController.active_wallet.value!.toIcpPrincipal();
     try {
       final nTxes = await icService?.getLatestTransactions(
-          token: widget.token, accountAddr: addr);
+          token: widget.token, accountAddr: addr, maxResults: 3);
       isLoading.value = false;
       txs.value = nTxes ?? [];
     } catch (err) {
@@ -94,9 +105,9 @@ class _SendScreenState extends State<SendScreen> {
     // Ensure address has correct format based on network
     if (widget.token.network == WalletTokenNetWork.internetComputer) {
       // ICP principal format check
-      if (!WalletContext.verifyPrincipal(text: addressController.text.trim())) {
-        addressError.value = 'Invalid ICP principal format';
-        showToast("Invalid ICP principal format");
+      if (!WalletContext.verifyPrincipal(text: addressController.text.trim()) && !WalletContext.verifyAccountId(text: addressController.text.trim())) {
+        addressError.value = 'Invalid ICP Account format';
+        // showToast("Invalid ICP principal format");
         return;
       }
     }
@@ -351,8 +362,8 @@ class _SendScreenState extends State<SendScreen> {
                   ],
                 ),
                 hasHeader: true,
-                headerText: "Address",
-                hintText: "Enter Address or Principal",
+                headerText: widget.token.tokenAddress == "ryjl3-tyaaa-aaaaa-aaaba-cai" ? "Principal or Account Id" : "Principal",
+                hintText: "Type here",
                 onChange: (val) {
                   setState(() {});
                 },

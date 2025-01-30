@@ -8,12 +8,12 @@
  * (at your option) any later version.
  */
 
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:fusion_wallet/screens/openLink.dart';
+import 'package:fusion_wallet/screens/resetApp.dart';
 import 'package:fusion_wallet/screens/secretRecoveryPhrase.dart';
 import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
@@ -43,16 +43,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
         child: ListView(
           padding: EdgeInsets.symmetric(horizontal: 16),
           children: [
-            SizedBox(height: 16,),
+            SizedBox(
+              height: 16,
+            ),
             Container(
               width: Get.width,
               height: 44,
               decoration: BoxDecoration(color: Colors.black.withOpacity(0)),
               child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  GestureDetector(
+                      onTap: () {
+                        Get.back();
+                      },
+                      child: Icon(
+                        Icons.arrow_back_ios,
+                        color: darkBlueColor.value,
+                        size: 16,
+                      )),
+                  SizedBox(
+                    width: 8,
+                  ),
                   Text(
                     'Settings',
                     textAlign: TextAlign.center,
@@ -63,7 +74,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       fontWeight: FontWeight.w500,
                       height: 0.09,
                     ),
-                  ),
+                  )
                 ],
               ),
             ),
@@ -123,7 +134,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       height: 20,
                                       clipBehavior: Clip.antiAlias,
                                       decoration: BoxDecoration(),
-                                      child: SvgPicture.asset("assets/svg/solar_key-broken.svg"),
+                                      child: SvgPicture.asset(
+                                          "assets/svg/solar_key-broken.svg"),
                                     ),
                                   ],
                                 ),
@@ -147,14 +159,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             height: 24,
                             clipBehavior: Clip.antiAlias,
                             decoration: BoxDecoration(),
-                            child: Icon(Icons.arrow_forward_ios_outlined, size: 18, color: lightTextColor.value),
+                            child: Icon(Icons.arrow_forward_ios_outlined,
+                                size: 18, color: lightTextColor.value),
                           ),
                         ],
                       ),
                     ),
                   ),
                   SizedBox(height: 8),
-                  
                   Container(
                     width: double.infinity,
                     decoration: ShapeDecoration(
@@ -171,7 +183,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   GestureDetector(
                     onTap: () {
                       Get.to(OpenLink(
-                        url: 'https://fusionwallet.me/',
+                        url: 'https://github.com/Zedonboy/Fusion-Wallet/issues',
                         fromPage: 'Help & Support',
                       ));
                     },
@@ -203,7 +215,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       height: 20,
                                       clipBehavior: Clip.antiAlias,
                                       decoration: BoxDecoration(),
-                                      child: SvgPicture.asset("assets/svg/material-symbols_help-outline.svg"),
+                                      child: SvgPicture.asset(
+                                          "assets/svg/material-symbols_help-outline.svg"),
                                     ),
                                   ],
                                 ),
@@ -227,7 +240,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             height: 24,
                             clipBehavior: Clip.antiAlias,
                             decoration: BoxDecoration(),
-                            child: Icon(Icons.arrow_forward_ios_outlined, size: 18, color: lightTextColor.value),
+                            child: Icon(Icons.arrow_forward_ios_outlined,
+                                size: 18, color: lightTextColor.value),
                           ),
                         ],
                       ),
@@ -282,7 +296,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       height: 20,
                                       clipBehavior: Clip.antiAlias,
                                       decoration: BoxDecoration(),
-                                      child: SvgPicture.asset("assets/svg/arrow-3.svg"),
+                                      child: SvgPicture.asset(
+                                          "assets/svg/arrow-3.svg"),
                                     ),
                                   ],
                                 ),
@@ -306,26 +321,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             height: 24,
                             clipBehavior: Clip.antiAlias,
                             decoration: BoxDecoration(),
-                            child: Icon(Icons.arrow_forward_ios_outlined, size: 18, color: lightTextColor.value),
+                            child: Icon(Icons.arrow_forward_ios_outlined,
+                                size: 18, color: lightTextColor.value),
                           ),
                         ],
                       ),
                     ),
                   ),
-                
                 ],
               ),
             ),
             SizedBox(
               height: 24,
             ),
-            
             SizedBox(
               height: 24,
             ),
-
-
-
             Container(
               width: Get.width,
               padding: EdgeInsets.all(16),
@@ -359,16 +370,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         Row(
                           children: [
                             SvgPicture.asset('assets/svg/faceID.svg'),
-                            SizedBox(width: 16,),
+                            SizedBox(
+                              width: 16,
+                            ),
                             Expanded(
                               child: Container(
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Text(
-                                      'Use Face ID',
+                                      'Enable Biometric',
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         color: lightTextColor.value,
@@ -383,15 +397,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       height: 25.0,
                                       valueFontSize: 20.0,
                                       toggleSize: 20.0,
-                                      value: appController.enabledBiometric.value,
+                                      value:
+                                          appController.enabledBiometric.value,
                                       borderRadius: 30.0,
-                                      toggleColor: primaryColor.value,
-                                      activeColor: Color(0xFF242438),
-                                      inactiveColor: Color(0xFF242438),
+                                      toggleColor: lightColor,
+                                      activeColor: primaryAltColor.value,
+                                      inactiveColor: labelColor.value,
                                       padding: 2.0,
                                       showOnOff: false,
                                       onToggle: (val) {
-                                        appController.enabledBiometric.value = val;
+                                        appController.enabledBiometric.value =
+                                            val;
                                         enableBiometric(context, val);
                                       },
                                     ),
@@ -420,12 +436,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   SizedBox(height: 8),
                   GestureDetector(
                     onTap: () {
-                      // Get.to(ResetApp(),transition: Transition.rightToLeft);
+                      Get.to(ResetApp(), transition: Transition.rightToLeft);
                     },
                     child: Row(
                       children: [
                         SvgPicture.asset('assets/svg/resetApp.svg'),
-                        SizedBox(width: 16,),
+                        SizedBox(
+                          width: 16,
+                        ),
                         Expanded(
                           child: Container(
                             clipBehavior: Clip.antiAlias,
@@ -444,8 +462,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   width: double.infinity,
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
                                       Text(
                                         'Reset App',
@@ -464,7 +484,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                         height: 24,
                                         clipBehavior: Clip.antiAlias,
                                         decoration: BoxDecoration(),
-                                        child: Icon(Icons.arrow_forward_ios_outlined, size: 18, color: lightTextColor.value),
+                                        child: Icon(
+                                            Icons.arrow_forward_ios_outlined,
+                                            size: 18,
+                                            color: lightTextColor.value),
                                       ),
                                     ],
                                   ),
@@ -495,7 +518,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
         final bool didAuthenticate = await auth
             .authenticate(
           localizedReason: 'Please authenticate to show account balance',
-          options: const AuthenticationOptions(useErrorDialogs: false, stickyAuth: true),
+          options: const AuthenticationOptions(
+              useErrorDialogs: false, stickyAuth: true),
         )
             .then((value) async {
           if (value == true) {

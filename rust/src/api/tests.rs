@@ -15,10 +15,10 @@ fn test_address_generation() {
 
     let master_wallet = wc;
 
-    let app_result = master_wallet.to_bitcoin_address();
+    // let app_result = master_wallet.to_bitcoin_address();
 
-    assert!(app_result.is_ok(), "Error generating bitcoin address");
-    println!("Bitcoin address: {}", app_result.unwrap().to_lowercase());
+    // assert!(app_result.is_ok(), "Error generating bitcoin address");
+    // println!("Bitcoin address: {}", app_result.unwrap().to_lowercase());
 
     // let app_result = master_wallet.to_evm_address();
     // assert!(app_result.is_ok(), "Error generating Ethereum address");

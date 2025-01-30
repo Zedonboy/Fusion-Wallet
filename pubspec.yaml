@@ -35,7 +35,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   flutter_secure_storage: ^9.1.1
-  cached_network_image: ^3.3.0
+  # cached_network_image: ^3.3.0
   shared_preferences: ^2.2.0
   flutter_svg: ^2.0.10+1
   get: ^4.6.6
@@ -43,12 +43,12 @@ dependencies:
   flutter_switch: ^0.3.2
   qr_flutter: ^4.1.0
   local_auth: ^2.1.8
-  image_picker: ^1.1.2
-  device_info_plus: ^10.1.2
+  # image_picker: ^1.1.2
+  # device_info_plus: ^10.1.2
   permission_handler: ^11.3.1
-  flutter_exif_rotation: ^0.5.1
+  # flutter_exif_rotation: ^0.5.1
   pin_dot: ^1.0.4
-  horizontal_stepper_flutter: ^1.0.3
+  # horizontal_stepper_flutter: ^1.0.3
   rust_lib_fusion_wallet:
     path: rust_builder
   flutter_rust_bridge: 2.7.0
@@ -64,8 +64,11 @@ dependencies:
   encrypt: ^5.0.3
   flutter_animate: ^4.5.2
   flutter_inappwebview: ^6.1.5
-  freezed_annotation: any
+  # freezed_annotation: any
   url_launcher: ^6.3.1
+  package_info_plus: ^8.1.4
+  version: ^3.0.0
+  freezed_annotation: any
 dev_dependencies:
   flutter_test:
     sdk: flutter

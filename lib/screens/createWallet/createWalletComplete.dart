@@ -1,3 +1,14 @@
+/*
+ * Fusion Wallet - A non-custodial cryptocurrency wallet
+ * Copyright (C) 2025 Fusion Wallet
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ */
+
+
 import 'package:credential_manager/credential_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -192,7 +203,7 @@ class _CreateWalletCompleteState extends State<CreateWalletComplete> {
                   SizedBox(
                     width: 311,
                     child: Text(
-                      'ELLAsset cannot recover your wallet should you lose it. You can find your seedphrase in\nSetings > Security & Privacy',
+                      'Fusion Wallet cannot recover your wallet should you lose it. You can find your seedphrase in\nSetings > Security & Privacy',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: labelColorPrimaryShade.value,

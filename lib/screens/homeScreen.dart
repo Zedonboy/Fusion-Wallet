@@ -25,6 +25,7 @@ import 'package:fusion_wallet/screens/sendScreens/sendScreen.dart';
 import 'package:fusion_wallet/screens/settings.dart';
 import 'package:fusion_wallet/screens/tokenScreen.dart';
 import 'package:fusion_wallet/src/rust/api/wallet.dart';
+import 'package:fusion_wallet/types/UpdateChecker.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -46,6 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    UpdateChecker.checkForUpdate(context);
   }
 
   String calc_total_worth() {
@@ -331,13 +333,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   topLeft: Radius.circular(32))),
                           selectToken(onSelect: (token) {
                         Get.back();
-                        var addr = switch (token.network) {
-                          WalletTokenNetWork.bitcoin => appController
-                              .active_wallet.value
-                              ?.toBitcoinAddress(),
-                          WalletTokenNetWork.internetComputer =>
-                            appController.active_wallet.value?.toIcpPrincipal(),
-                        };
+                        var addr = appController.active_wallet.value?.toIcpPrincipal();
 
                         if (addr == null) {
                           showToast("No Address or Principal ID found");

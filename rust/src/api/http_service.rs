@@ -23,7 +23,7 @@ use std::sync::Arc;
 use reqwest::Client;
 use serde_json::Value;
 
-use super::{constants::REPO_GITHUB_TOKEN, wallet::WalletToken};
+use super::{wallet::WalletToken};
 use serde::{Deserialize, Serialize};
 use anyhow::Result;
 
@@ -84,7 +84,6 @@ impl HttpWalletService {
         let response = self.http_client
             .get(url)
             .header("Accept", "application/vnd.github+json")
-            .header("Authorization", format!("Bearer {}", REPO_GITHUB_TOKEN))
             .header("X-GitHub-Api-Version", "2022-11-28")
             .header("User-Agent", "reqwest") // GitHub API requires User-Agent
             .send()

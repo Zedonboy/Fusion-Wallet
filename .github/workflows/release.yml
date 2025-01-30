@@ -96,13 +96,13 @@ jobs:
               build/app/outputs/bundle/release/signed/app-release-signed.aab
 
       - name: Upload Signed APK as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: signed-apk
           path: build/app/outputs/flutter-apk/*-signed.apk
 
       - name: Upload App Bundle as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: app-release.aab
           path: build/app/outputs/bundle/release/signed/app-release-signed.aab
@@ -113,13 +113,13 @@ jobs:
 
     steps:
       - name: Download Signed APK artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: signed-apk
           path: build/apk
 
       - name: Download App Bundle artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: app-release.aab
           path: build/aab

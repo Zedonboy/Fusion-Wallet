@@ -28,6 +28,14 @@ class RecentTransfers extends StatelessWidget {
   });
 
   int nanosToMillis(BigInt nanos) {
+    // Check if the value is already in milliseconds or nanoseconds
+    // Nanosecond timestamps are typically much larger than millisecond ones
+    // A timestamp from 2023 in milliseconds would be around 1.7 trillion
+    // If the value is less than 2 trillion, assume it's already in milliseconds
+    if (nanos < BigInt.from(2000000000000)) {
+      return nanos.toInt();
+    }
+    // Otherwise, convert from nanoseconds to milliseconds
     return (nanos ~/ BigInt.from(1000000)).toInt();
   }
 
@@ -268,7 +276,7 @@ class RecentTransfers extends StatelessWidget {
                   Text(
                     DateFormat('d MMM, y hh:mm a').format(
                         DateTime.fromMillisecondsSinceEpoch(
-                            transaction.timestamp.toInt())),
+                            nanosToMillis(transaction.timestamp))),
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 12,

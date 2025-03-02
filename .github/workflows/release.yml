@@ -51,33 +51,33 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      # - name: Sign APK
-      #   run: |
-      #     echo "${{ secrets.ANDROID_KEYSTORE }}" | base64 -d > keystore.jks
-      #     echo "${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" > keystore_password.txt
-      #     echo "${{ secrets.ANDROID_KEY_ALIAS }}" > key_alias.txt
-      #     echo "${{ secrets.ANDROID_KEY_PASSWORD }}" > key_password.txt
+      - name: Sign APK
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE }}" | base64 -d > keystore.jks
+          echo "${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" > keystore_password.txt
+          echo "${{ secrets.ANDROID_KEY_ALIAS }}" > key_alias.txt
+          echo "${{ secrets.ANDROID_KEY_PASSWORD }}" > key_password.txt
 
-      #     LATEST_BUILD_TOOLS=$(ls $ANDROID_HOME/build-tools | sort -V | tail -n 1)
-      #     ZIPALIGN="$ANDROID_HOME/build-tools/$LATEST_BUILD_TOOLS/zipalign"
+          LATEST_BUILD_TOOLS=$(ls $ANDROID_HOME/build-tools | sort -V | tail -n 1)
+          ZIPALIGN="$ANDROID_HOME/build-tools/$LATEST_BUILD_TOOLS/zipalign"
 
-      #     for apk in build/app/outputs/flutter-apk/*-release.apk; do
-      #       [ -f "$apk" ] || continue
+          # for apk in build/app/outputs/flutter-apk/*-release.apk; do
+          #   [ -f "$apk" ] || continue
       
-      #       filename=$(basename "$apk")
-      #       signed_name="${filename%.*}-signed.apk"
+          #   filename=$(basename "$apk")
+          #   signed_name="${filename%.*}-signed.apk"
       
-      #       jarsigner -verbose \
-      #         -keystore keystore.jks \
-      #         -storepass $(cat keystore_password.txt) \
-      #         -keypass $(cat key_password.txt) \
-      #         "$apk" \
-      #         $(cat key_alias.txt)
+          #   jarsigner -verbose \
+          #     -keystore keystore.jks \
+          #     -storepass $(cat keystore_password.txt) \
+          #     -keypass $(cat key_password.txt) \
+          #     "$apk" \
+          #     $(cat key_alias.txt)
 
-      #       $ZIPALIGN -v 4 \
-      #         "$apk" \
-      #         "build/app/outputs/flutter-apk/$signed_name"
-      #     done
+          #   $ZIPALIGN -v 4 \
+          #     "$apk" \
+          #     "build/app/outputs/flutter-apk/$signed_name"
+          # done
       - name: Sign App Bundle
         run: |
             # We can reuse the keystore and password files from APK signing

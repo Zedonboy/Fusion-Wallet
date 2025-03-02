@@ -8,8 +8,6 @@
  * (at your option) any later version.
  */
 
-
-
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -48,6 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     UpdateChecker.checkForUpdate(context);
+    appController.check_token_balances();
   }
 
   String calc_total_worth() {
@@ -115,18 +114,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   InkWell(
                     onTap: () {
-                      Get.to(SettingsScreen());
+                      // Get.to(SettingsScreen());
                     },
                     child: Row(
                       children: [
-                        Icon(
-                          Icons.settings,
-                          color: headingColor.value,
-                          size: 24.0,
-                          semanticLabel: 'setting',
-                        ),
+                        
                         Text(
-                          "Settings",
+                          "Main",
                           textAlign: TextAlign.start,
                           style: TextStyle(
                             fontSize: 14,
@@ -333,7 +327,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   topLeft: Radius.circular(32))),
                           selectToken(onSelect: (token) {
                         Get.back();
-                        var addr = appController.active_wallet.value?.toIcpPrincipal();
+                        var addr =
+                            appController.active_wallet.value?.toIcpPrincipal();
 
                         if (addr == null) {
                           showToast("No Address or Principal ID found");

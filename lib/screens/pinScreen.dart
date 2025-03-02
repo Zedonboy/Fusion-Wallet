@@ -8,7 +8,6 @@
  * (at your option) any later version.
  */
 
-
 import 'package:credential_manager/credential_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -53,7 +52,7 @@ class _PinScreenState extends State<PinScreen>
 
     if (widget.isSignin) {
       _checkCredentials();
-    } else if(appController.enabledBiometric.value) {
+    } else if (appController.enabledBiometric.value) {
       _checkBiometrics();
     }
   }

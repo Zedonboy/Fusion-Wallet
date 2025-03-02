@@ -1,3 +1,14 @@
+/*
+ * Fusion Wallet - A non-custodial cryptocurrency wallet
+ * Copyright (C) 2025 Fusion Wallet
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ */
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fusion_wallet/common_widgets/bottomRectangularbtn.dart';
@@ -48,7 +59,8 @@ class _SecretRecoveryPharaseState extends State<SecretRecoveryPharase> {
                           padding: EdgeInsets.all(6),
                           decoration: ShapeDecoration(
                             color: cardcolor.value,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8)),
                           ),
                           child: Icon(
                             Icons.arrow_back_ios_new,
@@ -84,7 +96,8 @@ class _SecretRecoveryPharaseState extends State<SecretRecoveryPharase> {
                         color: Color(0x33FF5C5C),
                         shape: OvalBorder(),
                       ),
-                      child: SvgPicture.asset("assets/svg/mingcute_warning-line.svg"),
+                      child: SvgPicture.asset(
+                          "assets/svg/mingcute_warning-line.svg"),
                     ),
                     SizedBox(
                       height: 24,
@@ -132,19 +145,22 @@ class _SecretRecoveryPharaseState extends State<SecretRecoveryPharase> {
                                   clipBehavior: Clip.antiAlias,
                                   decoration: ShapeDecoration(
                                     color: Color(0x19FF5C5C),
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8)),
                                   ),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
                                       Container(
                                         width: 16,
                                         height: 16,
                                         clipBehavior: Clip.antiAlias,
                                         decoration: BoxDecoration(),
-                                        child: SvgPicture.asset("assets/svg/warning1.svg"),
+                                        child: SvgPicture.asset(
+                                            "assets/svg/warning1.svg"),
                                       ),
                                     ],
                                   ),
@@ -154,8 +170,10 @@ class _SecretRecoveryPharaseState extends State<SecretRecoveryPharase> {
                                   child: Container(
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         SizedBox(
                                           width: double.infinity,
@@ -207,19 +225,22 @@ class _SecretRecoveryPharaseState extends State<SecretRecoveryPharase> {
                                   clipBehavior: Clip.antiAlias,
                                   decoration: ShapeDecoration(
                                     color: Color(0x19FF5C5C),
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8)),
                                   ),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
                                       Container(
                                         width: 16,
                                         height: 16,
                                         clipBehavior: Clip.antiAlias,
                                         decoration: BoxDecoration(),
-                                        child: SvgPicture.asset("assets/svg/warning2.svg"),
+                                        child: SvgPicture.asset(
+                                            "assets/svg/warning2.svg"),
                                       ),
                                     ],
                                   ),
@@ -229,8 +250,10 @@ class _SecretRecoveryPharaseState extends State<SecretRecoveryPharase> {
                                   child: Container(
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         SizedBox(
                                           width: double.infinity,
@@ -282,19 +305,22 @@ class _SecretRecoveryPharaseState extends State<SecretRecoveryPharase> {
                                   clipBehavior: Clip.antiAlias,
                                   decoration: ShapeDecoration(
                                     color: Color(0x19FF5C5C),
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8)),
                                   ),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
                                       Container(
                                         width: 16,
                                         height: 16,
                                         clipBehavior: Clip.antiAlias,
                                         decoration: BoxDecoration(),
-                                        child: SvgPicture.asset("assets/svg/warning3.svg"),
+                                        child: SvgPicture.asset(
+                                            "assets/svg/warning3.svg"),
                                       ),
                                     ],
                                   ),
@@ -304,8 +330,10 @@ class _SecretRecoveryPharaseState extends State<SecretRecoveryPharase> {
                                   child: Container(
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         SizedBox(
                                           width: double.infinity,
@@ -336,9 +364,18 @@ class _SecretRecoveryPharaseState extends State<SecretRecoveryPharase> {
                   children: [
                     BottomRectangularBtn(
                         onTapFunc: () {
-                          Get.to(PinScreen(onPinConfirm: (phrase) {
-                            Navigator.pushReplacement(context, PageTransition(duration: Duration(milliseconds: 100), type: PageTransitionType.fade, child: SecretRecoveryPharase2(mnemonic: phrase,)));
-                          }, isSignin: true));
+                          Get.to(PinScreen(
+                              onPinConfirm: (phrase) {
+                                Navigator.pushReplacement(
+                                    context,
+                                    PageTransition(
+                                        duration: Duration(milliseconds: 100),
+                                        type: PageTransitionType.fade,
+                                        child: SecretRecoveryPharase2(
+                                          mnemonic: phrase,
+                                        )));
+                              },
+                              isSignin: true));
                           // if (appController.enabledBiometric.value == true) {
                           //   Get.to(VerifyPassword(fromPage: 'send'))!.then((value) {
                           //     if (value == 'verified') {

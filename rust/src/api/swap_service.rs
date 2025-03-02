@@ -1,95 +1,210 @@
 use std::sync::Arc;
 
 use candid::{decode_args, encode_one, Decode, Encode, Nat, Principal, CandidType, Deserialize};
-use flutter_rust_bridge::frb;
 use ic_agent::Agent;
 
-use super::wallet::WalletToken;
+#[derive(CandidType, Deserialize)]
+pub(super) enum TxId { TransactionId(String), BlockIndex(candid::Nat) }
 
-#[derive(CandidType, Deserialize, Clone)]
-pub(super) struct SwapArgs {
-    pub(super) receive_token: String,
-    pub(super) max_slippage: Option<f64>,
-    pub(super) pay_amount: Nat,
-    pub(super) referred_by: Option<String>,
-    pub(super) receive_amount: Option<Nat>,
-    pub(super) receive_address: Option<String>,
-    pub(super) pay_token: String,
-    pub(super) pay_tx_id: Option<TxId>,
+#[derive(CandidType, Deserialize)]
+pub(super) struct IcTransferReply {
+  pub(super) is_send: bool,
+  pub(super) block_index: candid::Nat,
+  pub(super) chain: String,
+  pub(super) canister_id: String,
+  pub(super) amount: candid::Nat,
+  pub(super) symbol: String,
 }
 
-#[derive(CandidType, Deserialize, Clone)]
-pub(super) enum TxId {
-    TransactionId(String),
-    BlockIndex(Nat),
+#[derive(CandidType, Deserialize)]
+pub(super) enum TransferReply { #[serde(rename="IC")] Ic(IcTransferReply) }
+
+#[derive(CandidType, Deserialize)]
+pub(super) struct TransferIdReply { pub(super) transfer_id: u64, pub(super) transfer: TransferReply }
+
+#[derive(CandidType, Deserialize)]
+pub(super) struct SwapArgs {
+  pub(super) receive_token: String,
+  pub(super) max_slippage: Option<f64>,
+  pub(super) pay_amount: candid::Nat,
+  pub(super) referred_by: Option<String>,
+  pub(super) receive_amount: Option<candid::Nat>,
+  pub(super) receive_address: Option<String>,
+  pub(super) pay_token: String,
+  pub(super) pay_tx_id: Option<TxId>,
 }
 
 #[derive(CandidType, Deserialize)]
 pub(super) struct SwapTxReply {
-    pub(super) ts: u64,
-    pub(super) receive_chain: String,
-    pub(super) pay_amount: Nat,
-    pub(super) receive_amount: Nat,
-    pub(super) pay_symbol: String,
-    pub(super) receive_symbol: String,
-    pub(super) receive_address: String,
-    pub(super) pool_symbol: String,
-    pub(super) pay_address: String,
-    pub(super) price: f64,
-    pub(super) pay_chain: String,
-    pub(super) lp_fee: Nat,
-    pub(super) gas_fee: Nat,
+  pub(super) ts: u64,
+  pub(super) receive_chain: String,
+  pub(super) pay_amount: candid::Nat,
+  pub(super) receive_amount: candid::Nat,
+  pub(super) pay_symbol: String,
+  pub(super) receive_symbol: String,
+  pub(super) receive_address: String,
+  pub(super) pool_symbol: String,
+  pub(super) pay_address: String,
+  pub(super) price: f64,
+  pub(super) pay_chain: String,
+  pub(super) lp_fee: candid::Nat,
+  pub(super) gas_fee: candid::Nat,
 }
 
 #[derive(CandidType, Deserialize)]
 pub(super) struct SwapReply {
-    pub(super) ts: u64,
-    pub(super) txs: Vec<SwapTxReply>,
-    pub(super) request_id: u64,
-    pub(super) status: String,
-    pub(super) tx_id: u64,
-    pub(super) transfer_ids: Vec<TransferIdReply>,
-    pub(super) receive_chain: String,
-    pub(super) mid_price: f64,
-    pub(super) pay_amount: Nat,
-    pub(super) receive_amount: Nat,
-    pub(super) claim_ids: Vec<u64>,
-    pub(super) pay_symbol: String,
-    pub(super) receive_symbol: String,
-    pub(super) receive_address: String,
-    pub(super) pay_address: String,
-    pub(super) price: f64,
-    pub(super) pay_chain: String,
-    pub(super) slippage: f64,
+  pub(super) ts: u64,
+  pub(super) txs: Vec<SwapTxReply>,
+  pub(super) request_id: u64,
+  pub(super) status: String,
+  pub(super) tx_id: u64,
+  pub(super) transfer_ids: Vec<TransferIdReply>,
+  pub(super) receive_chain: String,
+  pub(super) mid_price: f64,
+  pub(super) pay_amount: candid::Nat,
+  pub(super) receive_amount: candid::Nat,
+  pub(super) claim_ids: Vec<u64>,
+  pub(super) pay_symbol: String,
+  pub(super) receive_symbol: String,
+  pub(super) receive_address: String,
+  pub(super) pay_address: String,
+  pub(super) price: f64,
+  pub(super) pay_chain: String,
+  pub(super) slippage: f64,
 }
 
 #[derive(CandidType, Deserialize)]
-pub(super) struct TransferIdReply {
-    pub(super) transfer_id: u64,
-    pub(super) transfer: TransferReply,
+pub(super) struct SwapAmountsTxReply {
+  pub(super) receive_chain: String,
+  pub(super) pay_amount: candid::Nat,
+  pub(super) receive_amount: candid::Nat,
+  pub(super) pay_symbol: String,
+  pub(super) receive_symbol: String,
+  pub(super) receive_address: String,
+  pub(super) pool_symbol: String,
+  pub(super) pay_address: String,
+  pub(super) price: f64,
+  pub(super) pay_chain: String,
+  pub(super) lp_fee: candid::Nat,
+  pub(super) gas_fee: candid::Nat,
 }
 
 #[derive(CandidType, Deserialize)]
-pub(super) enum TransferReply {
-    Ic(IcTransferReply),
+pub(super) struct SwapAmountsReply {
+  pub(super) txs: Vec<SwapAmountsTxReply>,
+  pub(super) receive_chain: String,
+  pub(super) mid_price: f64,
+  pub(super) pay_amount: candid::Nat,
+  pub(super) receive_amount: candid::Nat,
+  pub(super) pay_symbol: String,
+  pub(super) receive_symbol: String,
+  pub(super) receive_address: String,
+  pub(super) pay_address: String,
+  pub(super) price: f64,
+  pub(super) pay_chain: String,
+  pub(super) slippage: f64,
 }
 
 #[derive(CandidType, Deserialize)]
-pub(super) struct IcTransferReply {
-    pub(super) is_send: bool,
-    pub(super) block_index: Nat,
-    pub(super) chain: String,
-    pub(super) canister_id: String,
-    pub(super) amount: Nat,
-    pub(super) symbol: String,
+pub(super) struct PoolReply {
+  pub(super) tvl: candid::Nat,
+  pub(super) lp_token_symbol: String,
+  pub(super) name: String,
+  pub(super) lp_fee_0: candid::Nat,
+  pub(super) lp_fee_1: candid::Nat,
+  pub(super) balance_0: candid::Nat,
+  pub(super) balance_1: candid::Nat,
+  pub(super) rolling_24h_volume: candid::Nat,
+  pub(super) rolling_24h_apy: f64,
+  pub(super) address_0: String,
+  pub(super) address_1: String,
+  pub(super) rolling_24h_num_swaps: candid::Nat,
+  pub(super) symbol_0: String,
+  pub(super) symbol_1: String,
+  pub(super) pool_id: u32,
+  pub(super) price: f64,
+  pub(super) chain_0: String,
+  pub(super) chain_1: String,
+  pub(super) is_removed: bool,
+  pub(super) symbol: String,
+  pub(super) rolling_24h_lp_fee: candid::Nat,
+  pub(super) lp_fee_bps: u8,
 }
 
-pub(super) struct ICSwapService {
+#[derive(CandidType, Deserialize)]
+pub(super) struct PoolsReply {
+  pub(super) total_24h_lp_fee: candid::Nat,
+  pub(super) total_tvl: candid::Nat,
+  pub(super) total_24h_volume: candid::Nat,
+  pub(super) pools: Vec<PoolReply>,
+  pub(super) total_24h_num_swaps: candid::Nat,
+}
+
+#[derive(CandidType, Deserialize)]
+pub(super) struct IcTokenReply {
+  pub(super) fee: candid::Nat,
+  pub(super) decimals: u8,
+  pub(super) token_id: u32,
+  pub(super) chain: String,
+  pub(super) name: String,
+  pub(super) canister_id: String,
+  pub(super) icrc1: bool,
+  pub(super) icrc2: bool,
+  pub(super) icrc3: bool,
+  pub(super) is_removed: bool,
+  pub(super) symbol: String,
+}
+
+#[derive(CandidType, Deserialize)]
+pub(super) struct LpTokenReply {
+  pub(super) fee: candid::Nat,
+  pub(super) decimals: u8,
+  pub(super) token_id: u32,
+  pub(super) chain: String,
+  pub(super) name: String,
+  pub(super) address: String,
+  pub(super) pool_id_of: u32,
+  pub(super) is_removed: bool,
+  pub(super) total_supply: candid::Nat,
+  pub(super) symbol: String,
+}
+
+#[derive(CandidType, Deserialize)]
+pub(super) enum TokenReply {
+  #[serde(rename="IC")]
+  Ic(IcTokenReply),
+  #[serde(rename="LP")]
+  Lp(LpTokenReply),
+}
+
+#[derive(CandidType, Deserialize)]
+pub(super) struct LpBalancesReply {
+  pub(super) ts: u64,
+  pub(super) usd_balance: f64,
+  pub(super) balance: f64,
+  pub(super) name: String,
+  pub(super) amount_0: f64,
+  pub(super) amount_1: f64,
+  pub(super) address_0: String,
+  pub(super) address_1: String,
+  pub(super) symbol_0: String,
+  pub(super) symbol_1: String,
+  pub(super) usd_amount_0: f64,
+  pub(super) usd_amount_1: f64,
+  pub(super) chain_0: String,
+  pub(super) chain_1: String,
+  pub(super) symbol: String,
+}
+
+#[derive(CandidType, Deserialize)]
+pub(super) enum UserBalancesReply { #[serde(rename="LP")] Lp(LpBalancesReply) }
+
+pub(crate) struct KongSwapService {
     ic_agent: Arc<Agent>,
     swap_canister_id: Principal,
 }
 
-impl ICSwapService {
+impl KongSwapService {
     pub(super) fn new(ic_agent: Arc<Agent>, swap_canister_id: Principal) -> Self {
         Self {
             ic_agent,
@@ -127,7 +242,7 @@ impl ICSwapService {
         let swap_canister = self.ic_agent.query(
             &self.swap_canister_id,
             "swap_amounts"
-        ).with_arg(Encode!(&(pay_token, pay_amount, receive_token))?);
+        ).with_arg(Encode!(&pay_token, &pay_amount, &receive_token)?);
 
         let result = swap_canister
             .call()
@@ -200,129 +315,3 @@ impl ICSwapService {
     }
 }
 
-// Additional types needed for the service
-#[derive(CandidType, Deserialize)]
-pub(super) struct SwapAmountsReply {
-    pub(super) txs: Vec<SwapAmountsTxReply>,
-    pub(super) receive_chain: String,
-    pub(super) mid_price: f64,
-    pub(super) pay_amount: Nat,
-    pub(super) receive_amount: Nat,
-    pub(super) pay_symbol: String,
-    pub(super) receive_symbol: String,
-    pub(super) receive_address: String,
-    pub(super) pay_address: String,
-    pub(super) price: f64,
-    pub(super) pay_chain: String,
-    pub(super) slippage: f64,
-}
-
-#[derive(CandidType, Deserialize)]
-pub(super) struct SwapAmountsTxReply {
-    pub(super) receive_chain: String,
-    pub(super) pay_amount: Nat,
-    pub(super) receive_amount: Nat,
-    pub(super) pay_symbol: String,
-    pub(super) receive_symbol: String,
-    pub(super) receive_address: String,
-    pub(super) pool_symbol: String,
-    pub(super) pay_address: String,
-    pub(super) price: f64,
-    pub(super) pay_chain: String,
-    pub(super) lp_fee: Nat,
-    pub(super) gas_fee: Nat,
-}
-
-#[derive(CandidType, Deserialize)]
-pub(super) struct PoolsReply {
-    pub(super) total_24h_lp_fee: Nat,
-    pub(super) total_tvl: Nat,
-    pub(super) total_24h_volume: Nat,
-    pub(super) pools: Vec<PoolReply>,
-    pub(super) total_24h_num_swaps: Nat,
-}
-
-#[derive(CandidType, Deserialize)]
-pub(super) struct PoolReply {
-    pub(super) tvl: Nat,
-    pub(super) lp_token_symbol: String,
-    pub(super) name: String,
-    pub(super) lp_fee_0: Nat,
-    pub(super) lp_fee_1: Nat,
-    pub(super) balance_0: Nat,
-    pub(super) balance_1: Nat,
-    pub(super) rolling_24h_volume: Nat,
-    pub(super) rolling_24h_apy: f64,
-    pub(super) address_0: String,
-    pub(super) address_1: String,
-    pub(super) rolling_24h_num_swaps: Nat,
-    pub(super) symbol_0: String,
-    pub(super) symbol_1: String,
-    pub(super) pool_id: u32,
-    pub(super) price: f64,
-    pub(super) chain_0: String,
-    pub(super) chain_1: String,
-    pub(super) is_removed: bool,
-    pub(super) symbol: String,
-    pub(super) rolling_24h_lp_fee: Nat,
-    pub(super) lp_fee_bps: u8,
-}
-
-#[derive(CandidType, Deserialize)]
-pub(super) enum TokenReply {
-    Ic(IcTokenReply),
-    Lp(LpTokenReply),
-}
-
-#[derive(CandidType, Deserialize)]
-pub(super) struct IcTokenReply {
-    pub(super) fee: Nat,
-    pub(super) decimals: u8,
-    pub(super) token_id: u32,
-    pub(super) chain: String,
-    pub(super) name: String,
-    pub(super) canister_id: String,
-    pub(super) icrc1: bool,
-    pub(super) icrc2: bool,
-    pub(super) icrc3: bool,
-    pub(super) is_removed: bool,
-    pub(super) symbol: String,
-}
-
-#[derive(CandidType, Deserialize)]
-pub(super) struct LpTokenReply {
-    pub(super) fee: Nat,
-    pub(super) decimals: u8,
-    pub(super) token_id: u32,
-    pub(super) chain: String,
-    pub(super) name: String,
-    pub(super) address: String,
-    pub(super) pool_id_of: u32,
-    pub(super) is_removed: bool,
-    pub(super) total_supply: Nat,
-    pub(super) symbol: String,
-}
-
-#[derive(CandidType, Deserialize)]
-pub(super) enum UserBalancesReply {
-    Lp(LpBalancesReply),
-}
-
-#[derive(CandidType, Deserialize)]
-pub(super) struct LpBalancesReply {
-    pub(super) ts: u64,
-    pub(super) usd_balance: f64,
-    pub(super) balance: f64,
-    pub(super) name: String,
-    pub(super) amount_0: f64,
-    pub(super) amount_1: f64,
-    pub(super) address_0: String,
-    pub(super) address_1: String,
-    pub(super) symbol_0: String,
-    pub(super) symbol_1: String,
-    pub(super) usd_amount_0: f64,
-    pub(super) usd_amount_1: f64,
-    pub(super) chain_0: String,
-    pub(super) chain_1: String,
-    pub(super) symbol: String,
-}

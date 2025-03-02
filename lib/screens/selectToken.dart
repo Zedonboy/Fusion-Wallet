@@ -1,3 +1,14 @@
+/*
+ * Fusion Wallet - A non-custodial cryptocurrency wallet
+ * Copyright (C) 2025 Fusion Wallet
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ */
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_switch/flutter_switch.dart';
@@ -32,10 +43,10 @@ class _SelectTokenScreenState extends State<SelectTokenScreen> {
 
     //Simulate network delay
     queryFuture = Future.microtask(() {
-      
       filteredTokens.value = all_tokens
           .where((token) =>
-              token.symbol.toLowerCase().contains(query.toLowerCase()) || token.tokenName.toLowerCase().contains(query.toLowerCase()))
+              token.symbol.toLowerCase().contains(query.toLowerCase()) ||
+              token.tokenName.toLowerCase().contains(query.toLowerCase()))
           .toList();
       isSearching.value = false;
     });
@@ -44,11 +55,9 @@ class _SelectTokenScreenState extends State<SelectTokenScreen> {
 
   @override
   void initState() {
-     super.initState();
+    super.initState();
     filteredTokens.value = all_tokens;
-   
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +87,8 @@ class _SelectTokenScreenState extends State<SelectTokenScreen> {
                         width: 8,
                       ),
                       Text(
-                        getTranslated(context, "Manage Token") ?? "Manage Token",
+                        getTranslated(context, "Manage Token") ??
+                            "Manage Token",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 15,
@@ -107,7 +117,6 @@ class _SelectTokenScreenState extends State<SelectTokenScreen> {
                       )),
                     ),
                   )
-                  
                 ],
               ),
               SizedBox(height: 16),
@@ -115,15 +124,15 @@ class _SelectTokenScreenState extends State<SelectTokenScreen> {
               // Search Input
               InputFields(
                 textController: searchController,
-               icon: isSearching.value
-                ? SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: primaryAltColor.value,
-                    ))
-                : Image.asset("assets/images/Search.png"),
+                icon: isSearching.value
+                    ? SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: primaryAltColor.value,
+                        ))
+                    : Image.asset("assets/images/Search.png"),
                 onChange: (query) => performSearch(query),
                 hintText: "Search tokens",
               ),
@@ -132,92 +141,95 @@ class _SelectTokenScreenState extends State<SelectTokenScreen> {
               // Token List
               Expanded(
                 child: Obx(() => ListView.separated(
-                  itemCount: filteredTokens.length,
-                  separatorBuilder: (context, index) => SizedBox(height: 12),
-                  itemBuilder: (context, index) {
-                    final token = filteredTokens[index];
-                    final tokenAddress = token.tokenAddress;
+                      itemCount: filteredTokens.length,
+                      separatorBuilder: (context, index) =>
+                          SizedBox(height: 12),
+                      itemBuilder: (context, index) {
+                        final token = filteredTokens[index];
+                        final tokenAddress = token.tokenAddress;
 
-                    return Container(
-                      padding: EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: inputFieldBackgroundColor2.value,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          width: 1,
-                          color: inputFieldBackgroundColor.value,
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
+                        return Container(
+                          padding: EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: inputFieldBackgroundColor2.value,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              width: 1,
+                              color: inputFieldBackgroundColor.value,
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Container(
-                                height: 40,
-                                width: 40,
-                                clipBehavior: Clip.antiAlias,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: lightColor,
-                                ),
-                                child: FutureAdaptiveImage(
-                                    imageUrl: token.imageUrl ??
-                                        "assets/images/usd.png"),
-                              ),
-                              SizedBox(width: 12),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                              Row(
                                 children: [
-                                  Text(
-                                    token.symbol,
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                      color: headingColor.value,
-                                      fontFamily: "dmsans",
+                                  Container(
+                                    height: 40,
+                                    width: 40,
+                                    clipBehavior: Clip.antiAlias,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: lightColor,
                                     ),
+                                    child: FutureAdaptiveImage(
+                                        imageUrl: token.imageUrl ??
+                                            "assets/images/usd.png"),
                                   ),
-                                  Text(
-                                    token.tokenName,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w400,
-                                      color: lightTextColor.value,
-                                      fontFamily: "dmsans",
-                                    ),
+                                  SizedBox(width: 12),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        token.symbol,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          color: headingColor.value,
+                                          fontFamily: "dmsans",
+                                        ),
+                                      ),
+                                      Text(
+                                        token.tokenName,
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w400,
+                                          color: lightTextColor.value,
+                                          fontFamily: "dmsans",
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
+                              FlutterSwitch(
+                                width: 50.0,
+                                height: 25.0,
+                                valueFontSize: 12.0,
+                                toggleSize: 20.0,
+                                activeColor: primaryAltColor.value,
+                                inactiveColor: inputFieldBackgroundColor.value,
+                                value: appController.tokens_map
+                                    .containsKey(tokenAddress),
+                                onToggle: (val) {
+                                  HapticFeedback.lightImpact();
+                                  if (val) {
+                                    appController.addToken(token);
+                                    filteredTokens.refresh();
+                                    showToast("${token.symbol} added");
+                                  } else {
+                                    appController.tokens_map
+                                        .remove(tokenAddress);
+                                    filteredTokens.refresh();
+                                    appController.tokens_map.refresh();
+                                  }
+                                },
+                              ),
                             ],
                           ),
-                          FlutterSwitch(
-                            width: 50.0,
-                            height: 25.0,
-                            valueFontSize: 12.0,
-                            toggleSize: 20.0,
-                            activeColor: primaryAltColor.value,
-                            inactiveColor: inputFieldBackgroundColor.value,
-                            value: appController.tokens_map
-                                .containsKey(tokenAddress),
-                            onToggle: (val) {
-                              HapticFeedback.lightImpact();
-                              if(val) {
-                                appController.addToken(token);
-                                filteredTokens.refresh();
-                                showToast("${token.symbol} added");
-                              } else {
-                                appController.tokens_map.remove(tokenAddress);
-                                filteredTokens.refresh();
-                                appController.tokens_map.refresh();
-                              }
-                            },
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                )),
+                        );
+                      },
+                    )),
               ),
             ],
           ),

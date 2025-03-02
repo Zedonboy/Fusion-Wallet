@@ -8,7 +8,6 @@
  * (at your option) any later version.
  */
 
-
 import 'dart:math';
 
 import 'package:flutter/material.dart';

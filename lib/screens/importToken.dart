@@ -1,3 +1,14 @@
+/*
+ * Fusion Wallet - A non-custodial cryptocurrency wallet
+ * Copyright (C) 2025 Fusion Wallet
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ */
+
+
 import 'package:flutter/material.dart';
 import 'package:fusion_wallet/common_widgets/bottomRectangularbtn.dart';
 import 'package:fusion_wallet/common_widgets/commonWidgets.dart';
@@ -150,22 +161,22 @@ class _ImportTokenState extends State<ImportToken> {
     } else {
       importLoader.value = true;
       final icService = appController.ic_service!;
-      final indexId = indexController.text.trim() == "" ? null : indexController.text;
+      final indexId =
+          indexController.text.trim() == "" ? null : indexController.text;
       final ledgerId = addressController.text;
       try {
-        final walletToken = await icService.getToken(canisterId: ledgerId, indexCanister: indexId);
+        final walletToken = await icService.getToken(
+            canisterId: ledgerId, indexCanister: indexId);
         appController.addToken(walletToken);
         showToast("Imported successfully");
-        
       } catch (e) {
         print(e.toString());
         // printError(info: e.toString(), logFunction: print);
         // showToast("Error trying to fetch token");
-
       }
 
       importLoader.value = false;
-      
+
       // SharedPreferences prefs = await SharedPreferences.getInstance();
       // Map<String, Object> data = {
       //   "decimals": num.parse(decimalController.text),

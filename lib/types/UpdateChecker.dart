@@ -1,21 +1,20 @@
-/**
- * Copyright (C) 2025 Fusion Wallet
- * 
- * This file is part of Fusion Wallet.
- * 
- * Fusion Wallet is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * Fusion Wallet is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with Fusion Wallet.  If not, see <https://www.gnu.org/licenses/>.
- */
+/// Copyright (C) 2025 Fusion Wallet
+///
+/// This file is part of Fusion Wallet.
+///
+/// Fusion Wallet is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU General Public License as published by
+/// the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// Fusion Wallet is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU General Public License for more details.
+///
+/// You should have received a copy of the GNU General Public License
+/// along with Fusion Wallet.  If not, see <https://www.gnu.org/licenses/>.
+library;
 
 import 'package:flutter/material.dart';
 import 'package:fusion_wallet/src/rust/api/wallet.dart';
@@ -25,20 +24,28 @@ import 'package:version/version.dart';
 
 class UpdateChecker {
   // GitHub API endpoint for releases
-  
 
   /// Checks if there's a new version available
   static Future<void> checkForUpdate(BuildContext context) async {
     try {
       // Get current app version
       final packageInfo = await PackageInfo.fromPlatform();
-      final currentVersion = Version.parse(packageInfo.version);
+      final version = packageInfo.version;
+
+      if (!version.startsWith("git")) {
+        return;
+      }
+
+      final versionCode = version.split("-")[1];
+      final currentVersion = Version.parse(versionCode);
 
       // Fetch latest release from GitHub
-      final response = await WalletContext.createHttpService().getLatestRelease();
+      final response =
+          await WalletContext.createHttpService().getLatestRelease();
       print("latest ${response.tagName}");
-     
-      final latestVersion = Version.parse(response.tagName.replaceFirst("v", ""));
+
+      final latestVersion =
+          Version.parse(response.tagName.replaceFirst("v", ""));
 
       print("latest ${response.tagName}");
       // Compare versions
@@ -82,11 +89,11 @@ class UpdateDialog extends StatelessWidget {
   final String releaseUrl;
 
   const UpdateDialog({
-    Key? key,
+    super.key,
     required this.currentVersion,
     required this.newVersion,
     required this.releaseUrl,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

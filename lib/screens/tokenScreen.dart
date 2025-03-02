@@ -8,8 +8,6 @@
  * (at your option) any later version.
  */
 
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fusion_wallet/common_widgets/RecentTransactions.dart';
@@ -22,7 +20,6 @@ import 'package:fusion_wallet/screens/sendScreens/sendScreen.dart';
 import 'package:fusion_wallet/src/rust/api/wallet.dart';
 import 'package:fusion_wallet/src/rust/api/ic_wallet_service.dart';
 import 'package:get/get.dart';
-
 
 // import '../nfts/nftsScreen.dart';
 class TokenScreen extends StatefulWidget {
@@ -113,7 +110,6 @@ class _TokenScreenState extends State<TokenScreen> {
                   height: 40,
                   width: 40,
                   clipBehavior: Clip.antiAlias,
-
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: lightColor,
@@ -156,10 +152,8 @@ class _TokenScreenState extends State<TokenScreen> {
                   // SizedBox(height: 8),
                   Text(
                     () {
-                      
-
-                      final tokenData =
-                          appController.token_data_map[widget.token.tokenAddress];
+                      final tokenData = appController
+                          .token_data_map[widget.token.tokenAddress];
                       if (tokenData == null) return "---";
                       return calculateUsdWorth(tokenData.balance,
                           widget.token.tokenDecimal ?? 8, tokenData.price);
@@ -221,7 +215,8 @@ class _TokenScreenState extends State<TokenScreen> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      var addr = appController.active_wallet.value?.toIcpPrincipal();
+                      var addr =
+                          appController.active_wallet.value?.toIcpPrincipal();
 
                       if (addr == null) {
                         showToast("No Address or Principal ID found");

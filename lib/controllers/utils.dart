@@ -1,3 +1,13 @@
+/*
+ * Fusion Wallet - A non-custodial cryptocurrency wallet
+ * Copyright (C) 2025 Fusion Wallet
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ */
+
 
 import 'dart:math';
 import 'package:flutter/material.dart';
@@ -36,7 +46,7 @@ class TokenData {
 
   // Create a default instance with zero values
   factory TokenData.zero() {
-    return  TokenData(balance: BigInt.zero, price: 0.00);
+    return TokenData(balance: BigInt.zero, price: 0.00);
   }
 
   // Create an error instance
@@ -45,10 +55,8 @@ class TokenData {
   }
 }
 
-
-
-
-String address_shortener(String addr, {int start_count = 5, int end_count = 4}) {
+String address_shortener(String addr,
+    {int start_count = 5, int end_count = 4}) {
   return "${addr.substring(0, start_count)}...${addr.substring(addr.length - end_count)}";
 }
 
@@ -59,50 +67,50 @@ String calculateUsdWorth(BigInt amount, int decimals, double usdPrice) {
 
   // Convert to decimal value
   double decimalAmount = amount.toDouble() / pow(10, decimals);
-  
+
   // Calculate USD worth
   double usdWorth = decimalAmount * usdPrice;
-  
+
   return formatUsdPrice(usdWorth);
 }
+
 // Formats a number as USD currency, removing unnecessary trailing zeros
 /// [amount] - The amount to format
 String formatUsdPrice(double amount) {
   // Handle zero and negative cases
   if (amount <= 0) return '\$0';
-  
+
   // Create currency formatter
   final formatter = NumberFormat.currency(
     locale: 'en_US',
     symbol: '\$',
     decimalDigits: 6,
   );
-  
+
   // Format the number
   String formatted = formatter.format(amount);
-  
+
   // Remove trailing zeros after decimal
   if (formatted.contains('.')) {
     // Split into dollars and cents
     var parts = formatted.split('.');
-    
+
     // Remove trailing zeros from cents
     var cents = parts[1].replaceAll(RegExp(r'0+$'), '');
-    
+
     // If cents is empty, return just the dollars
     if (cents.isEmpty) {
       return parts[0];
     }
-    
+
     // Otherwise combine dollars with cleaned cents
     return '${parts[0]}.$cents';
   }
-  
+
   return formatted;
 }
 
 String normalizeBalance(BigInt value, int decimals) {
-
   if (value < BigInt.zero) return "0";
 
   print(value);
@@ -112,7 +120,8 @@ String normalizeBalance(BigInt value, int decimals) {
   if (valueStr.length <= decimals) {
     valueStr = "0.${"0" * (decimals - valueStr.length)}$valueStr";
   } else {
-    valueStr = "${valueStr.substring(0, valueStr.length - decimals)}.${valueStr.substring(valueStr.length - decimals)}";
+    valueStr =
+        "${valueStr.substring(0, valueStr.length - decimals)}.${valueStr.substring(valueStr.length - decimals)}";
   }
 
   // Remove trailing zeros after decimal

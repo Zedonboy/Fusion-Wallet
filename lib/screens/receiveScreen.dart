@@ -1,3 +1,14 @@
+/*
+ * Fusion Wallet - A non-custodial cryptocurrency wallet
+ * Copyright (C) 2025 Fusion Wallet
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ */
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fusion_wallet/constants/colors.dart';
@@ -74,7 +85,8 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                     height: 28,
                     clipBehavior: Clip.antiAlias,
                     width: 28,
-                    decoration: BoxDecoration(shape: BoxShape.circle, color: lightColor),
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle, color: lightColor),
                     child: appController
                         .token_image_map[widget.token.tokenAddress]),
                 SizedBox(
@@ -179,7 +191,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
               height: 32,
             ),
             Text(
-              getTranslated(context, "Send only the specified coins to this deposit address. This address does NOT support deposit of non-fungible token.") ?? "Send only the specified coins to this deposit address. This address does NOT support deposit of non-fungible token.",
+              getTranslated(context,
+                      "Send only the specified coins to this deposit address. This address does NOT support deposit of non-fungible token.") ??
+                  "Send only the specified coins to this deposit address. This address does NOT support deposit of non-fungible token.",
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 12,
@@ -200,7 +214,8 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
             ),
             if (widget.token.tokenAddress == "ryjl3-tyaaa-aaaaa-aaaba-cai") ...[
               Text(
-                getTranslated(context, "For ICP Account ID Only") ?? "For ICP Account ID Only",
+                getTranslated(context, "For ICP Account ID Only") ??
+                    "For ICP Account ID Only",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14,
@@ -217,7 +232,6 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                     
                       copyToClipboard(acc_id);
                     },
                     child: Container(
@@ -237,7 +251,8 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            address_shortener(acc_id, start_count: 8, end_count: 5),
+                            address_shortener(acc_id,
+                                start_count: 8, end_count: 5),
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 14,
@@ -287,7 +302,10 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                           //   height: 20,
                           //   width: 20,
                           // ),
-                          Icon(Icons.share, color: primaryAltColor.value,),
+                          Icon(
+                            Icons.share,
+                            color: primaryAltColor.value,
+                          ),
                           SizedBox(
                             width: 8,
                           ),

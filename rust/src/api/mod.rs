@@ -7,5 +7,6 @@ pub mod index_service;
 pub mod utils;
 pub mod icp_index_service;
 pub mod http_service;
+pub mod nft_service;
 #[cfg(test)]
 pub mod tests;

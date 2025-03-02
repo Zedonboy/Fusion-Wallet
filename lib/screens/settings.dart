@@ -52,15 +52,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               decoration: BoxDecoration(color: Colors.black.withOpacity(0)),
               child: Row(
                 children: [
-                  GestureDetector(
-                      onTap: () {
-                        Get.back();
-                      },
-                      child: Icon(
-                        Icons.arrow_back_ios,
-                        color: darkBlueColor.value,
-                        size: 16,
-                      )),
+                  
                   SizedBox(
                     width: 8,
                   ),

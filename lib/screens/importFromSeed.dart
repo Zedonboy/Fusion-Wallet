@@ -8,20 +8,18 @@
  * (at your option) any later version.
  */
 
-
 import 'package:credential_manager/credential_manager.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fusion_wallet/common_widgets/bottomNavBar.dart';
 import 'package:fusion_wallet/common_widgets/bottomRectangularbtn.dart';
 import 'package:fusion_wallet/common_widgets/commonWidgets.dart';
 import 'package:fusion_wallet/common_widgets/inputField.dart';
-import 'package:fusion_wallet/screens/homeScreen.dart';
 import 'package:fusion_wallet/src/rust/api/wallet.dart';
 import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -244,8 +242,8 @@ class _ImportFromSeedState extends State<ImportFromSeed> {
                             ),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () async {
-                                final Uri url =
-                                    Uri.parse('https://github.com/Zedonboy/Fusion-Wallet/blob/main/terms.md');
+                                final Uri url = Uri.parse(
+                                    'https://github.com/Zedonboy/Fusion-Wallet/blob/main/terms.md');
                                 if (!await launchUrl(url)) {
                                   throw Exception('Could not launch $url');
                                 }
@@ -341,7 +339,7 @@ class _ImportFromSeedState extends State<ImportFromSeed> {
   }
 
   verifyFields() async {
-    if(!isCheck.value) {
+    if (!isCheck.value) {
       mnemonicError.value = "Accept Terms";
       return;
     }
@@ -363,8 +361,8 @@ class _ImportFromSeedState extends State<ImportFromSeed> {
         appController.encryptAndStoreMnemonic(mnemonic, widget.pin);
         appController.active_wallet.value = wallet;
         await save_to_credential();
-        // Get.offAll(() => BottomBar());
-        Get.offAll(() => HomeScreen());
+        Get.offAll(() => BottomBar());
+        // Get.offAll(() => HomeScreen());
       } catch (e) {
         mnemonicError.value = 'Invalid Secret Phrase';
         importLoader.value = false;

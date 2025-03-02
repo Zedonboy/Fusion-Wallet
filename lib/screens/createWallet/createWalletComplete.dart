@@ -8,14 +8,13 @@
  * (at your option) any later version.
  */
 
-
 import 'package:credential_manager/credential_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fusion_wallet/common_widgets/bottomNavBar.dart';
 import 'package:fusion_wallet/common_widgets/bottomRectangularbtn.dart';
 import 'package:fusion_wallet/constants/colors.dart';
 import 'package:fusion_wallet/controllers/appController.dart';
-import 'package:fusion_wallet/screens/homeScreen.dart';
 import 'package:fusion_wallet/src/rust/api/wallet.dart';
 import 'package:get/get.dart';
 
@@ -271,7 +270,7 @@ class _CreateWalletCompleteState extends State<CreateWalletComplete> {
     Wallet wallet = Wallet.fromSeed(seedPhrase: widget.mnemonic);
     appController.active_wallet.value = wallet;
     await save_to_credential();
-    // Get.offAll(() => BottomBar());
-    Get.offAll(() => HomeScreen());
+    Get.offAll(() => BottomBar());
+    // Get.offAll(() => HomeScreen());
   }
 }

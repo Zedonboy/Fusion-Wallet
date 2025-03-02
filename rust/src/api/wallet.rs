@@ -40,6 +40,7 @@ use k256::{
 };
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
+use serde_json::Value;
 
 use super::{
     constants::IC_HOST_URL, http_service::HttpWalletService, ic_wallet_service::ICWalletService
@@ -845,5 +846,38 @@ impl WalletContext {
     pub fn verify_account_id(text: &str) -> bool {
         let result = AccountIdentifier::from_hex(text);
         result.is_ok()
+    }
+
+    pub async fn get_token_worth(token_symbol: String, amount: f64) -> f64 {
+        let symbol = if token_symbol.starts_with("ck") {
+            token_symbol.strip_prefix("ck").unwrap()
+        } else {
+            token_symbol.as_str()
+        };
+
+        let url = format!(
+            "https://api.coinbase.com/v2/prices/{}-usd/spot",
+            symbol.to_ascii_lowercase()
+        );
+        let http_result = match CLIENT.get(url).send().await {
+            Result::Ok(response) => response,
+            Err(_) => return 0.0,
+        };
+
+        let json: Value = match http_result.json().await {
+            Result::Ok(j) => j,
+            Err(_) => return 0.0,
+        };
+
+        match json.get("data").and_then(|d| d.get("amount")) {
+            Some(json_amount) => {
+                let amount_str = json_amount.as_str().unwrap_or("");
+                match amount_str.parse::<f64>() {
+                    Result::Ok(num) => num * amount,
+                    Err(_) => 0.0,
+                }
+            }
+            None => 0.0,
+        }
     }
 }

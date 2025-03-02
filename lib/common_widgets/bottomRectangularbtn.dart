@@ -1,3 +1,14 @@
+/*
+ * Fusion Wallet - A non-custodial cryptocurrency wallet
+ * Copyright (C) 2025 Fusion Wallet
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ */
+
+
 // import 'package:crypto_wallet/localization/language_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -58,9 +69,7 @@ class BottomRectangularBtn extends StatelessWidget {
                 borderRadius: BorderRadius.circular(66))
             : BoxDecoration(
                 color: color ??
-                    (isDisabled
-                        ? btnDisabledBg
-                        : primaryAltColor.value),
+                    (isDisabled ? btnDisabledBg : primaryAltColor.value),
                 borderRadius: const BorderRadius.all(Radius.circular(66)),
               ),
         child: Center(
@@ -74,8 +83,9 @@ class BottomRectangularBtn extends StatelessWidget {
                   width: 28.0,
                   child: CircularProgressIndicator(
                     strokeWidth: 3.0,
-                    color:
-                        onlyBorder == true ? primaryAltColor.value : Colors.white,
+                    color: onlyBorder == true
+                        ? primaryAltColor.value
+                        : Colors.white,
                     backgroundColor: Colors.transparent,
                   ),
                 ),

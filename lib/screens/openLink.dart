@@ -1,3 +1,14 @@
+/*
+ * Fusion Wallet - A non-custodial cryptocurrency wallet
+ * Copyright (C) 2025 Fusion Wallet
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ */
+
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -26,7 +37,9 @@ class _OpenLinkState extends State<OpenLink> {
   final GlobalKey webViewKey = GlobalKey();
   InAppWebViewController? webViewController;
   InAppWebViewGroupOptions options = InAppWebViewGroupOptions(
-    crossPlatform: InAppWebViewOptions(useShouldOverrideUrlLoading: true, mediaPlaybackRequiresUserGesture: false),
+    crossPlatform: InAppWebViewOptions(
+        useShouldOverrideUrlLoading: true,
+        mediaPlaybackRequiresUserGesture: false),
     android: AndroidInAppWebViewOptions(useHybridComposition: true),
     ios: IOSInAppWebViewOptions(allowsInlineMediaPlayback: true),
   );
@@ -88,8 +101,11 @@ class _OpenLinkState extends State<OpenLink> {
           print("onHideContextMenu");
         },
         onContextMenuActionItemClicked: (contextMenuItemClicked) async {
-          var id = (Platform.isAndroid) ? contextMenuItemClicked.androidId : contextMenuItemClicked.iosId;
-          print("onContextMenuActionItemClicked: $id ${contextMenuItemClicked.title}");
+          var id = (Platform.isAndroid)
+              ? contextMenuItemClicked.androidId
+              : contextMenuItemClicked.iosId;
+          print(
+              "onContextMenuActionItemClicked: $id ${contextMenuItemClicked.title}");
         });
 
     pullToRefreshController = PullToRefreshController(
@@ -98,7 +114,8 @@ class _OpenLinkState extends State<OpenLink> {
         if (Platform.isAndroid) {
           webViewController?.reload();
         } else if (Platform.isIOS) {
-          webViewController?.loadUrl(urlRequest: URLRequest(url: await webViewController?.getUrl()));
+          webViewController?.loadUrl(
+              urlRequest: URLRequest(url: await webViewController?.getUrl()));
         }
       },
     );
@@ -106,11 +123,14 @@ class _OpenLinkState extends State<OpenLink> {
     if (Platform.isAndroid) {
       await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
 
-      var swAvailable = await AndroidWebViewFeature.isFeatureSupported(AndroidWebViewFeature.SERVICE_WORKER_BASIC_USAGE);
-      var swInterceptAvailable = await AndroidWebViewFeature.isFeatureSupported(AndroidWebViewFeature.SERVICE_WORKER_SHOULD_INTERCEPT_REQUEST);
+      var swAvailable = await AndroidWebViewFeature.isFeatureSupported(
+          AndroidWebViewFeature.SERVICE_WORKER_BASIC_USAGE);
+      var swInterceptAvailable = await AndroidWebViewFeature.isFeatureSupported(
+          AndroidWebViewFeature.SERVICE_WORKER_SHOULD_INTERCEPT_REQUEST);
 
       if (swAvailable && swInterceptAvailable) {
-        AndroidServiceWorkerController serviceWorkerController = AndroidServiceWorkerController.instance();
+        AndroidServiceWorkerController serviceWorkerController =
+            AndroidServiceWorkerController.instance();
 
         await serviceWorkerController.setServiceWorkerClient(
           AndroidServiceWorkerClient(
@@ -144,7 +164,12 @@ class _OpenLinkState extends State<OpenLink> {
         appBar: AppBar(
           centerTitle: true,
           backgroundColor: primaryColor.value,
-          title: Text(widget.fromPage != '' ? widget.fromPage : 'Payment',style: TextStyle(fontFamily: 'sfpro',),),
+          title: Text(
+            widget.fromPage != '' ? widget.fromPage : 'Payment',
+            style: TextStyle(
+              fontFamily: 'sfpro',
+            ),
+          ),
         ),
         body: Stack(
           children: [
@@ -162,8 +187,11 @@ class _OpenLinkState extends State<OpenLink> {
                   urlController.text = this.url;
                 });
               },
-              androidOnPermissionRequest: (controller, origin, resources) async {
-                return PermissionRequestResponse(resources: resources, action: PermissionRequestResponseAction.GRANT);
+              androidOnPermissionRequest:
+                  (controller, origin, resources) async {
+                return PermissionRequestResponse(
+                    resources: resources,
+                    action: PermissionRequestResponseAction.GRANT);
               },
               shouldOverrideUrlLoading: (controller, navigationAction) async {
                 var uri = navigationAction.request.url!;
@@ -197,7 +225,9 @@ class _OpenLinkState extends State<OpenLink> {
               },
               onConsoleMessage: (controller, consoleMessage) {},
             ),
-            progress < 1.0 ? LinearProgressIndicator(value: progress) : Container(),
+            progress < 1.0
+                ? LinearProgressIndicator(value: progress)
+                : Container(),
           ],
         ),
       ),
@@ -221,7 +251,12 @@ class _OpenLinkState extends State<OpenLink> {
         },
         child: const Text(
           "Go Back",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white,fontFamily: 'sfpro',),
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+            color: Colors.white,
+            fontFamily: 'sfpro',
+          ),
         ),
       ),
     );

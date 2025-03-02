@@ -19,6 +19,7 @@
 
 import 'api/http_service.dart';
 import 'api/ic_wallet_service.dart';
+import 'api/nft_service.dart';
 import 'api/simple.dart';
 import 'api/utils.dart';
 import 'api/wallet.dart';
@@ -38,6 +39,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   CrossPlatformFinalizerArg
       get rust_arc_decrement_strong_count_HttpWalletServicePtr => wire
           .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHttpWalletService;
+
+  CrossPlatformFinalizerArg
+      get rust_arc_decrement_strong_count_IcCollectionServicePtr => wire
+          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerICCollectionService;
 
   CrossPlatformFinalizerArg
       get rust_arc_decrement_strong_count_IcWalletServicePtr => wire
@@ -60,6 +65,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   HttpWalletService
       dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHttpWalletService(
+          dynamic raw);
+
+  @protected
+  IcCollectionService
+      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerICCollectionService(
           dynamic raw);
 
   @protected
@@ -93,6 +103,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           dynamic raw);
 
   @protected
+  IcCollectionService
+      dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerICCollectionService(
+          dynamic raw);
+
+  @protected
   IcWalletService
       dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerICWalletService(
           dynamic raw);
@@ -108,8 +123,17 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           dynamic raw);
 
   @protected
+  Map<String, CollectMetaValue> dco_decode_Map_String_collect_meta_value(
+      dynamic raw);
+
+  @protected
   HttpWalletService
       dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHttpWalletService(
+          dynamic raw);
+
+  @protected
+  IcCollectionService
+      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerICCollectionService(
           dynamic raw);
 
   @protected
@@ -142,13 +166,28 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   BigInt dco_decode_U128(dynamic raw);
 
   @protected
+  AllowanceResponse dco_decode_allowance_response(dynamic raw);
+
+  @protected
   bool dco_decode_bool(dynamic raw);
+
+  @protected
+  double dco_decode_box_autoadd_f_64(dynamic raw);
 
   @protected
   int dco_decode_box_autoadd_u_32(dynamic raw);
 
   @protected
+  BigInt dco_decode_box_autoadd_u_64(dynamic raw);
+
+  @protected
   int dco_decode_box_autoadd_u_8(dynamic raw);
+
+  @protected
+  WalletCollection dco_decode_box_autoadd_wallet_collection(dynamic raw);
+
+  @protected
+  CollectMetaValue dco_decode_collect_meta_value(dynamic raw);
 
   @protected
   double dco_decode_f_32(dynamic raw);
@@ -163,6 +202,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   int dco_decode_i_32(dynamic raw);
 
   @protected
+  PlatformInt64 dco_decode_i_64(dynamic raw);
+
+  @protected
   List<WalletToken>
       dco_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
           dynamic raw);
@@ -174,13 +216,27 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Uint8List dco_decode_list_prim_u_8_strict(dynamic raw);
 
   @protected
+  List<(String, CollectMetaValue)>
+      dco_decode_list_record_string_collect_meta_value(dynamic raw);
+
+  @protected
+  List<(BigInt, Map<String, CollectMetaValue>)>
+      dco_decode_list_record_u_64_map_string_collect_meta_value(dynamic raw);
+
+  @protected
   List<SimpleTransaction> dco_decode_list_simple_transaction(dynamic raw);
 
   @protected
   String? dco_decode_opt_String(dynamic raw);
 
   @protected
+  double? dco_decode_opt_box_autoadd_f_64(dynamic raw);
+
+  @protected
   int? dco_decode_opt_box_autoadd_u_32(dynamic raw);
+
+  @protected
+  BigInt? dco_decode_opt_box_autoadd_u_64(dynamic raw);
 
   @protected
   int? dco_decode_opt_box_autoadd_u_8(dynamic raw);
@@ -189,7 +245,18 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   QuoteResponse dco_decode_quote_response(dynamic raw);
 
   @protected
+  (String, CollectMetaValue) dco_decode_record_string_collect_meta_value(
+      dynamic raw);
+
+  @protected
+  (BigInt, Map<String, CollectMetaValue>)
+      dco_decode_record_u_64_map_string_collect_meta_value(dynamic raw);
+
+  @protected
   SimpleTransaction dco_decode_simple_transaction(dynamic raw);
+
+  @protected
+  SwapResponse dco_decode_swap_response(dynamic raw);
 
   @protected
   int dco_decode_u_32(dynamic raw);
@@ -207,6 +274,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   BigInt dco_decode_usize(dynamic raw);
 
   @protected
+  WalletCollection dco_decode_wallet_collection(dynamic raw);
+
+  @protected
   WalletContext dco_decode_wallet_context(dynamic raw);
 
   @protected
@@ -218,6 +288,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   HttpWalletService
       sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHttpWalletService(
+          SseDeserializer deserializer);
+
+  @protected
+  IcCollectionService
+      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerICCollectionService(
           SseDeserializer deserializer);
 
   @protected
@@ -251,6 +326,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           SseDeserializer deserializer);
 
   @protected
+  IcCollectionService
+      sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerICCollectionService(
+          SseDeserializer deserializer);
+
+  @protected
   IcWalletService
       sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerICWalletService(
           SseDeserializer deserializer);
@@ -266,8 +346,17 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           SseDeserializer deserializer);
 
   @protected
+  Map<String, CollectMetaValue> sse_decode_Map_String_collect_meta_value(
+      SseDeserializer deserializer);
+
+  @protected
   HttpWalletService
       sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHttpWalletService(
+          SseDeserializer deserializer);
+
+  @protected
+  IcCollectionService
+      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerICCollectionService(
           SseDeserializer deserializer);
 
   @protected
@@ -297,13 +386,29 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   BigInt sse_decode_U128(SseDeserializer deserializer);
 
   @protected
+  AllowanceResponse sse_decode_allowance_response(SseDeserializer deserializer);
+
+  @protected
   bool sse_decode_bool(SseDeserializer deserializer);
+
+  @protected
+  double sse_decode_box_autoadd_f_64(SseDeserializer deserializer);
 
   @protected
   int sse_decode_box_autoadd_u_32(SseDeserializer deserializer);
 
   @protected
+  BigInt sse_decode_box_autoadd_u_64(SseDeserializer deserializer);
+
+  @protected
   int sse_decode_box_autoadd_u_8(SseDeserializer deserializer);
+
+  @protected
+  WalletCollection sse_decode_box_autoadd_wallet_collection(
+      SseDeserializer deserializer);
+
+  @protected
+  CollectMetaValue sse_decode_collect_meta_value(SseDeserializer deserializer);
 
   @protected
   double sse_decode_f_32(SseDeserializer deserializer);
@@ -318,6 +423,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   int sse_decode_i_32(SseDeserializer deserializer);
 
   @protected
+  PlatformInt64 sse_decode_i_64(SseDeserializer deserializer);
+
+  @protected
   List<WalletToken>
       sse_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
           SseDeserializer deserializer);
@@ -329,6 +437,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Uint8List sse_decode_list_prim_u_8_strict(SseDeserializer deserializer);
 
   @protected
+  List<(String, CollectMetaValue)>
+      sse_decode_list_record_string_collect_meta_value(
+          SseDeserializer deserializer);
+
+  @protected
+  List<(BigInt, Map<String, CollectMetaValue>)>
+      sse_decode_list_record_u_64_map_string_collect_meta_value(
+          SseDeserializer deserializer);
+
+  @protected
   List<SimpleTransaction> sse_decode_list_simple_transaction(
       SseDeserializer deserializer);
 
@@ -336,7 +454,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   String? sse_decode_opt_String(SseDeserializer deserializer);
 
   @protected
+  double? sse_decode_opt_box_autoadd_f_64(SseDeserializer deserializer);
+
+  @protected
   int? sse_decode_opt_box_autoadd_u_32(SseDeserializer deserializer);
+
+  @protected
+  BigInt? sse_decode_opt_box_autoadd_u_64(SseDeserializer deserializer);
 
   @protected
   int? sse_decode_opt_box_autoadd_u_8(SseDeserializer deserializer);
@@ -345,7 +469,19 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   QuoteResponse sse_decode_quote_response(SseDeserializer deserializer);
 
   @protected
+  (String, CollectMetaValue) sse_decode_record_string_collect_meta_value(
+      SseDeserializer deserializer);
+
+  @protected
+  (BigInt, Map<String, CollectMetaValue>)
+      sse_decode_record_u_64_map_string_collect_meta_value(
+          SseDeserializer deserializer);
+
+  @protected
   SimpleTransaction sse_decode_simple_transaction(SseDeserializer deserializer);
+
+  @protected
+  SwapResponse sse_decode_swap_response(SseDeserializer deserializer);
 
   @protected
   int sse_decode_u_32(SseDeserializer deserializer);
@@ -363,6 +499,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   BigInt sse_decode_usize(SseDeserializer deserializer);
 
   @protected
+  WalletCollection sse_decode_wallet_collection(SseDeserializer deserializer);
+
+  @protected
   WalletContext sse_decode_wallet_context(SseDeserializer deserializer);
 
   @protected
@@ -377,6 +516,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void
       sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHttpWalletService(
           HttpWalletService self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerICCollectionService(
+          IcCollectionService self, SseSerializer serializer);
 
   @protected
   void
@@ -410,6 +554,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void
+      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerICCollectionService(
+          IcCollectionService self, SseSerializer serializer);
+
+  @protected
+  void
       sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerICWalletService(
           IcWalletService self, SseSerializer serializer);
 
@@ -424,9 +573,18 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           WalletToken self, SseSerializer serializer);
 
   @protected
+  void sse_encode_Map_String_collect_meta_value(
+      Map<String, CollectMetaValue> self, SseSerializer serializer);
+
+  @protected
   void
       sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHttpWalletService(
           HttpWalletService self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerICCollectionService(
+          IcCollectionService self, SseSerializer serializer);
 
   @protected
   void
@@ -455,13 +613,31 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_U128(BigInt self, SseSerializer serializer);
 
   @protected
+  void sse_encode_allowance_response(
+      AllowanceResponse self, SseSerializer serializer);
+
+  @protected
   void sse_encode_bool(bool self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_f_64(double self, SseSerializer serializer);
 
   @protected
   void sse_encode_box_autoadd_u_32(int self, SseSerializer serializer);
 
   @protected
+  void sse_encode_box_autoadd_u_64(BigInt self, SseSerializer serializer);
+
+  @protected
   void sse_encode_box_autoadd_u_8(int self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_wallet_collection(
+      WalletCollection self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_collect_meta_value(
+      CollectMetaValue self, SseSerializer serializer);
 
   @protected
   void sse_encode_f_32(double self, SseSerializer serializer);
@@ -476,6 +652,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_i_32(int self, SseSerializer serializer);
 
   @protected
+  void sse_encode_i_64(PlatformInt64 self, SseSerializer serializer);
+
+  @protected
   void
       sse_encode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
           List<WalletToken> self, SseSerializer serializer);
@@ -488,6 +667,15 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       Uint8List self, SseSerializer serializer);
 
   @protected
+  void sse_encode_list_record_string_collect_meta_value(
+      List<(String, CollectMetaValue)> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_record_u_64_map_string_collect_meta_value(
+      List<(BigInt, Map<String, CollectMetaValue>)> self,
+      SseSerializer serializer);
+
+  @protected
   void sse_encode_list_simple_transaction(
       List<SimpleTransaction> self, SseSerializer serializer);
 
@@ -495,7 +683,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_opt_String(String? self, SseSerializer serializer);
 
   @protected
+  void sse_encode_opt_box_autoadd_f_64(double? self, SseSerializer serializer);
+
+  @protected
   void sse_encode_opt_box_autoadd_u_32(int? self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_opt_box_autoadd_u_64(BigInt? self, SseSerializer serializer);
 
   @protected
   void sse_encode_opt_box_autoadd_u_8(int? self, SseSerializer serializer);
@@ -504,8 +698,19 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_quote_response(QuoteResponse self, SseSerializer serializer);
 
   @protected
+  void sse_encode_record_string_collect_meta_value(
+      (String, CollectMetaValue) self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_record_u_64_map_string_collect_meta_value(
+      (BigInt, Map<String, CollectMetaValue>) self, SseSerializer serializer);
+
+  @protected
   void sse_encode_simple_transaction(
       SimpleTransaction self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_swap_response(SwapResponse self, SseSerializer serializer);
 
   @protected
   void sse_encode_u_32(int self, SseSerializer serializer);
@@ -521,6 +726,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_usize(BigInt self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_wallet_collection(
+      WalletCollection self, SseSerializer serializer);
 
   @protected
   void sse_encode_wallet_context(WalletContext self, SseSerializer serializer);
@@ -545,6 +754,18 @@ class RustLibWire implements BaseWire {
           int ptr) =>
       wasmModule
           .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHttpWalletService(
+              ptr);
+
+  void rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerICCollectionService(
+          int ptr) =>
+      wasmModule
+          .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerICCollectionService(
+              ptr);
+
+  void rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerICCollectionService(
+          int ptr) =>
+      wasmModule
+          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerICCollectionService(
               ptr);
 
   void rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerICWalletService(
@@ -608,6 +829,14 @@ extension type RustLibWasmModule._(JSObject _) implements JSObject {
 
   external void
       rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHttpWalletService(
+          int ptr);
+
+  external void
+      rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerICCollectionService(
+          int ptr);
+
+  external void
+      rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerICCollectionService(
           int ptr);
 
   external void

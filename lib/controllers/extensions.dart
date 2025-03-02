@@ -1,8 +1,17 @@
+/*
+ * Fusion Wallet - A non-custodial cryptocurrency wallet
+ * Copyright (C) 2025 Fusion Wallet
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ */
+
 
 import 'package:flutter/material.dart';
 import 'package:fusion_wallet/controllers/utils.dart';
 import 'package:intl/intl.dart';
-
 
 extension NumberStringCleaning on String {
   String removeTrailingZeroes() {
@@ -81,4 +90,3 @@ String removeTrailingZeros(String number) {
   if (!number.contains('.')) return number;
   return number.replaceAll(RegExp(r'\.?0*$'), '');
 }
-

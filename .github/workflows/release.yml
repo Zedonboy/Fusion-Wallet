@@ -40,13 +40,13 @@ jobs:
           java-version: '17' # Java 11 is required for signing
 
       - name: Build for APK ABIs
-        run: flutter build apk --split-per-abi --build-name=${{github.event.inputs.tag_name}}
+        run: flutter build apk --split-per-abi --build-name=git-${{github.event.inputs.tag_name}}
 
       - name: Build for APK
-        run: flutter build apk --release --build-name=${{github.event.inputs.tag_name}}
+        run: flutter build apk --release --build-name=git-${{github.event.inputs.tag_name}}
 
       - name: Build App Bundle
-        run: flutter build appbundle --release --build-name=${{github.event.inputs.tag_name}}
+        run: flutter build appbundle --release --build-name=git-${{github.event.inputs.tag_name}}
 
       # - name: Setup Android SDK
       #   uses: android-actions/setup-android@v3

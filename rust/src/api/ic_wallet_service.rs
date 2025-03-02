@@ -29,9 +29,9 @@ use icrc_ledger_types::{
         account::Account,
         transfer::{TransferArg, TransferError},
     },
-    icrc2::approve::{ApproveArgs, ApproveError},
+    icrc2::{allowance::{Allowance, AllowanceArgs}, approve::{ApproveArgs, ApproveError}},
 };
-use log::debug;
+use log::{debug, info};
 use reqwest::Client;
 use serde::Deserialize;
 use serde_json::Value;
@@ -41,11 +41,7 @@ use crate::api::icp_index_service::{
 };
 
 use super::{
-    constants::KONG_SWAP_ID,
-    index_service::{GetTransactionsResult, IcIndexService, Transaction, TransactionWithId},
-    swap_service::ICSwapService,
-    utils::{format_amount, TokenMetadata},
-    wallet::{WalletToken, WalletTokenNetWork},
+    constants::KONG_SWAP_ID, index_service::{GetTransactionsResult, IcIndexService, Transaction, TransactionWithId}, nft_service::ICCollectionService, swap_service::{KongSwapService, SwapArgs}, utils::{format_amount, TokenMetadata}, wallet::{WalletToken, WalletTokenNetWork}
 };
 
 pub struct ICWalletService {
@@ -59,6 +55,21 @@ pub struct QuoteResponse {
     pub tx_count: usize,
     pub mid_price: f64,
     pub receive_amount: u128,
+    pub estimated_fee_amount: u128,
+}
+
+pub struct SwapResponse {
+    pub tx_id: u64,
+    pub status: String,
+    pub pay_symbol: String,
+    pub receive_symbol: String,
+    pub pay_amount: u128,
+    pub receive_amount: u128,
+}
+
+pub struct AllowanceResponse {
+    pub allowance: u64,
+    pub expires_at: Option<u64>,
 }
 
 pub struct SimpleTransaction {
@@ -156,6 +167,7 @@ impl ICWalletService {
         token: &WalletToken,
         spender: String,
         amount: u128,
+        expires_at: Option<u64>,
     ) -> anyhow::Result<u64> {
         // Parse the spender address into an Account
         let spender_account = Account::from_str(&spender)?;
@@ -168,7 +180,7 @@ impl ICWalletService {
             spender: spender_account,
             amount: Nat::from(amount),
             expected_allowance: None,
-            expires_at: None,
+            expires_at,
             created_at_time: None, // Let the ledger set the timestamp
         };
 
@@ -206,27 +218,40 @@ impl ICWalletService {
         token: &WalletToken,
         owner: String,
         spender: String,
-    ) -> anyhow::Result<u128> {
+    ) -> anyhow::Result<AllowanceResponse> {
         let owner_account = Account::from_str(&owner)?;
         let spender_account = Account::from_str(&spender)?;
 
         let canister_id = Principal::from_text(&token.token_address)?;
 
-        let args = (owner_account, spender_account);
+        let allowance_args = AllowanceArgs {
+            account: owner_account,
+            spender: spender_account,
+        };
 
         let token_canister = self
             .ic_agent
             .query(&canister_id, "icrc2_allowance")
-            .with_arg(Encode!(&args)?);
+            .with_arg(Encode!(&allowance_args)?);
 
         let result = token_canister
             .call()
             .await
             .map_err(|err| Error::msg(format!("Failed to get allowance: {}", err)))?;
 
-        let (allowance,): (Nat,) = decode_args(&result)?;
+        let (allowance,): (Allowance,) = decode_args(&result)?;
 
-        Ok(allowance.0.try_into()?)
+        Ok(AllowanceResponse {
+            allowance: allowance.allowance.0.try_into()?,
+            expires_at: allowance.expires_at,
+        })
+    }
+
+    #[flutter_rust_bridge::frb(sync)]
+    pub fn create_collection_service(&self) -> anyhow::Result<ICCollectionService> {
+        let service = ICCollectionService::new(self.ic_agent.clone());
+
+        anyhow::Ok(service)
     }
     /// Gets the balance of an account for a specific token
     pub async fn get_balance(&self, token: &WalletToken, account: String) -> anyhow::Result<u128> {
@@ -263,7 +288,7 @@ impl ICWalletService {
         pay_amount: u128,
     ) -> anyhow::Result<QuoteResponse> {
         let swap_id = Principal::from_str(KONG_SWAP_ID)?;
-        let swap_service = ICSwapService::new(self.ic_agent.clone(), swap_id);
+        let swap_service = KongSwapService::new(self.ic_agent.clone(), swap_id);
         let result = swap_service
             .get_swap_amounts(
                 pay_token.symbol.clone(),
@@ -271,14 +296,59 @@ impl ICWalletService {
                 receive_token.symbol.clone(),
             )
             .await?;
+
+
+       
+        let mut total_pay_amount = Nat::from(0u64);
+
+        result.txs.iter().for_each(|tx| {
+            
+            total_pay_amount += tx.gas_fee.clone() + tx.lp_fee.clone();
+        });
+
+        debug!("Total Pay Amount: {:?}", total_pay_amount);
+
+
         let quote = QuoteResponse {
             receive_token_address: result.receive_address,
             slippage: result.slippage,
             tx_count: result.txs.len(),
             mid_price: result.mid_price,
             receive_amount: result.receive_amount.0.try_into()?,
+            estimated_fee_amount: total_pay_amount.0.try_into()?,
         };
+
+        
         Ok(quote)
+    }
+
+    pub async fn swap(&self, pay_token: &WalletToken, receive_token: &WalletToken, pay_amount: u128, slippage: Option<f64>) -> anyhow::Result<SwapResponse> {
+        let swap_id = Principal::from_str(KONG_SWAP_ID)?;
+        let swap_service = KongSwapService::new(self.ic_agent.clone(), swap_id);
+        let swap_args = SwapArgs {
+            receive_token: receive_token.symbol.clone(),
+            pay_amount: Nat::from(pay_amount),
+            receive_amount: None, //Some(Nat::from(receive_amount)),
+            max_slippage: slippage,
+            referred_by: None,
+            receive_address: None,
+            pay_token: pay_token.symbol.clone(),
+            pay_tx_id: None,
+        };
+        let result = swap_service.swap(swap_args).await?;
+
+       
+
+        let swap_response = SwapResponse {
+            tx_id: result.tx_id,
+            status: result.status,
+            pay_symbol: result.pay_symbol,
+            receive_symbol: result.receive_symbol,
+            pay_amount: result.pay_amount.0.try_into()?,
+            receive_amount: result.receive_amount.0.try_into()?,
+        };
+
+        Ok(swap_response)
     }
 
     fn create_index_service(&self, index_canister: &String) -> anyhow::Result<IcIndexService> {

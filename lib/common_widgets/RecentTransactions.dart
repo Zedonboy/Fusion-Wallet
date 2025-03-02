@@ -8,7 +8,6 @@
  * (at your option) any later version.
  */
 
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fusion_wallet/constants/colors.dart';

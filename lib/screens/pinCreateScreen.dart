@@ -1,3 +1,14 @@
+/*
+ * Fusion Wallet - A non-custodial cryptocurrency wallet
+ * Copyright (C) 2025 Fusion Wallet
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ */
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fusion_wallet/common_widgets/customNamPad.dart';
@@ -175,7 +186,9 @@ class _PinCreationScreenState extends State<PinCreationScreen> {
                       ),
                   ],
                 ),
-                SizedBox(height: 32,),
+                SizedBox(
+                  height: 32,
+                ),
                 Column(
                   children: [
                     CustomNumPad(

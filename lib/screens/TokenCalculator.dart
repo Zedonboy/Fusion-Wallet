@@ -1,3 +1,14 @@
+/*
+ * Fusion Wallet - A non-custodial cryptocurrency wallet
+ * Copyright (C) 2025 Fusion Wallet
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ */
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fusion_wallet/constants/colors.dart';
@@ -179,13 +190,15 @@ class _TokenCalculatorState extends State<TokenCalculator> {
                     ),
                   ),
                 ),
-                SizedBox(width: 10,),
+              SizedBox(
+                width: 10,
+              ),
               if (!isUsd)
                 InkWell(
                   onTap: () {
                     final amt = topAmountController.text;
-                    copyToClipboard(amt).then((value) =>
-                        {showToast("Copied amount")});
+                    copyToClipboard(amt)
+                        .then((value) => {showToast("Copied amount")});
                   },
                   child: Container(
                     height: 30,

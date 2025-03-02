@@ -8,7 +8,6 @@
  * (at your option) any later version.
  */
 
-
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -67,7 +66,8 @@ class _ResetAppState extends State<ResetApp> {
                         padding: EdgeInsets.all(6),
                         decoration: ShapeDecoration(
                           color: cardcolor.value,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8)),
                         ),
                         child: Icon(
                           Icons.arrow_back_ios_new,
@@ -106,7 +106,8 @@ class _ResetAppState extends State<ResetApp> {
                       color: Color(0x33FF5C5C),
                       shape: OvalBorder(),
                     ),
-                    child: SvgPicture.asset("assets/svg/fluent_key-reset-24-regular.svg"),
+                    child: SvgPicture.asset(
+                        "assets/svg/fluent_key-reset-24-regular.svg"),
                   ),
                   SizedBox(
                     height: 32,
@@ -143,20 +144,25 @@ class _ResetAppState extends State<ResetApp> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      Get.to(PinScreen(onPinConfirm: (data) {
-                        clear_app_data();
-                      }, isSignin: false, onBiometric: (auth) {
-                        if(auth) {
+                      Get.to(PinScreen(
+                        onPinConfirm: (data) {
                           clear_app_data();
-                        }
-                      },));
+                        },
+                        isSignin: false,
+                        onBiometric: (auth) {
+                          if (auth) {
+                            clear_app_data();
+                          }
+                        },
+                      ));
                       // Get.to(Transactions());
-                      
                     },
                     child: Container(
                       height: 50,
                       width: Get.width,
-                      decoration: BoxDecoration(color: Color(0xFFFF5C5C), borderRadius: BorderRadius.circular(100)),
+                      decoration: BoxDecoration(
+                          color: Color(0xFFFF5C5C),
+                          borderRadius: BorderRadius.circular(100)),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -183,7 +189,9 @@ class _ResetAppState extends State<ResetApp> {
                     child: Container(
                       height: 50,
                       width: Get.width,
-                      decoration: BoxDecoration(border: Border.all(width: 1, color: Colors.white), borderRadius: BorderRadius.circular(100)),
+                      decoration: BoxDecoration(
+                          border: Border.all(width: 1, color: Colors.white),
+                          borderRadius: BorderRadius.circular(100)),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [

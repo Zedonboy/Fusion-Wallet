@@ -1,3 +1,14 @@
+/*
+ * Fusion Wallet - A non-custodial cryptocurrency wallet
+ * Copyright (C) 2025 Fusion Wallet
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ */
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -12,15 +23,14 @@ class CustomNumPad extends StatelessWidget {
   final Function()? onBiometric;
   final int maxLength;
 
-  const CustomNumPad({
-    super.key,
-    this.buttonSize = 60,
-    required this.delete,
-    required this.onSubmit,
-    required this.controller,
-    this.maxLength = 4,
-    this.onBiometric
-  });
+  const CustomNumPad(
+      {super.key,
+      this.buttonSize = 60,
+      required this.delete,
+      required this.onSubmit,
+      required this.controller,
+      this.maxLength = 4,
+      this.onBiometric});
 
   @override
   Widget build(BuildContext context) {
@@ -76,20 +86,21 @@ class CustomNumPad extends StatelessWidget {
             children: [
               // Empty button
               SizedBox(
-                height: Get.width * 0.1,
-                width: Get.width * 0.1,
-                child: InkWell(onTap: (){
-                  onBiometric?.call();
-                }, child: Container(
-                  padding: const EdgeInsets.all(8),
-                  child: Image.asset(
-                    "assets/images/Frame333.png",
-                    color: primaryAltColor.value,
-                    height: 20,
-                    width: 20,
-                  ),
-                ))
-              ),
+                  height: Get.width * 0.1,
+                  width: Get.width * 0.1,
+                  child: InkWell(
+                      onTap: () {
+                        onBiometric?.call();
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        child: Image.asset(
+                          "assets/images/Frame333.png",
+                          color: primaryAltColor.value,
+                          height: 20,
+                          width: 20,
+                        ),
+                      ))),
               // Number 0
               NumberButton(
                 number: 0,

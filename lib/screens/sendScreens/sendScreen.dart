@@ -8,7 +8,6 @@
  * (at your option) any later version.
  */
 
-
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -105,7 +104,8 @@ class _SendScreenState extends State<SendScreen> {
     // Ensure address has correct format based on network
     if (widget.token.network == WalletTokenNetWork.internetComputer) {
       // ICP principal format check
-      if (!WalletContext.verifyPrincipal(text: addressController.text.trim()) && !WalletContext.verifyAccountId(text: addressController.text.trim())) {
+      if (!WalletContext.verifyPrincipal(text: addressController.text.trim()) &&
+          !WalletContext.verifyAccountId(text: addressController.text.trim())) {
         addressError.value = 'Invalid ICP Account format';
         // showToast("Invalid ICP principal format");
         return;
@@ -362,7 +362,10 @@ class _SendScreenState extends State<SendScreen> {
                   ],
                 ),
                 hasHeader: true,
-                headerText: widget.token.tokenAddress == "ryjl3-tyaaa-aaaaa-aaaba-cai" ? "Principal or Account Id" : "Principal",
+                headerText:
+                    widget.token.tokenAddress == "ryjl3-tyaaa-aaaaa-aaaba-cai"
+                        ? "Principal or Account Id"
+                        : "Principal",
                 hintText: "Type here",
                 onChange: (val) {
                   setState(() {});
@@ -452,7 +455,8 @@ class _SendScreenState extends State<SendScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    getTranslated(context, "Recent transfers") ?? "Recent transfers",
+                    getTranslated(context, "Recent transfers") ??
+                        "Recent transfers",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 15,

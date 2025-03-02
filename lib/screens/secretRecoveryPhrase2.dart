@@ -1,3 +1,14 @@
+/*
+ * Fusion Wallet - A non-custodial cryptocurrency wallet
+ * Copyright (C) 2025 Fusion Wallet
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ */
+
+
 import 'package:flutter/material.dart';
 import 'package:fusion_wallet/common_widgets/bottomRectangularbtn.dart';
 import 'package:fusion_wallet/controllers/utils.dart';
@@ -29,8 +40,8 @@ class _SecretRecoveryPharase2State extends State<SecretRecoveryPharase2> {
     print(mnemonicList.length);
     print(mnemonicList);
     mnemonicWidget(mnemonicList);
-
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,7 +51,9 @@ class _SecretRecoveryPharase2State extends State<SecretRecoveryPharase2> {
           padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
           child: Column(
             children: [
-              SizedBox(height: 24.0,),
+              SizedBox(
+                height: 24.0,
+              ),
               Container(
                 width: Get.width,
                 // height: 44,
@@ -60,7 +73,8 @@ class _SecretRecoveryPharase2State extends State<SecretRecoveryPharase2> {
                         padding: EdgeInsets.all(6),
                         decoration: ShapeDecoration(
                           color: cardcolor.value,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8)),
                         ),
                         child: Icon(
                           Icons.arrow_back_ios_new,
@@ -142,18 +156,21 @@ class _SecretRecoveryPharase2State extends State<SecretRecoveryPharase2> {
                   ],
                 ),
               ),
-
-
-              SizedBox(height: 24,),
-              BottomRectangularBtn(onTapFunc: () {
-                copyToClipboard(widget.mnemonic);
-              }, btnTitle: "Copy")
+              SizedBox(
+                height: 24,
+              ),
+              BottomRectangularBtn(
+                  onTapFunc: () {
+                    copyToClipboard(widget.mnemonic);
+                  },
+                  btnTitle: "Copy")
             ],
           ),
         ),
       ),
     );
   }
+
   mnemonicWidget(List<String> mnemonicList) {
     /*List<String> _mnemonicList = _mnemonic.split(" ");
     print(_mnemonicList.length);
@@ -166,7 +183,8 @@ class _SecretRecoveryPharase2State extends State<SecretRecoveryPharase2> {
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: ShapeDecoration(
             color: cardcolor.value,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -174,7 +192,7 @@ class _SecretRecoveryPharase2State extends State<SecretRecoveryPharase2> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                '${index+1}.',
+                '${index + 1}.',
                 style: TextStyle(
                   color: labelColorPrimaryShade.value,
                   fontSize: 16,

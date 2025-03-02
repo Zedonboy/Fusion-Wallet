@@ -15,6 +15,7 @@
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
 import '../frb_generated.dart';
+import 'nft_service.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'wallet.dart';
 
@@ -26,10 +27,13 @@ abstract class IcWalletService implements RustOpaqueInterface {
   Future<BigInt> approve(
       {required WalletToken token,
       required String spender,
-      required BigInt amount});
+      required BigInt amount,
+      BigInt? expiresAt});
+
+  IcCollectionService createCollectionService();
 
   /// Checks if a spender is approved for a certain amount
-  Future<BigInt> getAllowance(
+  Future<AllowanceResponse> getAllowance(
       {required WalletToken token,
       required String owner,
       required String spender});
@@ -51,10 +55,37 @@ abstract class IcWalletService implements RustOpaqueInterface {
   Future<BigInt> send(
       {required WalletToken token, required String to, required BigInt amount});
 
+  Future<SwapResponse> swap(
+      {required WalletToken payToken,
+      required WalletToken receiveToken,
+      required BigInt payAmount,
+      double? slippage});
+
   Future<QuoteResponse> swapQuote(
       {required WalletToken payToken,
       required WalletToken receiveToken,
       required BigInt payAmount});
+}
+
+class AllowanceResponse {
+  final BigInt allowance;
+  final BigInt? expiresAt;
+
+  const AllowanceResponse({
+    required this.allowance,
+    this.expiresAt,
+  });
+
+  @override
+  int get hashCode => allowance.hashCode ^ expiresAt.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is AllowanceResponse &&
+          runtimeType == other.runtimeType &&
+          allowance == other.allowance &&
+          expiresAt == other.expiresAt;
 }
 
 class QuoteResponse {
@@ -63,6 +94,7 @@ class QuoteResponse {
   final BigInt txCount;
   final double midPrice;
   final BigInt receiveAmount;
+  final BigInt estimatedFeeAmount;
 
   const QuoteResponse({
     required this.receiveTokenAddress,
@@ -70,6 +102,7 @@ class QuoteResponse {
     required this.txCount,
     required this.midPrice,
     required this.receiveAmount,
+    required this.estimatedFeeAmount,
   });
 
   @override
@@ -78,7 +111,8 @@ class QuoteResponse {
       slippage.hashCode ^
       txCount.hashCode ^
       midPrice.hashCode ^
-      receiveAmount.hashCode;
+      receiveAmount.hashCode ^
+      estimatedFeeAmount.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -89,7 +123,8 @@ class QuoteResponse {
           slippage == other.slippage &&
           txCount == other.txCount &&
           midPrice == other.midPrice &&
-          receiveAmount == other.receiveAmount;
+          receiveAmount == other.receiveAmount &&
+          estimatedFeeAmount == other.estimatedFeeAmount;
 }
 
 class SimpleTransaction {
@@ -125,4 +160,43 @@ class SimpleTransaction {
           to == other.to &&
           timestamp == other.timestamp &&
           symbol == other.symbol;
+}
+
+class SwapResponse {
+  final BigInt txId;
+  final String status;
+  final String paySymbol;
+  final String receiveSymbol;
+  final BigInt payAmount;
+  final BigInt receiveAmount;
+
+  const SwapResponse({
+    required this.txId,
+    required this.status,
+    required this.paySymbol,
+    required this.receiveSymbol,
+    required this.payAmount,
+    required this.receiveAmount,
+  });
+
+  @override
+  int get hashCode =>
+      txId.hashCode ^
+      status.hashCode ^
+      paySymbol.hashCode ^
+      receiveSymbol.hashCode ^
+      payAmount.hashCode ^
+      receiveAmount.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is SwapResponse &&
+          runtimeType == other.runtimeType &&
+          txId == other.txId &&
+          status == other.status &&
+          paySymbol == other.paySymbol &&
+          receiveSymbol == other.receiveSymbol &&
+          payAmount == other.payAmount &&
+          receiveAmount == other.receiveAmount;
 }

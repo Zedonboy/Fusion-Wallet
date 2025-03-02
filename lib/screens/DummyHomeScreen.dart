@@ -1,3 +1,14 @@
+/*
+ * Fusion Wallet - A non-custodial cryptocurrency wallet
+ * Copyright (C) 2025 Fusion Wallet
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ */
+
+
 import 'package:flutter/material.dart';
 import 'package:fusion_wallet/common_widgets/futureImageWidget.dart';
 import 'package:fusion_wallet/constants/colors.dart';
@@ -115,8 +126,8 @@ class DummyHomeScreen extends StatelessWidget {
                     _tokenCard("USDC", "USD Coin", "300", "\$1.00", "300.00",
                         "assets/images/usdc.png"),
                     SizedBox(height: 12),
-                    _tokenCard("ETH", "Ethereum", "0.113", "\$2,250",
-                        "254.25", "assets/images/eth.png"),
+                    _tokenCard("ETH", "Ethereum", "0.113", "\$2,250", "254.25",
+                        "assets/images/eth.png"),
                     SizedBox(height: 12),
                     _tokenCard("SOL", "Solana", "4.26", "\$95.00", "04.70",
                         "assets/images/sol.png"),

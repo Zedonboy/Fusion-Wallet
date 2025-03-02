@@ -1,3 +1,14 @@
+/*
+ * Fusion Wallet - A non-custodial cryptocurrency wallet
+ * Copyright (C) 2025 Fusion Wallet
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ */
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -251,7 +262,7 @@ class _InputFieldsState extends State<InputFields> {
                       // color: appController.isDark.value ? labelColor.value : placeholderColor
                       ),
                   filled: true,
-                  fillColor:Colors.transparent,
+                  fillColor: Colors.transparent,
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                   hintText: getTranslated(context, "${widget.hintText}") ??

@@ -1,10 +1,20 @@
+/*
+ * Fusion Wallet - A non-custodial cryptocurrency wallet
+ * Copyright (C) 2025 Fusion Wallet
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ */
+
+
 import 'package:flutter/material.dart';
 import 'package:fusion_wallet/common_widgets/bottomRectangularbtn.dart';
 import 'package:fusion_wallet/constants/colors.dart';
 import 'package:fusion_wallet/screens/createWallet/confirmSeedPhrase.dart';
 import 'package:fusion_wallet/src/rust/api/wallet.dart';
 import 'package:get/get.dart';
-
 
 class CreaateWalletStep2 extends StatefulWidget {
   const CreaateWalletStep2({super.key, required this.password});
@@ -239,10 +249,10 @@ class _CreaateWalletStep2State extends State<CreaateWalletStep2> {
                         // isDisabled: true,
                         onTapFunc: () {
                           Get.to(() => ConfirmSeedPhrase(
-                                  password: widget.password,
-                                  mnemonic: _mnemonic.split(" "),
-                                  mn: _mnemonic.split(" "),
-                                  mne: _mnemonic));
+                              password: widget.password,
+                              mnemonic: _mnemonic.split(" "),
+                              mn: _mnemonic.split(" "),
+                              mne: _mnemonic));
                         },
                         btnTitle: "Next"),
                     SizedBox(

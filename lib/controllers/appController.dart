@@ -8,7 +8,6 @@
  * (at your option) any later version.
  */
 
-
 import 'dart:async';
 import 'dart:convert';
 
@@ -17,6 +16,7 @@ import 'package:fusion_wallet/common_widgets/futureImageWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:fusion_wallet/controllers/utils.dart';
 import 'package:fusion_wallet/src/rust/api/ic_wallet_service.dart';
+import 'package:fusion_wallet/src/rust/api/nft_service.dart';
 import 'package:fusion_wallet/src/rust/api/wallet.dart';
 
 import 'package:get/get.dart';
@@ -31,8 +31,10 @@ class AppController extends GetxController {
   RxMap<String, WalletToken> tokens_map = RxMap();
   // RxList<WalletToken> tokens = WalletContext.getInitialSupportedTokens().obs;
   IcWalletService? ic_service;
-  var token_image_map = RxMap<String, Widget>();
+  var token_image_map = RxMap<String, Widget?>();
   Timer? _balanceTimer;
+
+  RxMap<String, WalletCollection> collection = RxMap();
 
   /// Single map to hold all token data
   var token_data_map = RxMap<String, TokenData>();
@@ -64,6 +66,27 @@ class AppController extends GetxController {
       ic_service = data?.createIcService();
       start_balance_monitor();
     });
+  }
+
+  Future<void> check_token_balances() async {
+    if (ic_service == null || active_wallet.value == null) {
+      return;
+    }
+
+    try {
+      final all_tokens = WalletContext.getAllSupportedTokens();
+      
+      for (var token in all_tokens) {
+        final balance = await ic_service!.getBalance(token: token, account: active_wallet.value!.toIcpPrincipal());
+        
+        // Check if balance is greater than 0 and token fee
+        if (balance > token.transferFee) {
+          addToken(token);
+        }
+      }
+    } catch (e) {
+      print("Error checking token balances: $e");
+    }
   }
 
 // base16 key
@@ -216,6 +239,26 @@ class AppController extends GetxController {
     final prefs = await SharedPreferences.getInstance();
     final tokenList = tokens_map.values.map((t) => t.toString()).toList();
     await prefs.setString('saved_tokens', jsonEncode(tokenList));
+  }
+
+  // Add to AppController class:
+  Future<void> saveCollectionTokens() async {
+    final prefs = await SharedPreferences.getInstance();
+    final tokenList = collection.values.map((t) => t.toString()).toList();
+    await prefs.setString('saved_collections', jsonEncode(tokenList));
+  }
+
+  Future<void> loadSavedCollection() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedTokens = prefs.getString('saved_collections');
+    if (savedTokens != null) {
+      final List<dynamic> tokenList = jsonDecode(savedTokens);
+      for (var tokenJson in tokenList) {
+        final token = WalletCollection.fromString(data: tokenJson);
+        collection[token.tokenAddress] = token;
+      }
+      collection.refresh();
+    }
   }
 
   Future<void> loadSavedTokens() async {

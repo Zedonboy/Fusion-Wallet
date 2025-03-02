@@ -1,3 +1,14 @@
+/*
+ * Fusion Wallet - A non-custodial cryptocurrency wallet
+ * Copyright (C) 2025 Fusion Wallet
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ */
+
+
 import 'package:flutter/material.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 
@@ -5,7 +16,7 @@ var primaryColor2 = Color(0xff1A2B56).obs; //changes
 var primaryColor = Color(0xff5C87FF).obs; //changes
 var primaryBackgroundColor = Color(0xff09080C).obs; //changed
 var primaryAltBgColor2 = Color(0xff242438);
-var primaryAltBackgroundColor =  Color(0xff242438).obs;
+var primaryAltBackgroundColor = Color(0xff242438).obs;
 var inputFieldBackgroundColor = Color(0xff6C7CA7).obs; //changes
 var inputFieldBackgroundColor2 = Color(0xff1A1930).obs;
 var blueCard1 = Color(0xffFDFCFD).obs; //changed

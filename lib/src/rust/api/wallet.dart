@@ -107,6 +107,11 @@ class WalletContext {
   static List<WalletToken> getInitialSupportedTokens() => RustLib.instance.api
       .crateApiWalletWalletContextGetInitialSupportedTokens();
 
+  static Future<double> getTokenWorth(
+          {required String tokenSymbol, required double amount}) =>
+      RustLib.instance.api.crateApiWalletWalletContextGetTokenWorth(
+          tokenSymbol: tokenSymbol, amount: amount);
+
   static String hashData({required String data}) =>
       RustLib.instance.api.crateApiWalletWalletContextHashData(data: data);
 

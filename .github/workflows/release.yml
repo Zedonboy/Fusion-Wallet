@@ -131,6 +131,6 @@ jobs:
             ${{ github.event.inputs.release_note }}
           files: |
             build/apk/*-release.apk
-            build/aab/app-release.aab
+            build/aab/*.aab
           tag_name: ${{ github.event.inputs.tag_name }} # Use the dynamic tag_name input
           name: Release ${{ github.event.inputs.tag_name }} # Use the dynamic tag_name input

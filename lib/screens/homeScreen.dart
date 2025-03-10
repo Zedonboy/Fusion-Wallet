@@ -45,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    UpdateChecker.checkForUpdate(context);
+    // UpdateChecker.checkForUpdate(context);
     appController.check_token_balances();
   }
 

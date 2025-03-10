@@ -37,100 +37,62 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu' # Use Zulu OpenJDK
-          java-version: '17' # Java 11 is required for signing
+          java-version: '17' # Java 17 is required for signing
 
-      - name: Build for APK ABIs
-        run: flutter build apk --split-per-abi --build-name=git-${{github.event.inputs.tag_name}}
+      - name: Decode Keystore
+        run: |
+          echo "${{ secrets.KEYSTORE_FILE }}" | base64 --decode > android/app/your_keystore_file.jks
 
-      - name: Build for APK
-        run: flutter build apk --release --build-name=git-${{github.event.inputs.tag_name}}
+      - name: Create key.properties
+        run: |
+          echo "storeFile=your_keystore_file.jks" > android/key.properties
+          echo "storePassword=${{ secrets.KEYSTORE_PASSWORD }}" >> android/key.properties
+          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
+          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/key.properties
+
+      - name: Build APK (Split by ABI)
+        run: flutter build apk --split-per-abi --release --build-name=${{ github.event.inputs.tag_name }}
 
       - name: Build App Bundle
-        run: flutter build appbundle --release --build-name=${{github.event.inputs.tag_name}}
+        run: flutter build appbundle --release --build-name=${{ github.event.inputs.tag_name }}
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Sign APK
-        run: |
-          echo "${{ secrets.ANDROID_KEYSTORE }}" | base64 -d > keystore.jks
-          echo "${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" > keystore_password.txt
-          echo "${{ secrets.ANDROID_KEY_ALIAS }}" > key_alias.txt
-          echo "${{ secrets.ANDROID_KEY_PASSWORD }}" > key_password.txt
-
-          LATEST_BUILD_TOOLS=$(ls $ANDROID_HOME/build-tools | sort -V | tail -n 1)
-          ZIPALIGN="$ANDROID_HOME/build-tools/$LATEST_BUILD_TOOLS/zipalign"
-
-          # for apk in build/app/outputs/flutter-apk/*-release.apk; do
-          #   [ -f "$apk" ] || continue
-      
-          #   filename=$(basename "$apk")
-          #   signed_name="${filename%.*}-signed.apk"
-      
-          #   jarsigner -verbose \
-          #     -keystore keystore.jks \
-          #     -storepass $(cat keystore_password.txt) \
-          #     -keypass $(cat key_password.txt) \
-          #     "$apk" \
-          #     $(cat key_alias.txt)
-
-          #   $ZIPALIGN -v 4 \
-          #     "$apk" \
-          #     "build/app/outputs/flutter-apk/$signed_name"
-          # done
-      - name: Sign App Bundle
-        run: |
-            # We can reuse the keystore and password files from APK signing
-            jarsigner -verbose \
-              -keystore keystore.jks \
-              -storepass $(cat keystore_password.txt) \
-              -keypass $(cat key_password.txt) \
-              build/app/outputs/bundle/release/app-release.aab \
-              $(cat key_alias.txt)
-  
-            # Create a directory for the signed bundle
-            mkdir -p build/app/outputs/bundle/release/signed
-            
-            # Move the signed bundle
-            mv build/app/outputs/bundle/release/app-release.aab \
-              build/app/outputs/bundle/release/signed/app-release-signed.aab
-
-      - name: Upload APK as artifact
+      - name: Upload APKs as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: signed-apk
+          name: apks
           path: build/app/outputs/flutter-apk/*-release.apk
 
       - name: Upload App Bundle as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: app-release.aab
-          path: build/app/outputs/bundle/release/signed/app-release-signed.aab
+          name: appbundle
+          path: build/app/outputs/bundle/release/app-release.aab
 
   release:
     runs-on: ubuntu-latest
     needs: build
 
     steps:
-      - name: Download Signed APK artifact
+      - name: Download APKs artifact
         uses: actions/download-artifact@v4
         with:
-          name: signed-apk
-          path: build/apk
+          name: apks
+          path: build/apks
 
       - name: Download App Bundle artifact
         uses: actions/download-artifact@v4
         with:
-          name: app-release.aab
-          path: build/aab
-      - name: Release Signed APKs
+          name: appbundle
+          path: build/appbundle
+
+      - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           body: |
             ## Release Notes
             ${{ github.event.inputs.release_note }}
           files: |
-            build/apk/*-release.apk
-            build/aab/*.aab
-          tag_name: ${{ github.event.inputs.tag_name }} # Use the dynamic tag_name input
-          name: Release ${{ github.event.inputs.tag_name }} # Use the dynamic tag_name input
+            build/apks/*.apk
+            build/appbundle/app-release.aab
+          tag_name: ${{ github.event.inputs.tag_name }}
+          name: Release ${{ github.event.inputs.tag_name }}

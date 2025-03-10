@@ -52,6 +52,9 @@ jobs:
 
       - name: Build APK (Split by ABI)
         run: flutter build apk --split-per-abi --release --build-name=${{ github.event.inputs.tag_name }}
+      
+      - name: Build General APK
+        run: flutter build apk --release --build-name=${{ github.event.inputs.tag_name }}
 
       - name: Build App Bundle
         run: flutter build appbundle --release --build-name=${{ github.event.inputs.tag_name }}

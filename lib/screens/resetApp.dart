@@ -8,9 +8,11 @@
  * (at your option) any later version.
  */
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fusion_wallet/screens/VerifyPassword.dart';
 import 'package:fusion_wallet/screens/pinScreen.dart';
 import 'package:fusion_wallet/screens/splashScreen.dart';
 import 'package:get/get.dart';
@@ -144,9 +146,14 @@ class _ResetAppState extends State<ResetApp> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      Get.to(PinScreen(
-                        onPinConfirm: (data) {
-                          clear_app_data();
+                      if (kIsWeb) {
+                        Get.to(() => VerifyPassword(onPasswordVerified: (p0) {
+                              clear_app_data();
+                            },));
+                      } else {
+                        Get.to(PinScreen(
+                          onPinConfirm: (data) {
+                            clear_app_data();
                         },
                         isSignin: false,
                         onBiometric: (auth) {
@@ -155,7 +162,7 @@ class _ResetAppState extends State<ResetApp> {
                           }
                         },
                       ));
-                      // Get.to(Transactions());
+                      }
                     },
                     child: Container(
                       height: 50,

@@ -17,6 +17,7 @@ import 'package:fusion_wallet/controllers/utils.dart';
 import 'package:fusion_wallet/localization/language_constants.dart';
 import 'package:fusion_wallet/screens/receiveScreen.dart';
 import 'package:fusion_wallet/screens/sendScreens/sendScreen.dart';
+import 'package:fusion_wallet/screens/tokenScreenOption/option.dart';
 import 'package:fusion_wallet/src/rust/api/wallet.dart';
 import 'package:fusion_wallet/src/rust/api/ic_wallet_service.dart';
 import 'package:get/get.dart';
@@ -24,7 +25,8 @@ import 'package:get/get.dart';
 // import '../nfts/nftsScreen.dart';
 class TokenScreen extends StatefulWidget {
   WalletToken token;
-  TokenScreen({super.key, required this.token});
+  TokenScreen({super.key, required this.token, this.option});
+  final TokenScreenOption? option;
 
   @override
   State<TokenScreen> createState() => _TokenScreenState();
@@ -263,6 +265,7 @@ class _TokenScreenState extends State<TokenScreen> {
                       ],
                     ),
                   ),
+                  ...(widget.option?.getOptions(context, appController) ?? []),
                   // GestureDetector(
                   //   onTap: () {
                   //     Get.to(() => SwapScreen());

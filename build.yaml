@@ -1,0 +1,12 @@
+targets:
+  $default:
+    builders:
+      squadron_builder:worker_builder:
+        generate_for:
+        - lib/common_widgets/**.dart
+        options:
+          output: "lib/src/rust/squadron_generated.web.g.dart"
+      source_gen:combining_builder:
+        options:
+          build_extensions:
+            '^lib/src/rust/frb_generated.dart': ['lib/src/rust/frb_generated.web.g.dart'] 

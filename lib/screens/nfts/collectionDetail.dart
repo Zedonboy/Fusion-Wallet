@@ -305,7 +305,7 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
                                                 ),
                                                 child: CachedNetworkImage(
                                                   imageUrl: map["logo"]
-                                                          ?.field0
+                                                          ?.data
                                                           .toString() ??
                                                       widget.collection
                                                           .imageUrl ??

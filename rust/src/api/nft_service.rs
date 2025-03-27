@@ -1,6 +1,7 @@
 use std::{collections::HashMap, default, str::FromStr, sync::Arc};
 
 use candid::{decode_args, encode_args, Nat, Principal};
+use flutter_rust_bridge::frb;
 use ic_agent::Agent;
 use icrc_ledger_types::{icrc::generic_metadata_value::MetadataValue, icrc1::account::Account};
 use serde::{Deserialize, Serialize};
@@ -15,19 +16,28 @@ pub struct WalletCollection {
 }
 
 pub enum CollectMetaValue {
-    Text(String),
-    Int(i64),
-    Nat(u64),
-    Blob(Vec<u8>)
+    Text {
+        data: String,
+    },
+    
+    MetadataInt {
+        data: i128,
+    },
+    Nat {
+        data: u64,
+    },
+    Blob {
+        data: Vec<u8>,
+    },
 }
 
 impl From<MetadataValue> for CollectMetaValue {
     fn from(value: MetadataValue) -> Self {
         match value {
-            MetadataValue::Nat(nat) => Self::Nat(nat.0.try_into().unwrap()),
-            MetadataValue::Int(int) => Self::Int(int.0.try_into().unwrap()),
-            MetadataValue::Text(text) => Self::Text(text),
-            MetadataValue::Blob(byte_buf) => Self::Blob(byte_buf.to_vec()),
+            MetadataValue::Nat(nat) => Self::Nat { data: nat.0.try_into().unwrap() },
+            MetadataValue::Int(int) => Self::MetadataInt { data: int.0.try_into().unwrap() },
+            MetadataValue::Text(text) => Self::Text { data: text },
+            MetadataValue::Blob(byte_buf) => Self::Blob { data: byte_buf.to_vec() },
         }
     }
 }

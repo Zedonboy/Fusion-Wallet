@@ -400,7 +400,7 @@ class _InputFieldPasswordState extends State<InputFieldPassword> {
                   // color: appController.isDark.value ? labelColor.value : placeholderColor
                   ),
               filled: true,
-              fillColor: inputFieldBackgroundColor.value,
+              fillColor: inputFieldBackgroundColor2.value,
 
               contentPadding:
                   EdgeInsets.symmetric(horizontal: 20, vertical: 15),
@@ -408,20 +408,20 @@ class _InputFieldPasswordState extends State<InputFieldPassword> {
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide(
-                    color: inputFieldBackgroundColor.value, width: 0.5),
+                    color: inputFieldBackgroundColor.value, width: 1),
               ),
               disabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide(
-                    color: inputFieldBackgroundColor.value, width: 0.5),
+                    color: inputFieldBackgroundColor.value, width: 1),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide(
-                    color: inputFieldBackgroundColor.value, width: 0.5),
+                    color: inputFieldBackgroundColor.value, width: 1),
               ),
               focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: darkBlueColor.value, width: 0.5),
+                borderSide: BorderSide(color: darkBlueColor.value, width: 1),
                 borderRadius: BorderRadius.circular(12),
               ),
               suffixIcon: Padding(

@@ -154,7 +154,7 @@ class _NftDetailsState extends State<NftDetails> {
                                         ),
                                       ),
                                       child: CachedNetworkImage(
-                                        imageUrl: widget.data.properties["logo"]?.field0.toString() ?? widget.data.collection.imageUrl ??
+                                        imageUrl: widget.data.properties["logo"]?.data.toString() ?? widget.data.collection.imageUrl ??
                                         'https://media.istockphoto.com/id/1372146767/photo/nft-hexagons-pixelated-concept.jpg?b=1&s=612x612&w=0&k=20&c=4dMyZNzeFIAQfDvEL_jHqOa1eUYxsAymj-GwIUxK95Q=',
                                         fit: BoxFit.cover,
                                         errorWidget: (context, url, error) =>
@@ -225,7 +225,7 @@ class _NftDetailsState extends State<NftDetails> {
                                       children: [
                                         Text(
                                           
-                                          widget.data.properties['description']?.field0.toString() ?? widget.data.collection.desciption ?? "",
+                                          widget.data.properties['description']?.data.toString() ?? widget.data.collection.desciption ?? "",
                                           style: TextStyle(
                                             color: lightTextColor.value,
                                             fontSize: 12,
@@ -289,6 +289,7 @@ class _NftDetailsState extends State<NftDetails> {
                                               final entry = widget
                                                   .data.properties.entries
                                                   .elementAt(index);
+                                                  
                                               if (entry.key == "logo") {
                                                 return null;
                                               }
@@ -329,7 +330,7 @@ class _NftDetailsState extends State<NftDetails> {
                                                     ),
                                                     SizedBox(width: 4),
                                                     Text(
-                                                      entry.value.field0
+                                                      entry.value.data
                                                           .toString(),
                                                       textAlign:
                                                           TextAlign.right,

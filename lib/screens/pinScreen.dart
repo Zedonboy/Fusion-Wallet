@@ -9,6 +9,7 @@
  */
 
 import 'package:credential_manager/credential_manager.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fusion_wallet/common_widgets/customNamPad.dart';
@@ -50,10 +51,12 @@ class _PinScreenState extends State<PinScreen>
     super.initState();
     _pinController.clear();
 
-    if (widget.isSignin) {
-      _checkCredentials();
-    } else if (appController.enabledBiometric.value) {
-      _checkBiometrics();
+    if (!kIsWeb) {
+      if (widget.isSignin) {
+        _checkCredentials();
+      } else if (appController.enabledBiometric.value) {
+        _checkBiometrics();
+      }
     }
   }
 

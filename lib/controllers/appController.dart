@@ -215,7 +215,6 @@ class AppController extends GetxController {
   }
 
   void addToken(WalletToken token) {
-    if (tokens_map.containsKey(token.tokenAddress)) return;
 
     Future.microtask(() {
       final imageData = FutureAdaptiveImage(

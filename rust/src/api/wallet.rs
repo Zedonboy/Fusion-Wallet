@@ -32,7 +32,8 @@ use bip39::{Mnemonic, Seed};
 use candid::Principal;
 use flutter_rust_bridge::frb;
 use ic_agent::{identity::Secp256k1Identity, Identity};
-use ic_ledger_types::AccountIdentifier;
+// use ic_ledger_types::AccountIdentifier;
+use icrc_ledger_types::icrc1::account::{principal_to_subaccount, Account};
 use k256::{
     ecdsa::Signature,
     sha2::{Digest, Sha256},
@@ -43,7 +44,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
 use super::{
-    constants::IC_HOST_URL, http_service::HttpWalletService, ic_wallet_service::ICWalletService
+    constants::IC_HOST_URL, http_service::HttpWalletService, ic_wallet_service::ICWalletService, utils::{AccountIdentifier, Subaccount}
 };
 use lazy_static::lazy_static;
 
@@ -64,7 +65,6 @@ pub enum WalletTokenNetWork {
 }
 
 #[derive(Serialize, Deserialize)]
-#[frb(opaque)]
 pub struct WalletToken {
     pub symbol: String,
     pub network: WalletTokenNetWork,
@@ -141,7 +141,7 @@ impl Wallet {
     pub fn to_account_identifier(&self) -> anyhow::Result<String> {
         let principal_str = self.to_icp_principal()?;
         let owner = Principal::from_text(principal_str)?;
-        let account_id = AccountIdentifier::new(&owner, &ic_ledger_types::Subaccount([0; 32]));
+        let account_id = AccountIdentifier::new(&owner, &Subaccount([0; 32]));
         Ok(account_id.to_hex())
     }
 
@@ -149,10 +149,17 @@ impl Wallet {
     pub fn create_ic_service(&self) -> anyhow::Result<ICWalletService> {
         let secret_key = SecretKey::from_bytes(&self.key.private_key().to_bytes())?;
         let identity = Secp256k1Identity::from_private_key(secret_key);
+        
+        #[cfg(not(target_family = "wasm"))]
         let agent = ic_agent::Agent::builder()
             .with_url(IC_HOST_URL)
             .with_identity(identity)
             .with_arc_http_middleware(CLIENT.clone())
+            .build()?;
+        #[cfg(target_family = "wasm")]
+        let agent = ic_agent::Agent::builder()
+            .with_url(IC_HOST_URL)
+            .with_identity(identity)
             .build()?;
         let arc_agent = Arc::new(agent);
         let service = ICWalletService::new(arc_agent);
@@ -247,6 +254,17 @@ impl WalletContext {
                 gov_canister: Some("rrkah-fqaaa-aaaaa-aaaaq-cai".to_string())
             },
             WalletToken {
+                symbol: "TCYCLES".to_string(),
+                network: WalletTokenNetWork::InternetComputer,
+                token_address: "um5iw-rqaaa-aaaaq-qaaba-cai".to_string(),
+                token_decimal: Some(12),
+                image_url: Some("assets/images/cycles.png".to_string()),
+                token_name: "Trillion Cycles".to_string(),
+                index_canister: Some("ul4oc-4iaaa-aaaaq-qaabq-cai".to_string()),
+                transfer_fee: 100_000_000,
+                gov_canister: None
+            },
+            WalletToken {
                 symbol: "ckETH".to_string(),
                 network: WalletTokenNetWork::InternetComputer,
                 token_address: "ss2fx-dyaaa-aaaar-qacoq-cai".to_string(),
@@ -296,6 +314,7 @@ impl WalletContext {
     #[flutter_rust_bridge::frb(sync)]
     pub fn get_all_supported_tokens() -> Vec<WalletToken> {
         vec![
+            // this must be the first token in the list, a code depends on it.
             WalletToken {
                 symbol: "ICP".to_string(),
                 network: WalletTokenNetWork::InternetComputer,
@@ -306,6 +325,17 @@ impl WalletContext {
                 index_canister: Some("qhbym-qaaaa-aaaaa-aaafq-cai".to_string()),
                 transfer_fee: 10000,
                 gov_canister: Some("rrkah-fqaaa-aaaaa-aaaaq-cai".to_string())
+            },
+            WalletToken {
+                symbol: "TCYCLES".to_string(),
+                network: WalletTokenNetWork::InternetComputer,
+                token_address: "um5iw-rqaaa-aaaaq-qaaba-cai".to_string(),
+                token_decimal: Some(12),
+                image_url: Some("assets/images/cycles.png".to_string()),
+                token_name: "Trillion Cycles".to_string(),
+                index_canister: Some("ul4oc-4iaaa-aaaaq-qaabq-cai".to_string()),
+                transfer_fee: 100_000_000,
+                gov_canister: None
             },
             WalletToken {
                 symbol: "ckBTC".to_string(),
@@ -836,9 +866,10 @@ impl WalletContext {
         result.is_ok()
     }
 
+    // it verifies account.
     #[flutter_rust_bridge::frb(sync)]
-    pub fn verify_principal(text: &str) -> bool {
-        let result = Principal::from_text(text);
+    pub fn verify_account(text: &str) -> bool {
+        let result = Account::from_str(text);
         result.is_ok()
     }
 
@@ -847,6 +878,27 @@ impl WalletContext {
         let result = AccountIdentifier::from_hex(text);
         result.is_ok()
     }
+
+    #[flutter_rust_bridge::frb(sync)]
+    pub fn generate_account_id(owner: &str, subaccount: Option<String>) -> anyhow::Result<String> {
+        let owner = Principal::from_text(owner)?;
+        let subaccount = subaccount.map_or(Subaccount::empty(), |s| Subaccount::from(Principal::from_text(s).unwrap()));
+        let account_id = AccountIdentifier::new(&owner, &subaccount);
+        Ok(account_id.to_hex())
+    }
+
+    #[flutter_rust_bridge::frb(sync)]
+    pub fn generate_icrc_account(owner: &str, subaccount: Option<String>) -> anyhow::Result<String> {
+        let owner = Principal::from_text(owner)?;
+
+        let acc = Account{
+            owner,
+            subaccount: subaccount.map_or(None, |s| Some(principal_to_subaccount(Principal::from_text(s).unwrap()))),
+        };
+        Ok(acc.to_string())
+    }
+
+
 
     pub async fn get_token_worth(token_symbol: String, amount: f64) -> f64 {
         let symbol = if token_symbol.starts_with("ck") {

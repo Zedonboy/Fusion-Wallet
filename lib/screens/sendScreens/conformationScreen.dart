@@ -10,6 +10,7 @@
 
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fusion_wallet/common_widgets/bottomRectangularbtn.dart';
@@ -17,6 +18,7 @@ import 'package:fusion_wallet/constants/colors.dart';
 import 'package:fusion_wallet/controllers/appController.dart';
 import 'package:fusion_wallet/controllers/utils.dart';
 import 'package:fusion_wallet/localization/language_constants.dart';
+import 'package:fusion_wallet/screens/VerifyPassword.dart';
 import 'package:fusion_wallet/screens/pinScreen.dart';
 import 'package:fusion_wallet/src/rust/api/wallet.dart';
 import 'package:get/get.dart';
@@ -358,10 +360,8 @@ class _ConformationScreenState extends State<ConformationScreen> {
                                             width: 1,
                                             color:
                                                 primaryBackgroundColor.value)),
-                                    child: Center(
-                                      child: appController.token_image_map[
+                                    child: appController.token_image_map[
                                           widget.token.tokenAddress],
-                                    ),
                                   ),
                                 ],
                               ),
@@ -377,7 +377,11 @@ class _ConformationScreenState extends State<ConformationScreen> {
                   children: [
                     BottomRectangularBtn(
                       onTapFunc: () {
-                        trigger_send_sequence();
+                        if (kIsWeb) {
+                          trigger_pin_sequence();
+                        } else {
+                          trigger_send_sequence();
+                        }
                       },
                       btnTitle: "Send",
                       isLoading: isSending.value,
@@ -457,7 +461,13 @@ class _ConformationScreenState extends State<ConformationScreen> {
   }
 
   void trigger_pin_sequence() {
-    Get.to(() => PinScreen(
+    if (kIsWeb) {
+      Get.to(() => VerifyPassword(onPasswordVerified: (p0) {
+            Get.back();
+            start_sending();
+          },));
+    } else {
+      Get.to(() => PinScreen(
           isSignin: false,
           onPinConfirm: (data) {
             Get.back();
@@ -470,6 +480,7 @@ class _ConformationScreenState extends State<ConformationScreen> {
             }
           },
         ));
+    }
   }
 
   Widget confirmStatus() {

@@ -1,4 +1,19 @@
+/*
+ * Fusion Wallet - A non-custodial cryptocurrency wallet
+ * Copyright (C) 2025 Fusion Wallet
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ */
+
+
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fusion_wallet/common_widgets/bottomRectangularbtn.dart';
+import 'package:fusion_wallet/constants/colors.dart';
+import 'package:fusion_wallet/localization/language_constants.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 // import 'package:shimmer/shimmer.dart';
@@ -30,6 +45,81 @@ class CommonWidgets {
           fontSize: 13,
           fontFamily: 'sfpro',
         ),
+      ),
+    );
+  }
+
+  static Widget confirmStatus(String title, String description) {
+    return Container(
+      height: Get.height * 0.4,
+      width: Get.width,
+      padding: EdgeInsets.symmetric(horizontal: 22, vertical: 22),
+      color: primaryBackgroundColor.value,
+      child: Column(
+        children: [
+          Container(
+            height: 100,
+            width: 100,
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Color(0xff76CF56).withOpacity(0.20),
+                      Color(0xff55DDAF).withOpacity(0.20),
+                    ]),
+                shape: BoxShape.circle),
+            child:
+                Center(child: SvgPicture.asset("assets/svgs/shield-tick.svg")),
+          ),
+          SizedBox(
+            height: 16,
+          ),
+          Text(
+            title,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+              color: headingColor.value,
+              fontFamily: "dmsans",
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Text(
+            description,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+              color: lightTextColor.value,
+              fontFamily: "dmsans",
+            ),
+          ),
+          SizedBox(
+            height: 32,
+          ),
+          // BottomRectangularBtn(
+          //     onTapFunc: () {
+          //       // Get.to(TransactionScreen());
+          //     },
+          //     btnTitle: "View History"),
+          SizedBox(
+            height: 8,
+          ),
+          BottomRectangularBtn(
+              onlyBorder: true,
+              color: Colors.transparent,
+              onTapFunc: () {
+                Get.back();
+              },
+              btnTitle: "Ok"),
+          SizedBox(
+            height: 16,
+          ),
+        ],
       ),
     );
   }

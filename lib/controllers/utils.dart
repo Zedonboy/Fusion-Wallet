@@ -13,6 +13,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+// import 'package:fluttertoast/fluttertoast_web.dart';
 import 'package:intl/intl.dart';
 
 Future<void> copyToClipboard(String copiedText) async {
@@ -22,6 +23,7 @@ Future<void> copyToClipboard(String copiedText) async {
 
 showToast(message, {Color color = Colors.red}) {
   Fluttertoast.showToast(msg: message);
+  
   // Fluttertoast.showToast(
   //     msg: "$message",
   //     toastLength: Toast.LENGTH_SHORT,
@@ -130,4 +132,24 @@ String normalizeBalance(BigInt value, int decimals) {
   print(valueStr);
 
   return valueStr;
+}
+
+BigInt decimalToBlockchainUnits(double amount, int decimals) {
+  // Handle edge cases
+  if (amount < 0) {
+    throw ArgumentError('Amount cannot be negative');
+  }
+  
+  if (decimals < 0) {
+    throw ArgumentError('Decimals cannot be negative');
+  }
+  
+  // Calculate the multiplier (10^decimals)
+  BigInt multiplier = BigInt.from(10).pow(decimals);
+  
+  // Convert the decimal amount to blockchain units
+  // First multiply by 10^decimals to handle the decimal places
+  BigInt result = BigInt.from(amount * pow(10, decimals));
+  
+  return result;
 }

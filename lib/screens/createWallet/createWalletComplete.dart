@@ -9,6 +9,7 @@
  */
 
 import 'package:credential_manager/credential_manager.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fusion_wallet/common_widgets/bottomNavBar.dart';
@@ -17,6 +18,8 @@ import 'package:fusion_wallet/constants/colors.dart';
 import 'package:fusion_wallet/controllers/appController.dart';
 import 'package:fusion_wallet/src/rust/api/wallet.dart';
 import 'package:get/get.dart';
+import 'package:universal_web/web.dart' as web;
+import 'package:universal_web/js_interop.dart' as js;
 
 class CreateWalletComplete extends StatefulWidget {
   const CreateWalletComplete(
@@ -243,23 +246,38 @@ class _CreateWalletCompleteState extends State<CreateWalletComplete> {
   }
 
   save_to_credential() async {
-    final CredentialManager credentialManager = CredentialManager();
-    if (credentialManager.isSupportedPlatform) {
-      // Platform is supported, initialize the manager
-      await credentialManager.init(
-        preferImmediatelyAvailableCredentials: false,
-      );
-
+    if (kIsWeb) {
       try {
-        await credentialManager.savePasswordCredentials(
-          PasswordCredential(
-            username: 'fusion_wallet_user',
-            password: widget.passWord,
-          ),
+        final host = web.window.location.hostname;
+        final passwordCredentialInit = web.PasswordCredentialData(
+            id: "1", origin: host, password: widget.passWord);
+        final cred = await web.window.navigator.credentials
+            .create(
+                web.CredentialCreationOptions(password: passwordCredentialInit))
+            .toDart;
+        print(cred);
+      } catch (e) {
+        print(e);
+      }
+    } else {
+      final CredentialManager credentialManager = CredentialManager();
+      if (credentialManager.isSupportedPlatform) {
+        // Platform is supported, initialize the manager
+        await credentialManager.init(
+          preferImmediatelyAvailableCredentials: false,
         );
-      } on CredentialException catch (e) {
-        // Handle the error
-        print('Error saving password credential: ${e.message}');
+
+        try {
+          await credentialManager.savePasswordCredentials(
+            PasswordCredential(
+              username: 'fusion_wallet_user',
+              password: widget.passWord,
+            ),
+          );
+        } on CredentialException catch (e) {
+          // Handle the error
+          print('Error saving password credential: ${e.message}');
+        }
       }
     }
   }

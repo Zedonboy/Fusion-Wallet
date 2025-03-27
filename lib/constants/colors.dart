@@ -12,6 +12,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 
+const cycles_minting_canister = "rkp4c-7iaaa-aaaaa-aaaca-cai";
 var primaryColor2 = Color(0xff1A2B56).obs; //changes
 var primaryColor = Color(0xff5C87FF).obs; //changes
 var primaryBackgroundColor = Color(0xff09080C).obs; //changed

@@ -8,15 +8,18 @@
  * (at your option) any later version.
  */
 
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fusion_wallet/common_widgets/bottomNavBar.dart';
 import 'package:fusion_wallet/controllers/appController.dart';
+import 'package:fusion_wallet/screens/PasswordCreateScreen.dart';
+import 'package:fusion_wallet/screens/VerifyPassword.dart';
 import 'package:fusion_wallet/screens/pinCreateScreen.dart';
 import 'package:fusion_wallet/screens/pinScreen.dart';
 import 'package:fusion_wallet/src/rust/api/wallet.dart';
 import 'package:get/get.dart';
+import 'package:pwa_install/pwa_install.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -53,8 +56,12 @@ class _SplashScreenState extends State<SplashScreen> {
                 children: [
                   GestureDetector(
                       onTap: () {
-                        Get.to(() => PinCreationScreen(
-                            next_screen: WalletCreationType.import));
+                        if (kIsWeb) {
+                          Get.to(() => PasswordCreateScreen(next_screen: WalletCreationType.import));
+                        } else {
+                          Get.to(() => PinCreationScreen(
+                              next_screen: WalletCreationType.import));
+                        }
                       },
                       child: Container(
                         width: Get.width,
@@ -90,9 +97,15 @@ class _SplashScreenState extends State<SplashScreen> {
                   ),
                   GestureDetector(
                       onTap: () {
-                        Get.to(() => PinCreationScreen(
+                        if (kIsWeb) {
+                          Get.to(() => PasswordCreateScreen(
                               next_screen: WalletCreationType.create,
                             ));
+                        } else {
+                          Get.to(() => PinCreationScreen(
+                              next_screen: WalletCreationType.create,
+                            ));
+                        }
                       },
                       child: Container(
                         width: Get.width,
@@ -149,6 +162,12 @@ class _StartingPageState extends State<StartingPage> {
     // TODO: implement initState
     super.initState();
 
+    if (kIsWeb) {
+      if (PWAInstall().installPromptEnabled) {
+        PWAInstall().promptInstall_();
+      }
+    }
+
     redirect();
   }
 
@@ -157,19 +176,29 @@ class _StartingPageState extends State<StartingPage> {
     final storage = FlutterSecureStorage();
 
     if (await storage.containsKey(key: 'encrypted_mnemonic')) {
-      Get.offAll(
-        () => PinScreen(
-          onPinConfirm: (p0) {
-            final wallet = Wallet.fromSeed(seedPhrase: p0);
-            appController.active_wallet.value = wallet;
+      if (kIsWeb) {
+        Get.offAll(() => VerifyPassword(onPasswordVerified: (p0) {
+              final wallet = Wallet.fromSeed(seedPhrase: p0);
+              appController.active_wallet.value = wallet;
 
-            Get.offAll(() => BottomBar());
-            // Get.offAll(() => HomeScreen());
-          },
-          // onBiometric: (didAuth) {},
-          isSignin: true,
-        ),
-      );
+              Get.offAll(() => BottomBar());
+        },));
+
+      } else {
+        Get.offAll(
+          () => PinScreen(
+            onPinConfirm: (p0) {
+              final wallet = Wallet.fromSeed(seedPhrase: p0);
+              appController.active_wallet.value = wallet;
+
+              Get.offAll(() => BottomBar());
+              // Get.offAll(() => HomeScreen());
+            },
+            // onBiometric: (didAuth) {},
+            isSignin: true,
+          ),
+        );
+      }
     } else {
       Get.offAll(() => SplashScreen());
     }

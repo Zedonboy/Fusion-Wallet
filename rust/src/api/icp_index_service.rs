@@ -1,6 +1,6 @@
 use candid::{decode_args, encode_args, CandidType, Deserialize, Encode, Nat, Principal};
 use ic_agent::Agent;
-use ic_ledger_types::{AccountIdentifier, Subaccount};
+// use ic_ledger_types::{AccountIdentifier, Subaccount};
 use icrc_ledger_types::icrc1::account::Account;
 /**
  * Copyright (C) 2025 Fusion Wallet
@@ -22,18 +22,13 @@ use icrc_ledger_types::icrc1::account::Account;
  */
 use std::{str::FromStr, sync::Arc};
 
-use super::{utils::format_amount, ic_wallet_service::SimpleTransaction};
+use super::{ic_wallet_service::SimpleTransaction, utils::{format_amount, AccountIdentifier, Subaccount, Tokens}};
 
 #[derive(CandidType, Deserialize)]
 pub(super) struct GetAccountIdentifierTransactionsArgs {
     pub max_results: u64,
     pub start: Option<u64>,
     pub account_identifier: String,
-}
-
-#[derive(CandidType, Deserialize)]
-pub(super) struct Tokens {
-    pub e8s: u64,
 }
 
 #[derive(CandidType, Deserialize)]

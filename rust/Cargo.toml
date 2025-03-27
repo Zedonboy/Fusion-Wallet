@@ -7,22 +7,33 @@ edition = "2021"
 crate-type = ["cdylib", "staticlib"]
 
 [dependencies]
-flutter_rust_bridge = "=2.7.0"
-bip32 = "0.5.2"
+flutter_rust_bridge = "=2.9.0"
+bip32 = "0.5.3"
 tiny-bip39 = "2.0.0"
 hex = "0.4.3"
-ic-agent = "0.39.1"
-candid = "0.10.12"
+candid = "0.10.13"
 k256 = "0.13.4"
 serde = { version = "1.0", features = ["derive"] }
-reqwest = { version = "0.12.9", features = ["rustls-tls", "json"], default-features = false}
+reqwest = { version = "=0.12.14", features = ["rustls-tls", "json"], default-features = false}
 serde_json = "1.0.133"
 # bitcoin = "0.32.5"
-icrc-ledger-types = "0.1.6"
+icrc-ledger-types = "0.1.8"
 icrc7-types = "0.1.0"
-log = "0.4.25"
-ic-ledger-types = "0.14.0"
-# tokio = { version = "1.41.1", features = ["full"] }
+log = "0.4.26"
+ic-utils = "0.40.0"
+# ic-ledger-types = "0.14.0"
+crc32fast = "1.4.2"
+# serde_bytes = "0.11.17"
+
 lazy_static = "1.5.0"
 anyhow = "1.0"
+# getrandom = { version = "^0.2.15", features = ["wasm_js"] }
 
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+ic-agent = { version = "0.40", features = ["wasm-bindgen"] }
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+ic-agent = "0.40.0"
+
+[dev-dependencies]
+tokio = { version = "1.41.1", features = ["full"] }

@@ -8,5 +8,7 @@ pub mod utils;
 pub mod icp_index_service;
 pub mod http_service;
 pub mod nft_service;
+pub mod canister;
+pub mod cmc;
 #[cfg(test)]
 pub mod tests;

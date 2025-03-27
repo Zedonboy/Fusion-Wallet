@@ -22,7 +22,7 @@ use std::{str::FromStr, sync::Arc};
 use anyhow::{bail, Error, Ok};
 use candid::{decode_args, encode_args, encode_one, CandidType, Decode, Encode, Nat};
 use ic_agent::{export::Principal, Agent};
-use ic_ledger_types::{AccountIdentifier, BlockIndex, Memo, Tokens, DEFAULT_FEE, MAINNET_LEDGER_CANISTER_ID};
+// use ic_ledger_types::{AccountIdentifier, BlockIndex, Memo, Tokens, DEFAULT_FEE, MAINNET_LEDGER_CANISTER_ID};
 use icrc_ledger_types::{
     icrc::generic_metadata_value::MetadataValue,
     icrc1::{
@@ -41,7 +41,7 @@ use crate::api::icp_index_service::{
 };
 
 use super::{
-    constants::KONG_SWAP_ID, index_service::{GetTransactionsResult, IcIndexService, Transaction, TransactionWithId}, nft_service::ICCollectionService, swap_service::{KongSwapService, SwapArgs}, utils::{format_amount, TokenMetadata}, wallet::{WalletToken, WalletTokenNetWork}
+    canister::ICCanisterInfoService, cmc::CyclesService, constants::{CYCLES_MINTING_CANISTER, KONG_SWAP_ID, MAINNET_LEDGER_CANISTER_ID}, index_service::{GetTransactionsResult, IcIndexService, Transaction, TransactionWithId}, nft_service::ICCollectionService, swap_service::{KongSwapService, SwapArgs}, utils::{format_amount, AccountIdentifier, BlockIndex, Memo, TokenMetadata, Tokens, TransferArgs, DEFAULT_FEE}, wallet::{WalletToken, WalletTokenNetWork}
 };
 
 pub struct ICWalletService {
@@ -88,11 +88,11 @@ impl ICWalletService {
         }
     }
     // send function for account id ICP Only
-    pub async fn icp_account_id_send(&self, to: String, amount: u128) -> anyhow::Result<u64> {
+    pub async fn icp_account_id_send(&self, to: String, amount: u128, memo : Option<u64>) -> anyhow::Result<u64> {
         let account_id = AccountIdentifier::from_hex(&to).map_err(|mssg| Error::msg(mssg))?;
 
-        let args = ic_ledger_types::TransferArgs {
-            memo: Memo(0),
+        let args = TransferArgs {
+            memo: memo.map_or(Memo(0), |m| Memo(m)),
             amount: Tokens::from_e8s(amount.try_into().unwrap()),
             fee: DEFAULT_FEE,
             from_subaccount: None,
@@ -107,7 +107,7 @@ impl ICWalletService {
             .call_and_wait()
             .await?;
 
-        let (transfer_result,): (Result<BlockIndex, ic_ledger_types::TransferError>,) = decode_args(&result)?;
+        let (transfer_result,): (Result<BlockIndex, TransferError>,) = decode_args(&result)?;
 
 
         if transfer_result.is_err() {
@@ -356,6 +356,18 @@ impl ICWalletService {
         Ok(IcIndexService::new(self.ic_agent.clone(), principal))
     }
 
+    #[flutter_rust_bridge::frb(sync)]
+    pub fn create_canister_info_service(&self) -> anyhow::Result<ICCanisterInfoService> {
+        let service = ICCanisterInfoService::new(self.ic_agent.clone());
+        Ok(service)
+    }
+
+    #[flutter_rust_bridge::frb(sync)]
+    pub fn create_cycles_service(&self) -> anyhow::Result<CyclesService> {
+        let service = CyclesService::new(Principal::from_text(CYCLES_MINTING_CANISTER)?, self.ic_agent.clone());
+        Ok(service)
+    }
+
     pub async fn get_latest_transactions(
         &self,
         token: &WalletToken,
@@ -456,24 +468,20 @@ impl ICWalletService {
 
         let token_metadata = TokenMetadata::from_metadata_records(metadata_list);
 
-        let token = self.create_wallet_token(canister_id, token_metadata);
-
-        Ok(token)
-    }
-
-    // Helper function to create WalletToken from metadata
-    fn create_wallet_token(&self, canister_id: &str, metadata: TokenMetadata) -> WalletToken {
-        WalletToken {
-            symbol: metadata.symbol,
+        // let token = self.create_wallet_token(canister_id, token_metadata);
+        let token = WalletToken {
+            symbol: token_metadata.symbol,
             network: WalletTokenNetWork::InternetComputer,
             token_address: canister_id.to_string(),
-            token_decimal: Some(metadata.decimals as u8),
-            image_url: metadata.logo,
-            token_name: metadata.name,
-            index_canister: None,
-            transfer_fee: metadata.fee.0.try_into().unwrap(),
+            token_decimal: Some(token_metadata.decimals as u8),
+            image_url: token_metadata.logo,
+            token_name: token_metadata.name,
+            index_canister,
+            transfer_fee: token_metadata.fee.0.try_into().unwrap(),
             gov_canister: None,
-        }
+        };
+
+        Ok(token)
     }
 
     async fn verify_index(&self, ledger_id: &str, index: &str) -> anyhow::Result<bool> {

@@ -17,16 +17,16 @@ flutter_launcher_icons:
   # desaturate_tinted_to_grayscale_ios: true
 
   web:
-    generate: false
+    generate: true
     image_path: "assets/images/fusion_app_icon.png"
     background_color: "#hexcode"
     theme_color: "#hexcode"
 
   windows:
-    generate: false
+    generate: true
     image_path: "path/to/image.png"
     icon_size: 48 # min:48, max:256, default: 48
 
   macos:
-    generate: false
+    generate: true
     image_path: "path/to/image.png"

@@ -32,7 +32,7 @@ class SelectTokenScreen extends StatefulWidget {
 class _SelectTokenScreenState extends State<SelectTokenScreen> {
   final AppController appController = Get.find<AppController>();
   final TextEditingController searchController = TextEditingController();
-  final all_tokens = WalletContext.getAllSupportedTokens();
+  var all_tokens = <WalletToken>[];
   RxList<WalletToken> filteredTokens = RxList();
   final isSearching = false.obs;
   Future? queryFuture;
@@ -56,6 +56,19 @@ class _SelectTokenScreenState extends State<SelectTokenScreen> {
   @override
   void initState() {
     super.initState();
+    
+    
+    // Convert the list to a map for easier lookup
+    final alltokensMap = {for (var token in WalletContext.getAllSupportedTokens()) token.tokenAddress: token};
+    // Initialize token states based on what's already in the app controller
+    for (var token in appController.tokens_map.values) {
+      if (alltokensMap.containsKey(token.tokenAddress)) {
+        continue;
+      } else {
+        alltokensMap[token.tokenAddress] = token;
+      }
+    }
+    all_tokens = alltokensMap.values.toList();
     filteredTokens.value = all_tokens;
   }
 

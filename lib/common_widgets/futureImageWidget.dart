@@ -8,9 +8,9 @@
  * (at your option) any later version.
  */
 
-
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -23,6 +23,7 @@ class FutureAdaptiveImage extends StatelessWidget {
   final String fallbackAsset;
   final Widget? loadingWidget;
 
+
   const FutureAdaptiveImage({
     super.key,
     required this.imageUrl,
@@ -34,7 +35,7 @@ class FutureAdaptiveImage extends StatelessWidget {
     this.loadingWidget,
   });
 
-  Future<Widget> _processImage() async {
+  Future<Widget> processImage() async {
     try {
       if (_isBase64()) {
         final decodedData = base64Decode(_getBase64Data());
@@ -156,18 +157,18 @@ class FutureAdaptiveImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Widget>(
-      future: _processImage(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return _buildLoader();
-        }
+        future: processImage(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return _buildLoader();
+          }
 
-        if (snapshot.hasError || !snapshot.hasData) {
-          return _buildFallback();
-        }
+          if (snapshot.hasError || !snapshot.hasData) {
+            return _buildFallback();
+          }
 
-        return snapshot.data!;
-      },
-    );
+          return snapshot.data!;
+        },
+      );
   }
 }

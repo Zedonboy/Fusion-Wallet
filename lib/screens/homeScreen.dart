@@ -10,6 +10,7 @@
 
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fusion_wallet/constants/colors.dart';
@@ -22,6 +23,7 @@ import 'package:fusion_wallet/screens/selectToken.dart';
 import 'package:fusion_wallet/screens/sendScreens/sendScreen.dart';
 import 'package:fusion_wallet/screens/settings.dart';
 import 'package:fusion_wallet/screens/tokenScreen.dart';
+import 'package:fusion_wallet/screens/tokenScreenOption/option.dart';
 import 'package:fusion_wallet/src/rust/api/wallet.dart';
 import 'package:fusion_wallet/types/UpdateChecker.dart';
 import 'package:get/get.dart';
@@ -45,8 +47,11 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    // UpdateChecker.checkForUpdate(context);
-    appController.check_token_balances();
+    
+    if (!kIsWeb) {
+      UpdateChecker.checkForUpdate(context);
+      appController.check_token_balances();
+    }
   }
 
   String calc_total_worth() {
@@ -522,7 +527,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              '+ Import token',
+                              '+ Manage token',
                               style: TextStyle(
                                 color: primaryColor.value,
                                 fontSize: 12,
@@ -564,10 +569,22 @@ class _HomeScreenState extends State<HomeScreen> {
                             borderRadius: BorderRadius.circular(16),
                             child: InkWell(
                                 onTap: () {
-                                  Get.to(() => TokenScreen(
-                                        token: appController.tokens_map.values
-                                            .elementAt(index),
-                                      ));
+                                  switch (appController.tokens_map.values.elementAt(index).tokenAddress) {
+                                    case "um5iw-rqaaa-aaaaq-qaaba-cai":
+                                      Get.to(() => TokenScreen(
+                                            token: appController
+                                                .tokens_map.values.elementAt(
+                                                    index),
+                                            option: CyclesScreenOption(),
+                                          ));
+                                      break;
+                                    default:
+                                      Get.to(() => TokenScreen(
+                                            token: appController.tokens_map.values
+                                                .elementAt(index),
+                                          ));
+                                  }
+                                  // move to Coin page.
                                   // move to Coin page.
                                 },
                                 child: Container(

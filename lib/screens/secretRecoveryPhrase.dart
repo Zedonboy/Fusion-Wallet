@@ -9,12 +9,15 @@
  */
 
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fusion_wallet/common_widgets/bottomRectangularbtn.dart';
 import 'package:fusion_wallet/controllers/appController.dart';
+import 'package:fusion_wallet/screens/VerifyPassword.dart';
 import 'package:fusion_wallet/screens/pinScreen.dart';
 import 'package:fusion_wallet/screens/secretRecoveryPhrase2.dart';
+import 'package:fusion_wallet/src/rust/api/wallet.dart';
 import 'package:get/get.dart';
 import 'package:page_transition/page_transition.dart';
 import '../../constants/colors.dart';
@@ -364,7 +367,19 @@ class _SecretRecoveryPharaseState extends State<SecretRecoveryPharase> {
                   children: [
                     BottomRectangularBtn(
                         onTapFunc: () {
-                          Get.to(PinScreen(
+                          if(kIsWeb) {
+                            Get.to(() => VerifyPassword(onPasswordVerified: (p0) {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    PageTransition(
+                                        duration: Duration(milliseconds: 100),
+                                        type: PageTransitionType.fade,
+                                        child: SecretRecoveryPharase2(
+                                          mnemonic: p0,
+                                        )));
+                                }, ));
+                          } else {
+                            Get.to(PinScreen(
                               onPinConfirm: (phrase) {
                                 Navigator.pushReplacement(
                                     context,
@@ -376,6 +391,7 @@ class _SecretRecoveryPharaseState extends State<SecretRecoveryPharase> {
                                         )));
                               },
                               isSignin: true));
+                          }
                           // if (appController.enabledBiometric.value == true) {
                           //   Get.to(VerifyPassword(fromPage: 'send'))!.then((value) {
                           //     if (value == 'verified') {

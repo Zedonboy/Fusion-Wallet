@@ -9,6 +9,7 @@
  */
 
 import 'package:credential_manager/credential_manager.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -360,7 +361,9 @@ class _ImportFromSeedState extends State<ImportFromSeed> {
         var wallet = Wallet.fromSeed(seedPhrase: mnemonic);
         appController.encryptAndStoreMnemonic(mnemonic, widget.pin);
         appController.active_wallet.value = wallet;
-        await save_to_credential();
+        if (!kIsWeb) {
+          await save_to_credential();
+        }
         Get.offAll(() => BottomBar());
         // Get.offAll(() => HomeScreen());
       } catch (e) {

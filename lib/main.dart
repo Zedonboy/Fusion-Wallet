@@ -18,16 +18,24 @@
 //  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //  */
 // 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fusion_wallet/controllers/appController.dart';
 import 'package:fusion_wallet/screens/DummyHomeScreen.dart';
 import 'package:fusion_wallet/screens/splashScreen.dart';
 import 'package:fusion_wallet/src/rust/frb_generated.dart';
 import 'package:get/get.dart';
-import 'package:package_info_plus/package_info_plus.dart';
+import 'package:pwa_install/pwa_install.dart';
 
 Future<void> main() async {
   await RustLib.init();
+  if(kIsWeb){
+     // Add this
+  PWAInstall().setup(installCallback: () {
+    debugPrint('APP INSTALLED!');
+  });
+
+  }
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
@@ -46,10 +54,95 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      home: StartingPage(),
+      home: LayoutBuilder(builder: (context, constraints) {
+        if (constraints.maxWidth > 600) {
+          return const DesktopVersionNotAvailable();
+        }
+        return const StartingPage();
+      }),
     );
   }
 }
+
+class DesktopVersionNotAvailable extends StatelessWidget {
+  const DesktopVersionNotAvailable({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFF1A1930),
+      body: Center(
+        child: Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: const Color(0xFF252442),
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          constraints: const BoxConstraints(maxWidth: 400),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(
+                Icons.desktop_windows_outlined,
+                size: 64,
+                color: Color(0xFF70EDEF),
+              ),
+              const SizedBox(height: 24),
+              const Text(
+                "Desktop Version Not Available",
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  fontFamily: "dmsans",
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                "The desktop version is not under development yet. Please use a mobile device to access all features.",
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white70,
+                  fontFamily: "dmsans",
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF70EDEF),
+                  foregroundColor: const Color(0xFF1A1930),
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: const Text(
+                  "Got it",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: "dmsans",
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 
 class DemoApp extends StatelessWidget {
   const DemoApp({super.key});

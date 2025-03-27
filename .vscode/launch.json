@@ -4,11 +4,29 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-    {
-        "name": "Flutter",
-        "type": "dart",
-        "request": "launch",
-        "program": "lib/main.dart"
+        {
+            "name": "web with COOP/COEP headers",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart",
+            "args": [
+                "--web-header=Cross-Origin-Opener-Policy=same-origin",
+                "--web-header=Cross-Origin-Embedder-Policy=require-corp",
+                "-d",
+                "chrome"
+            ]
+        },
+        {
+            "name": "web",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/web.dart"
+        },
+        {
+            "name": "Flutter",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main.dart"
     },
         {
             "name": "fusion_wallet",

@@ -25,7 +25,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.0' # Specify your Flutter version
+          flutter-version: '3.29.2' # Specify your Flutter version
 
       - name: Install dependencies
         run: flutter pub get
@@ -51,13 +51,13 @@ jobs:
           echo "keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}" >> android/key.properties
 
       - name: Build APK (Split by ABI)
-        run: flutter build apk --split-per-abi --release --build-name=${{ github.event.inputs.tag_name }}
+        run: flutter build apk --split-per-abi --release --build-name=git-${{ github.event.inputs.tag_name }}
       
       - name: Build General APK
-        run: flutter build apk --release --build-name=${{ github.event.inputs.tag_name }}
+        run: flutter build apk --release --build-name=git-${{ github.event.inputs.tag_name }}
 
       - name: Build App Bundle
-        run: flutter build appbundle --release --build-name=${{ github.event.inputs.tag_name }}
+        run: flutter build appbundle --release --build-name=git-${{ github.event.inputs.tag_name }}
 
       - name: Upload APKs as artifact
         uses: actions/upload-artifact@v4

@@ -27,36 +27,36 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$CollectMetaValue {
-  Object get field0 => throw _privateConstructorUsedError;
+  Object get data => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String field0) text,
-    required TResult Function(int field0) int,
-    required TResult Function(BigInt field0) nat,
-    required TResult Function(Uint8List field0) blob,
+    required TResult Function(String data) text,
+    required TResult Function(BigInt data) metadataInt,
+    required TResult Function(BigInt data) nat,
+    required TResult Function(Uint8List data) blob,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String field0)? text,
-    TResult? Function(int field0)? int,
-    TResult? Function(BigInt field0)? nat,
-    TResult? Function(Uint8List field0)? blob,
+    TResult? Function(String data)? text,
+    TResult? Function(BigInt data)? metadataInt,
+    TResult? Function(BigInt data)? nat,
+    TResult? Function(Uint8List data)? blob,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String field0)? text,
-    TResult Function(int field0)? int,
-    TResult Function(BigInt field0)? nat,
-    TResult Function(Uint8List field0)? blob,
+    TResult Function(String data)? text,
+    TResult Function(BigInt data)? metadataInt,
+    TResult Function(BigInt data)? nat,
+    TResult Function(Uint8List data)? blob,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(CollectMetaValue_Text value) text,
-    required TResult Function(CollectMetaValue_Int value) int,
+    required TResult Function(CollectMetaValue_MetadataInt value) metadataInt,
     required TResult Function(CollectMetaValue_Nat value) nat,
     required TResult Function(CollectMetaValue_Blob value) blob,
   }) =>
@@ -64,7 +64,7 @@ mixin _$CollectMetaValue {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(CollectMetaValue_Text value)? text,
-    TResult? Function(CollectMetaValue_Int value)? int,
+    TResult? Function(CollectMetaValue_MetadataInt value)? metadataInt,
     TResult? Function(CollectMetaValue_Nat value)? nat,
     TResult? Function(CollectMetaValue_Blob value)? blob,
   }) =>
@@ -72,7 +72,7 @@ mixin _$CollectMetaValue {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(CollectMetaValue_Text value)? text,
-    TResult Function(CollectMetaValue_Int value)? int,
+    TResult Function(CollectMetaValue_MetadataInt value)? metadataInt,
     TResult Function(CollectMetaValue_Nat value)? nat,
     TResult Function(CollectMetaValue_Blob value)? blob,
     required TResult orElse(),
@@ -108,7 +108,7 @@ abstract class _$$CollectMetaValue_TextImplCopyWith<$Res> {
           $Res Function(_$CollectMetaValue_TextImpl) then) =
       __$$CollectMetaValue_TextImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({String field0});
+  $Res call({String data});
 }
 
 /// @nodoc
@@ -124,12 +124,12 @@ class __$$CollectMetaValue_TextImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? field0 = null,
+    Object? data = null,
   }) {
     return _then(_$CollectMetaValue_TextImpl(
-      null == field0
-          ? _value.field0
-          : field0 // ignore: cast_nullable_to_non_nullable
+      data: null == data
+          ? _value.data
+          : data // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -138,14 +138,14 @@ class __$$CollectMetaValue_TextImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$CollectMetaValue_TextImpl extends CollectMetaValue_Text {
-  const _$CollectMetaValue_TextImpl(this.field0) : super._();
+  const _$CollectMetaValue_TextImpl({required this.data}) : super._();
 
   @override
-  final String field0;
+  final String data;
 
   @override
   String toString() {
-    return 'CollectMetaValue.text(field0: $field0)';
+    return 'CollectMetaValue.text(data: $data)';
   }
 
   @override
@@ -153,11 +153,11 @@ class _$CollectMetaValue_TextImpl extends CollectMetaValue_Text {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$CollectMetaValue_TextImpl &&
-            (identical(other.field0, field0) || other.field0 == field0));
+            (identical(other.data, data) || other.data == data));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, field0);
+  int get hashCode => Object.hash(runtimeType, data);
 
   /// Create a copy of CollectMetaValue
   /// with the given fields replaced by the non-null parameter values.
@@ -171,36 +171,36 @@ class _$CollectMetaValue_TextImpl extends CollectMetaValue_Text {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String field0) text,
-    required TResult Function(int field0) int,
-    required TResult Function(BigInt field0) nat,
-    required TResult Function(Uint8List field0) blob,
+    required TResult Function(String data) text,
+    required TResult Function(BigInt data) metadataInt,
+    required TResult Function(BigInt data) nat,
+    required TResult Function(Uint8List data) blob,
   }) {
-    return text(field0);
+    return text(data);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String field0)? text,
-    TResult? Function(int field0)? int,
-    TResult? Function(BigInt field0)? nat,
-    TResult? Function(Uint8List field0)? blob,
+    TResult? Function(String data)? text,
+    TResult? Function(BigInt data)? metadataInt,
+    TResult? Function(BigInt data)? nat,
+    TResult? Function(Uint8List data)? blob,
   }) {
-    return text?.call(field0);
+    return text?.call(data);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String field0)? text,
-    TResult Function(int field0)? int,
-    TResult Function(BigInt field0)? nat,
-    TResult Function(Uint8List field0)? blob,
+    TResult Function(String data)? text,
+    TResult Function(BigInt data)? metadataInt,
+    TResult Function(BigInt data)? nat,
+    TResult Function(Uint8List data)? blob,
     required TResult orElse(),
   }) {
     if (text != null) {
-      return text(field0);
+      return text(data);
     }
     return orElse();
   }
@@ -209,7 +209,7 @@ class _$CollectMetaValue_TextImpl extends CollectMetaValue_Text {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(CollectMetaValue_Text value) text,
-    required TResult Function(CollectMetaValue_Int value) int,
+    required TResult Function(CollectMetaValue_MetadataInt value) metadataInt,
     required TResult Function(CollectMetaValue_Nat value) nat,
     required TResult Function(CollectMetaValue_Blob value) blob,
   }) {
@@ -220,7 +220,7 @@ class _$CollectMetaValue_TextImpl extends CollectMetaValue_Text {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(CollectMetaValue_Text value)? text,
-    TResult? Function(CollectMetaValue_Int value)? int,
+    TResult? Function(CollectMetaValue_MetadataInt value)? metadataInt,
     TResult? Function(CollectMetaValue_Nat value)? nat,
     TResult? Function(CollectMetaValue_Blob value)? blob,
   }) {
@@ -231,7 +231,7 @@ class _$CollectMetaValue_TextImpl extends CollectMetaValue_Text {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(CollectMetaValue_Text value)? text,
-    TResult Function(CollectMetaValue_Int value)? int,
+    TResult Function(CollectMetaValue_MetadataInt value)? metadataInt,
     TResult Function(CollectMetaValue_Nat value)? nat,
     TResult Function(CollectMetaValue_Blob value)? blob,
     required TResult orElse(),
@@ -244,12 +244,12 @@ class _$CollectMetaValue_TextImpl extends CollectMetaValue_Text {
 }
 
 abstract class CollectMetaValue_Text extends CollectMetaValue {
-  const factory CollectMetaValue_Text(final String field0) =
+  const factory CollectMetaValue_Text({required final String data}) =
       _$CollectMetaValue_TextImpl;
   const CollectMetaValue_Text._() : super._();
 
   @override
-  String get field0;
+  String get data;
 
   /// Create a copy of CollectMetaValue
   /// with the given fields replaced by the non-null parameter values.
@@ -259,20 +259,23 @@ abstract class CollectMetaValue_Text extends CollectMetaValue {
 }
 
 /// @nodoc
-abstract class _$$CollectMetaValue_IntImplCopyWith<$Res> {
-  factory _$$CollectMetaValue_IntImplCopyWith(_$CollectMetaValue_IntImpl value,
-          $Res Function(_$CollectMetaValue_IntImpl) then) =
-      __$$CollectMetaValue_IntImplCopyWithImpl<$Res>;
+abstract class _$$CollectMetaValue_MetadataIntImplCopyWith<$Res> {
+  factory _$$CollectMetaValue_MetadataIntImplCopyWith(
+          _$CollectMetaValue_MetadataIntImpl value,
+          $Res Function(_$CollectMetaValue_MetadataIntImpl) then) =
+      __$$CollectMetaValue_MetadataIntImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({int field0});
+  $Res call({BigInt data});
 }
 
 /// @nodoc
-class __$$CollectMetaValue_IntImplCopyWithImpl<$Res>
-    extends _$CollectMetaValueCopyWithImpl<$Res, _$CollectMetaValue_IntImpl>
-    implements _$$CollectMetaValue_IntImplCopyWith<$Res> {
-  __$$CollectMetaValue_IntImplCopyWithImpl(_$CollectMetaValue_IntImpl _value,
-      $Res Function(_$CollectMetaValue_IntImpl) _then)
+class __$$CollectMetaValue_MetadataIntImplCopyWithImpl<$Res>
+    extends _$CollectMetaValueCopyWithImpl<$Res,
+        _$CollectMetaValue_MetadataIntImpl>
+    implements _$$CollectMetaValue_MetadataIntImplCopyWith<$Res> {
+  __$$CollectMetaValue_MetadataIntImplCopyWithImpl(
+      _$CollectMetaValue_MetadataIntImpl _value,
+      $Res Function(_$CollectMetaValue_MetadataIntImpl) _then)
       : super(_value, _then);
 
   /// Create a copy of CollectMetaValue
@@ -280,84 +283,84 @@ class __$$CollectMetaValue_IntImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? field0 = null,
+    Object? data = null,
   }) {
-    return _then(_$CollectMetaValue_IntImpl(
-      null == field0
-          ? _value.field0
-          : field0 // ignore: cast_nullable_to_non_nullable
-              as int,
+    return _then(_$CollectMetaValue_MetadataIntImpl(
+      data: null == data
+          ? _value.data
+          : data // ignore: cast_nullable_to_non_nullable
+              as BigInt,
     ));
   }
 }
 
 /// @nodoc
 
-class _$CollectMetaValue_IntImpl extends CollectMetaValue_Int {
-  const _$CollectMetaValue_IntImpl(this.field0) : super._();
+class _$CollectMetaValue_MetadataIntImpl extends CollectMetaValue_MetadataInt {
+  const _$CollectMetaValue_MetadataIntImpl({required this.data}) : super._();
 
   @override
-  final int field0;
+  final BigInt data;
 
   @override
   String toString() {
-    return 'CollectMetaValue.int(field0: $field0)';
+    return 'CollectMetaValue.metadataInt(data: $data)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$CollectMetaValue_IntImpl &&
-            (identical(other.field0, field0) || other.field0 == field0));
+            other is _$CollectMetaValue_MetadataIntImpl &&
+            (identical(other.data, data) || other.data == data));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, field0);
+  int get hashCode => Object.hash(runtimeType, data);
 
   /// Create a copy of CollectMetaValue
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$CollectMetaValue_IntImplCopyWith<_$CollectMetaValue_IntImpl>
-      get copyWith =>
-          __$$CollectMetaValue_IntImplCopyWithImpl<_$CollectMetaValue_IntImpl>(
-              this, _$identity);
+  _$$CollectMetaValue_MetadataIntImplCopyWith<
+          _$CollectMetaValue_MetadataIntImpl>
+      get copyWith => __$$CollectMetaValue_MetadataIntImplCopyWithImpl<
+          _$CollectMetaValue_MetadataIntImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String field0) text,
-    required TResult Function(int field0) int,
-    required TResult Function(BigInt field0) nat,
-    required TResult Function(Uint8List field0) blob,
+    required TResult Function(String data) text,
+    required TResult Function(BigInt data) metadataInt,
+    required TResult Function(BigInt data) nat,
+    required TResult Function(Uint8List data) blob,
   }) {
-    return int(field0);
+    return metadataInt(data);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String field0)? text,
-    TResult? Function(int field0)? int,
-    TResult? Function(BigInt field0)? nat,
-    TResult? Function(Uint8List field0)? blob,
+    TResult? Function(String data)? text,
+    TResult? Function(BigInt data)? metadataInt,
+    TResult? Function(BigInt data)? nat,
+    TResult? Function(Uint8List data)? blob,
   }) {
-    return int?.call(field0);
+    return metadataInt?.call(data);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String field0)? text,
-    TResult Function(int field0)? int,
-    TResult Function(BigInt field0)? nat,
-    TResult Function(Uint8List field0)? blob,
+    TResult Function(String data)? text,
+    TResult Function(BigInt data)? metadataInt,
+    TResult Function(BigInt data)? nat,
+    TResult Function(Uint8List data)? blob,
     required TResult orElse(),
   }) {
-    if (int != null) {
-      return int(field0);
+    if (metadataInt != null) {
+      return metadataInt(data);
     }
     return orElse();
   }
@@ -366,52 +369,53 @@ class _$CollectMetaValue_IntImpl extends CollectMetaValue_Int {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(CollectMetaValue_Text value) text,
-    required TResult Function(CollectMetaValue_Int value) int,
+    required TResult Function(CollectMetaValue_MetadataInt value) metadataInt,
     required TResult Function(CollectMetaValue_Nat value) nat,
     required TResult Function(CollectMetaValue_Blob value) blob,
   }) {
-    return int(this);
+    return metadataInt(this);
   }
 
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(CollectMetaValue_Text value)? text,
-    TResult? Function(CollectMetaValue_Int value)? int,
+    TResult? Function(CollectMetaValue_MetadataInt value)? metadataInt,
     TResult? Function(CollectMetaValue_Nat value)? nat,
     TResult? Function(CollectMetaValue_Blob value)? blob,
   }) {
-    return int?.call(this);
+    return metadataInt?.call(this);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(CollectMetaValue_Text value)? text,
-    TResult Function(CollectMetaValue_Int value)? int,
+    TResult Function(CollectMetaValue_MetadataInt value)? metadataInt,
     TResult Function(CollectMetaValue_Nat value)? nat,
     TResult Function(CollectMetaValue_Blob value)? blob,
     required TResult orElse(),
   }) {
-    if (int != null) {
-      return int(this);
+    if (metadataInt != null) {
+      return metadataInt(this);
     }
     return orElse();
   }
 }
 
-abstract class CollectMetaValue_Int extends CollectMetaValue {
-  const factory CollectMetaValue_Int(final int field0) =
-      _$CollectMetaValue_IntImpl;
-  const CollectMetaValue_Int._() : super._();
+abstract class CollectMetaValue_MetadataInt extends CollectMetaValue {
+  const factory CollectMetaValue_MetadataInt({required final BigInt data}) =
+      _$CollectMetaValue_MetadataIntImpl;
+  const CollectMetaValue_MetadataInt._() : super._();
 
   @override
-  int get field0;
+  BigInt get data;
 
   /// Create a copy of CollectMetaValue
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$CollectMetaValue_IntImplCopyWith<_$CollectMetaValue_IntImpl>
+  _$$CollectMetaValue_MetadataIntImplCopyWith<
+          _$CollectMetaValue_MetadataIntImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -421,7 +425,7 @@ abstract class _$$CollectMetaValue_NatImplCopyWith<$Res> {
           $Res Function(_$CollectMetaValue_NatImpl) then) =
       __$$CollectMetaValue_NatImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({BigInt field0});
+  $Res call({BigInt data});
 }
 
 /// @nodoc
@@ -437,12 +441,12 @@ class __$$CollectMetaValue_NatImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? field0 = null,
+    Object? data = null,
   }) {
     return _then(_$CollectMetaValue_NatImpl(
-      null == field0
-          ? _value.field0
-          : field0 // ignore: cast_nullable_to_non_nullable
+      data: null == data
+          ? _value.data
+          : data // ignore: cast_nullable_to_non_nullable
               as BigInt,
     ));
   }
@@ -451,14 +455,14 @@ class __$$CollectMetaValue_NatImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$CollectMetaValue_NatImpl extends CollectMetaValue_Nat {
-  const _$CollectMetaValue_NatImpl(this.field0) : super._();
+  const _$CollectMetaValue_NatImpl({required this.data}) : super._();
 
   @override
-  final BigInt field0;
+  final BigInt data;
 
   @override
   String toString() {
-    return 'CollectMetaValue.nat(field0: $field0)';
+    return 'CollectMetaValue.nat(data: $data)';
   }
 
   @override
@@ -466,11 +470,11 @@ class _$CollectMetaValue_NatImpl extends CollectMetaValue_Nat {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$CollectMetaValue_NatImpl &&
-            (identical(other.field0, field0) || other.field0 == field0));
+            (identical(other.data, data) || other.data == data));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, field0);
+  int get hashCode => Object.hash(runtimeType, data);
 
   /// Create a copy of CollectMetaValue
   /// with the given fields replaced by the non-null parameter values.
@@ -485,36 +489,36 @@ class _$CollectMetaValue_NatImpl extends CollectMetaValue_Nat {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String field0) text,
-    required TResult Function(int field0) int,
-    required TResult Function(BigInt field0) nat,
-    required TResult Function(Uint8List field0) blob,
+    required TResult Function(String data) text,
+    required TResult Function(BigInt data) metadataInt,
+    required TResult Function(BigInt data) nat,
+    required TResult Function(Uint8List data) blob,
   }) {
-    return nat(field0);
+    return nat(data);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String field0)? text,
-    TResult? Function(int field0)? int,
-    TResult? Function(BigInt field0)? nat,
-    TResult? Function(Uint8List field0)? blob,
+    TResult? Function(String data)? text,
+    TResult? Function(BigInt data)? metadataInt,
+    TResult? Function(BigInt data)? nat,
+    TResult? Function(Uint8List data)? blob,
   }) {
-    return nat?.call(field0);
+    return nat?.call(data);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String field0)? text,
-    TResult Function(int field0)? int,
-    TResult Function(BigInt field0)? nat,
-    TResult Function(Uint8List field0)? blob,
+    TResult Function(String data)? text,
+    TResult Function(BigInt data)? metadataInt,
+    TResult Function(BigInt data)? nat,
+    TResult Function(Uint8List data)? blob,
     required TResult orElse(),
   }) {
     if (nat != null) {
-      return nat(field0);
+      return nat(data);
     }
     return orElse();
   }
@@ -523,7 +527,7 @@ class _$CollectMetaValue_NatImpl extends CollectMetaValue_Nat {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(CollectMetaValue_Text value) text,
-    required TResult Function(CollectMetaValue_Int value) int,
+    required TResult Function(CollectMetaValue_MetadataInt value) metadataInt,
     required TResult Function(CollectMetaValue_Nat value) nat,
     required TResult Function(CollectMetaValue_Blob value) blob,
   }) {
@@ -534,7 +538,7 @@ class _$CollectMetaValue_NatImpl extends CollectMetaValue_Nat {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(CollectMetaValue_Text value)? text,
-    TResult? Function(CollectMetaValue_Int value)? int,
+    TResult? Function(CollectMetaValue_MetadataInt value)? metadataInt,
     TResult? Function(CollectMetaValue_Nat value)? nat,
     TResult? Function(CollectMetaValue_Blob value)? blob,
   }) {
@@ -545,7 +549,7 @@ class _$CollectMetaValue_NatImpl extends CollectMetaValue_Nat {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(CollectMetaValue_Text value)? text,
-    TResult Function(CollectMetaValue_Int value)? int,
+    TResult Function(CollectMetaValue_MetadataInt value)? metadataInt,
     TResult Function(CollectMetaValue_Nat value)? nat,
     TResult Function(CollectMetaValue_Blob value)? blob,
     required TResult orElse(),
@@ -558,12 +562,12 @@ class _$CollectMetaValue_NatImpl extends CollectMetaValue_Nat {
 }
 
 abstract class CollectMetaValue_Nat extends CollectMetaValue {
-  const factory CollectMetaValue_Nat(final BigInt field0) =
+  const factory CollectMetaValue_Nat({required final BigInt data}) =
       _$CollectMetaValue_NatImpl;
   const CollectMetaValue_Nat._() : super._();
 
   @override
-  BigInt get field0;
+  BigInt get data;
 
   /// Create a copy of CollectMetaValue
   /// with the given fields replaced by the non-null parameter values.
@@ -579,7 +583,7 @@ abstract class _$$CollectMetaValue_BlobImplCopyWith<$Res> {
           $Res Function(_$CollectMetaValue_BlobImpl) then) =
       __$$CollectMetaValue_BlobImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({Uint8List field0});
+  $Res call({Uint8List data});
 }
 
 /// @nodoc
@@ -595,12 +599,12 @@ class __$$CollectMetaValue_BlobImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? field0 = null,
+    Object? data = null,
   }) {
     return _then(_$CollectMetaValue_BlobImpl(
-      null == field0
-          ? _value.field0
-          : field0 // ignore: cast_nullable_to_non_nullable
+      data: null == data
+          ? _value.data
+          : data // ignore: cast_nullable_to_non_nullable
               as Uint8List,
     ));
   }
@@ -609,14 +613,14 @@ class __$$CollectMetaValue_BlobImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$CollectMetaValue_BlobImpl extends CollectMetaValue_Blob {
-  const _$CollectMetaValue_BlobImpl(this.field0) : super._();
+  const _$CollectMetaValue_BlobImpl({required this.data}) : super._();
 
   @override
-  final Uint8List field0;
+  final Uint8List data;
 
   @override
   String toString() {
-    return 'CollectMetaValue.blob(field0: $field0)';
+    return 'CollectMetaValue.blob(data: $data)';
   }
 
   @override
@@ -624,12 +628,12 @@ class _$CollectMetaValue_BlobImpl extends CollectMetaValue_Blob {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$CollectMetaValue_BlobImpl &&
-            const DeepCollectionEquality().equals(other.field0, field0));
+            const DeepCollectionEquality().equals(other.data, data));
   }
 
   @override
   int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(field0));
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(data));
 
   /// Create a copy of CollectMetaValue
   /// with the given fields replaced by the non-null parameter values.
@@ -643,36 +647,36 @@ class _$CollectMetaValue_BlobImpl extends CollectMetaValue_Blob {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String field0) text,
-    required TResult Function(int field0) int,
-    required TResult Function(BigInt field0) nat,
-    required TResult Function(Uint8List field0) blob,
+    required TResult Function(String data) text,
+    required TResult Function(BigInt data) metadataInt,
+    required TResult Function(BigInt data) nat,
+    required TResult Function(Uint8List data) blob,
   }) {
-    return blob(field0);
+    return blob(data);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String field0)? text,
-    TResult? Function(int field0)? int,
-    TResult? Function(BigInt field0)? nat,
-    TResult? Function(Uint8List field0)? blob,
+    TResult? Function(String data)? text,
+    TResult? Function(BigInt data)? metadataInt,
+    TResult? Function(BigInt data)? nat,
+    TResult? Function(Uint8List data)? blob,
   }) {
-    return blob?.call(field0);
+    return blob?.call(data);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String field0)? text,
-    TResult Function(int field0)? int,
-    TResult Function(BigInt field0)? nat,
-    TResult Function(Uint8List field0)? blob,
+    TResult Function(String data)? text,
+    TResult Function(BigInt data)? metadataInt,
+    TResult Function(BigInt data)? nat,
+    TResult Function(Uint8List data)? blob,
     required TResult orElse(),
   }) {
     if (blob != null) {
-      return blob(field0);
+      return blob(data);
     }
     return orElse();
   }
@@ -681,7 +685,7 @@ class _$CollectMetaValue_BlobImpl extends CollectMetaValue_Blob {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(CollectMetaValue_Text value) text,
-    required TResult Function(CollectMetaValue_Int value) int,
+    required TResult Function(CollectMetaValue_MetadataInt value) metadataInt,
     required TResult Function(CollectMetaValue_Nat value) nat,
     required TResult Function(CollectMetaValue_Blob value) blob,
   }) {
@@ -692,7 +696,7 @@ class _$CollectMetaValue_BlobImpl extends CollectMetaValue_Blob {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(CollectMetaValue_Text value)? text,
-    TResult? Function(CollectMetaValue_Int value)? int,
+    TResult? Function(CollectMetaValue_MetadataInt value)? metadataInt,
     TResult? Function(CollectMetaValue_Nat value)? nat,
     TResult? Function(CollectMetaValue_Blob value)? blob,
   }) {
@@ -703,7 +707,7 @@ class _$CollectMetaValue_BlobImpl extends CollectMetaValue_Blob {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(CollectMetaValue_Text value)? text,
-    TResult Function(CollectMetaValue_Int value)? int,
+    TResult Function(CollectMetaValue_MetadataInt value)? metadataInt,
     TResult Function(CollectMetaValue_Nat value)? nat,
     TResult Function(CollectMetaValue_Blob value)? blob,
     required TResult orElse(),
@@ -716,12 +720,12 @@ class _$CollectMetaValue_BlobImpl extends CollectMetaValue_Blob {
 }
 
 abstract class CollectMetaValue_Blob extends CollectMetaValue {
-  const factory CollectMetaValue_Blob(final Uint8List field0) =
+  const factory CollectMetaValue_Blob({required final Uint8List data}) =
       _$CollectMetaValue_BlobImpl;
   const CollectMetaValue_Blob._() : super._();
 
   @override
-  Uint8List get field0;
+  Uint8List get data;
 
   /// Create a copy of CollectMetaValue
   /// with the given fields replaced by the non-null parameter values.

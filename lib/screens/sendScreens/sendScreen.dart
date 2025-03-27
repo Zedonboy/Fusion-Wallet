@@ -12,7 +12,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fusion_wallet/common_widgets/RecentTransactions.dart';
 import 'package:fusion_wallet/common_widgets/bottomRectangularbtn.dart';
@@ -23,6 +22,7 @@ import 'package:fusion_wallet/controllers/appController.dart';
 import 'package:fusion_wallet/controllers/extensions.dart';
 import 'package:fusion_wallet/controllers/utils.dart';
 import 'package:fusion_wallet/localization/language_constants.dart';
+import 'package:fusion_wallet/screens/QRcodeScreen.dart';
 import 'package:fusion_wallet/screens/TokenCalculator.dart';
 import 'package:fusion_wallet/screens/sendScreens/conformationScreen.dart';
 import 'package:fusion_wallet/src/rust/api/wallet.dart';
@@ -104,7 +104,7 @@ class _SendScreenState extends State<SendScreen> {
     // Ensure address has correct format based on network
     if (widget.token.network == WalletTokenNetWork.internetComputer) {
       // ICP principal format check
-      if (!WalletContext.verifyPrincipal(text: addressController.text.trim()) &&
+      if (!WalletContext.verifyAccount(text: addressController.text.trim()) &&
           !WalletContext.verifyAccountId(text: addressController.text.trim())) {
         addressError.value = 'Invalid ICP Account format';
         // showToast("Invalid ICP principal format");
@@ -343,13 +343,12 @@ class _SendScreenState extends State<SendScreen> {
                     GestureDetector(
                         onTap: () async {
                           try {
-                            final scanner =
-                                await FlutterBarcodeScanner.scanBarcode(
-                                    lightColor.toHex(),
-                                    "Cancel",
-                                    false,
-                                    ScanMode.QR);
-                            addressController.text = scanner;
+                            final result = await Get.to(() => QRcodeScreen());
+                            print("result: $result");
+                            if (result != null) {
+                              addressController.text = result;
+                            }
+                           
                           } catch (e) {
                             showToast("Error trying to scan");
                           }

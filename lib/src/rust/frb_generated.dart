@@ -75,7 +75,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
 
   @override
   Future<void> executeRustInitializers() async {
-    await api.crateApiSimpleInitApp();
+    api.crateApiSimpleInitApp();
   }
 
   @override
@@ -86,7 +86,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.9.0';
 
   @override
-  int get rustContentHash => 1149603692;
+  int get rustContentHash => 89587783;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -208,64 +208,6 @@ abstract class RustLibApi extends BaseApi {
       required WalletToken receiveToken,
       required BigInt payAmount});
 
-  String? crateApiWalletWalletTokenAutoAccessorGetGovCanister(
-      {required WalletToken that});
-
-  String? crateApiWalletWalletTokenAutoAccessorGetImageUrl(
-      {required WalletToken that});
-
-  String? crateApiWalletWalletTokenAutoAccessorGetIndexCanister(
-      {required WalletToken that});
-
-  WalletTokenNetWork crateApiWalletWalletTokenAutoAccessorGetNetwork(
-      {required WalletToken that});
-
-  String crateApiWalletWalletTokenAutoAccessorGetSymbol(
-      {required WalletToken that});
-
-  String crateApiWalletWalletTokenAutoAccessorGetTokenAddress(
-      {required WalletToken that});
-
-  int? crateApiWalletWalletTokenAutoAccessorGetTokenDecimal(
-      {required WalletToken that});
-
-  String crateApiWalletWalletTokenAutoAccessorGetTokenName(
-      {required WalletToken that});
-
-  BigInt crateApiWalletWalletTokenAutoAccessorGetTransferFee(
-      {required WalletToken that});
-
-  void crateApiWalletWalletTokenAutoAccessorSetGovCanister(
-      {required WalletToken that, String? govCanister});
-
-  void crateApiWalletWalletTokenAutoAccessorSetImageUrl(
-      {required WalletToken that, String? imageUrl});
-
-  void crateApiWalletWalletTokenAutoAccessorSetIndexCanister(
-      {required WalletToken that, String? indexCanister});
-
-  void crateApiWalletWalletTokenAutoAccessorSetNetwork(
-      {required WalletToken that, required WalletTokenNetWork network});
-
-  void crateApiWalletWalletTokenAutoAccessorSetSymbol(
-      {required WalletToken that, required String symbol});
-
-  void crateApiWalletWalletTokenAutoAccessorSetTokenAddress(
-      {required WalletToken that, required String tokenAddress});
-
-  void crateApiWalletWalletTokenAutoAccessorSetTokenDecimal(
-      {required WalletToken that, int? tokenDecimal});
-
-  void crateApiWalletWalletTokenAutoAccessorSetTokenName(
-      {required WalletToken that, required String tokenName});
-
-  void crateApiWalletWalletTokenAutoAccessorSetTransferFee(
-      {required WalletToken that, required BigInt transferFee});
-
-  WalletToken crateApiWalletWalletTokenFromString({required String data});
-
-  String crateApiWalletWalletTokenToString({required WalletToken that});
-
   Wallet crateApiWalletWalletCreateChildWallet(
       {required Wallet that, required String path});
 
@@ -280,13 +222,13 @@ abstract class RustLibApi extends BaseApi {
 
   String crateApiWalletWalletToIcpPrincipal({required Wallet that});
 
-  Future<String> crateApiWalletGenerateSeedPhrase();
+  String crateApiWalletGenerateSeedPhrase();
 
   String crateApiSimpleGreet({required String name});
 
-  Future<void> crateApiSimpleInitApp();
+  void crateApiSimpleInitApp();
 
-  Future<WalletCollection> crateApiNftServiceWalletCollectionDefault();
+  WalletCollection crateApiNftServiceWalletCollectionDefault();
 
   WalletCollection crateApiNftServiceWalletCollectionFromString(
       {required String data});
@@ -316,6 +258,10 @@ abstract class RustLibApi extends BaseApi {
   bool crateApiWalletWalletContextVerifyAccountId({required String text});
 
   bool crateApiWalletWalletContextVerifyMnemonic({required String mnemonic});
+
+  WalletToken crateApiWalletWalletTokenFromString({required String data});
+
+  String crateApiWalletWalletTokenToString({required WalletToken that});
 
   RustArcIncrementStrongCountFnType
       get rust_arc_increment_strong_count_CyclesService;
@@ -367,14 +313,6 @@ abstract class RustLibApi extends BaseApi {
   RustArcDecrementStrongCountFnType get rust_arc_decrement_strong_count_Wallet;
 
   CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_WalletPtr;
-
-  RustArcIncrementStrongCountFnType
-      get rust_arc_increment_strong_count_WalletToken;
-
-  RustArcDecrementStrongCountFnType
-      get rust_arc_decrement_strong_count_WalletToken;
-
-  CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_WalletTokenPtr;
 }
 
 class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
@@ -515,8 +453,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHttpWalletService(
             that, serializer);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-            token, serializer);
+        sse_encode_box_autoadd_wallet_token(token, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
             funcId: 5, port: port_);
       },
@@ -709,8 +646,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerICWalletService(
             that, serializer);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-            token, serializer);
+        sse_encode_box_autoadd_wallet_token(token, serializer);
         sse_encode_String(spender, serializer);
         sse_encode_U128(amount, serializer);
         sse_encode_opt_box_autoadd_u_64(expiresAt, serializer);
@@ -833,8 +769,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerICWalletService(
             that, serializer);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-            token, serializer);
+        sse_encode_box_autoadd_wallet_token(token, serializer);
         sse_encode_String(owner, serializer);
         sse_encode_String(spender, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
@@ -867,8 +802,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerICWalletService(
             that, serializer);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-            token, serializer);
+        sse_encode_box_autoadd_wallet_token(token, serializer);
         sse_encode_String(account, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
             funcId: 16, port: port_);
@@ -902,8 +836,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerICWalletService(
             that, serializer);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-            token, serializer);
+        sse_encode_box_autoadd_wallet_token(token, serializer);
         sse_encode_String(accountAddr, serializer);
         sse_encode_opt_box_autoadd_u_32(maxResults, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
@@ -943,8 +876,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             funcId: 18, port: port_);
       },
       codec: SseCodec(
-        decodeSuccessData:
-            sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken,
+        decodeSuccessData: sse_decode_wallet_token,
         decodeErrorData: sse_decode_AnyhowException,
       ),
       constMeta: kCrateApiIcWalletServiceIcWalletServiceGetTokenConstMeta,
@@ -1005,8 +937,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerICWalletService(
             that, serializer);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-            token, serializer);
+        sse_encode_box_autoadd_wallet_token(token, serializer);
         sse_encode_String(to, serializer);
         sse_encode_U128(amount, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
@@ -1040,10 +971,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerICWalletService(
             that, serializer);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-            payToken, serializer);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-            receiveToken, serializer);
+        sse_encode_box_autoadd_wallet_token(payToken, serializer);
+        sse_encode_box_autoadd_wallet_token(receiveToken, serializer);
         sse_encode_U128(payAmount, serializer);
         sse_encode_opt_box_autoadd_f_64(slippage, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
@@ -1076,10 +1005,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerICWalletService(
             that, serializer);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-            payToken, serializer);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-            receiveToken, serializer);
+        sse_encode_box_autoadd_wallet_token(payToken, serializer);
+        sse_encode_box_autoadd_wallet_token(receiveToken, serializer);
         sse_encode_U128(payAmount, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
             funcId: 22, port: port_);
@@ -1101,549 +1028,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  String? crateApiWalletWalletTokenAutoAccessorGetGovCanister(
-      {required WalletToken that}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-            that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 25)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_opt_String,
-        decodeErrorData: null,
-      ),
-      constMeta: kCrateApiWalletWalletTokenAutoAccessorGetGovCanisterConstMeta,
-      argValues: [that],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateApiWalletWalletTokenAutoAccessorGetGovCanisterConstMeta =>
-          const TaskConstMeta(
-            debugName: "WalletToken_auto_accessor_get_gov_canister",
-            argNames: ["that"],
-          );
-
-  @override
-  String? crateApiWalletWalletTokenAutoAccessorGetImageUrl(
-      {required WalletToken that}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-            that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 26)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_opt_String,
-        decodeErrorData: null,
-      ),
-      constMeta: kCrateApiWalletWalletTokenAutoAccessorGetImageUrlConstMeta,
-      argValues: [that],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateApiWalletWalletTokenAutoAccessorGetImageUrlConstMeta =>
-          const TaskConstMeta(
-            debugName: "WalletToken_auto_accessor_get_image_url",
-            argNames: ["that"],
-          );
-
-  @override
-  String? crateApiWalletWalletTokenAutoAccessorGetIndexCanister(
-      {required WalletToken that}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-            that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 27)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_opt_String,
-        decodeErrorData: null,
-      ),
-      constMeta:
-          kCrateApiWalletWalletTokenAutoAccessorGetIndexCanisterConstMeta,
-      argValues: [that],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateApiWalletWalletTokenAutoAccessorGetIndexCanisterConstMeta =>
-          const TaskConstMeta(
-            debugName: "WalletToken_auto_accessor_get_index_canister",
-            argNames: ["that"],
-          );
-
-  @override
-  WalletTokenNetWork crateApiWalletWalletTokenAutoAccessorGetNetwork(
-      {required WalletToken that}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-            that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 28)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_wallet_token_net_work,
-        decodeErrorData: null,
-      ),
-      constMeta: kCrateApiWalletWalletTokenAutoAccessorGetNetworkConstMeta,
-      argValues: [that],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta get kCrateApiWalletWalletTokenAutoAccessorGetNetworkConstMeta =>
-      const TaskConstMeta(
-        debugName: "WalletToken_auto_accessor_get_network",
-        argNames: ["that"],
-      );
-
-  @override
-  String crateApiWalletWalletTokenAutoAccessorGetSymbol(
-      {required WalletToken that}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-            that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 29)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_String,
-        decodeErrorData: null,
-      ),
-      constMeta: kCrateApiWalletWalletTokenAutoAccessorGetSymbolConstMeta,
-      argValues: [that],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta get kCrateApiWalletWalletTokenAutoAccessorGetSymbolConstMeta =>
-      const TaskConstMeta(
-        debugName: "WalletToken_auto_accessor_get_symbol",
-        argNames: ["that"],
-      );
-
-  @override
-  String crateApiWalletWalletTokenAutoAccessorGetTokenAddress(
-      {required WalletToken that}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-            that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 30)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_String,
-        decodeErrorData: null,
-      ),
-      constMeta: kCrateApiWalletWalletTokenAutoAccessorGetTokenAddressConstMeta,
-      argValues: [that],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateApiWalletWalletTokenAutoAccessorGetTokenAddressConstMeta =>
-          const TaskConstMeta(
-            debugName: "WalletToken_auto_accessor_get_token_address",
-            argNames: ["that"],
-          );
-
-  @override
-  int? crateApiWalletWalletTokenAutoAccessorGetTokenDecimal(
-      {required WalletToken that}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-            that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 31)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_opt_box_autoadd_u_8,
-        decodeErrorData: null,
-      ),
-      constMeta: kCrateApiWalletWalletTokenAutoAccessorGetTokenDecimalConstMeta,
-      argValues: [that],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateApiWalletWalletTokenAutoAccessorGetTokenDecimalConstMeta =>
-          const TaskConstMeta(
-            debugName: "WalletToken_auto_accessor_get_token_decimal",
-            argNames: ["that"],
-          );
-
-  @override
-  String crateApiWalletWalletTokenAutoAccessorGetTokenName(
-      {required WalletToken that}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-            that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 32)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_String,
-        decodeErrorData: null,
-      ),
-      constMeta: kCrateApiWalletWalletTokenAutoAccessorGetTokenNameConstMeta,
-      argValues: [that],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateApiWalletWalletTokenAutoAccessorGetTokenNameConstMeta =>
-          const TaskConstMeta(
-            debugName: "WalletToken_auto_accessor_get_token_name",
-            argNames: ["that"],
-          );
-
-  @override
-  BigInt crateApiWalletWalletTokenAutoAccessorGetTransferFee(
-      {required WalletToken that}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-            that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 33)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_U128,
-        decodeErrorData: null,
-      ),
-      constMeta: kCrateApiWalletWalletTokenAutoAccessorGetTransferFeeConstMeta,
-      argValues: [that],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateApiWalletWalletTokenAutoAccessorGetTransferFeeConstMeta =>
-          const TaskConstMeta(
-            debugName: "WalletToken_auto_accessor_get_transfer_fee",
-            argNames: ["that"],
-          );
-
-  @override
-  void crateApiWalletWalletTokenAutoAccessorSetGovCanister(
-      {required WalletToken that, String? govCanister}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-            that, serializer);
-        sse_encode_opt_String(govCanister, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 34)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_unit,
-        decodeErrorData: null,
-      ),
-      constMeta: kCrateApiWalletWalletTokenAutoAccessorSetGovCanisterConstMeta,
-      argValues: [that, govCanister],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateApiWalletWalletTokenAutoAccessorSetGovCanisterConstMeta =>
-          const TaskConstMeta(
-            debugName: "WalletToken_auto_accessor_set_gov_canister",
-            argNames: ["that", "govCanister"],
-          );
-
-  @override
-  void crateApiWalletWalletTokenAutoAccessorSetImageUrl(
-      {required WalletToken that, String? imageUrl}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-            that, serializer);
-        sse_encode_opt_String(imageUrl, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 35)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_unit,
-        decodeErrorData: null,
-      ),
-      constMeta: kCrateApiWalletWalletTokenAutoAccessorSetImageUrlConstMeta,
-      argValues: [that, imageUrl],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateApiWalletWalletTokenAutoAccessorSetImageUrlConstMeta =>
-          const TaskConstMeta(
-            debugName: "WalletToken_auto_accessor_set_image_url",
-            argNames: ["that", "imageUrl"],
-          );
-
-  @override
-  void crateApiWalletWalletTokenAutoAccessorSetIndexCanister(
-      {required WalletToken that, String? indexCanister}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-            that, serializer);
-        sse_encode_opt_String(indexCanister, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 36)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_unit,
-        decodeErrorData: null,
-      ),
-      constMeta:
-          kCrateApiWalletWalletTokenAutoAccessorSetIndexCanisterConstMeta,
-      argValues: [that, indexCanister],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateApiWalletWalletTokenAutoAccessorSetIndexCanisterConstMeta =>
-          const TaskConstMeta(
-            debugName: "WalletToken_auto_accessor_set_index_canister",
-            argNames: ["that", "indexCanister"],
-          );
-
-  @override
-  void crateApiWalletWalletTokenAutoAccessorSetNetwork(
-      {required WalletToken that, required WalletTokenNetWork network}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-            that, serializer);
-        sse_encode_wallet_token_net_work(network, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 37)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_unit,
-        decodeErrorData: null,
-      ),
-      constMeta: kCrateApiWalletWalletTokenAutoAccessorSetNetworkConstMeta,
-      argValues: [that, network],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta get kCrateApiWalletWalletTokenAutoAccessorSetNetworkConstMeta =>
-      const TaskConstMeta(
-        debugName: "WalletToken_auto_accessor_set_network",
-        argNames: ["that", "network"],
-      );
-
-  @override
-  void crateApiWalletWalletTokenAutoAccessorSetSymbol(
-      {required WalletToken that, required String symbol}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-            that, serializer);
-        sse_encode_String(symbol, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 38)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_unit,
-        decodeErrorData: null,
-      ),
-      constMeta: kCrateApiWalletWalletTokenAutoAccessorSetSymbolConstMeta,
-      argValues: [that, symbol],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta get kCrateApiWalletWalletTokenAutoAccessorSetSymbolConstMeta =>
-      const TaskConstMeta(
-        debugName: "WalletToken_auto_accessor_set_symbol",
-        argNames: ["that", "symbol"],
-      );
-
-  @override
-  void crateApiWalletWalletTokenAutoAccessorSetTokenAddress(
-      {required WalletToken that, required String tokenAddress}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-            that, serializer);
-        sse_encode_String(tokenAddress, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 39)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_unit,
-        decodeErrorData: null,
-      ),
-      constMeta: kCrateApiWalletWalletTokenAutoAccessorSetTokenAddressConstMeta,
-      argValues: [that, tokenAddress],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateApiWalletWalletTokenAutoAccessorSetTokenAddressConstMeta =>
-          const TaskConstMeta(
-            debugName: "WalletToken_auto_accessor_set_token_address",
-            argNames: ["that", "tokenAddress"],
-          );
-
-  @override
-  void crateApiWalletWalletTokenAutoAccessorSetTokenDecimal(
-      {required WalletToken that, int? tokenDecimal}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-            that, serializer);
-        sse_encode_opt_box_autoadd_u_8(tokenDecimal, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 40)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_unit,
-        decodeErrorData: null,
-      ),
-      constMeta: kCrateApiWalletWalletTokenAutoAccessorSetTokenDecimalConstMeta,
-      argValues: [that, tokenDecimal],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateApiWalletWalletTokenAutoAccessorSetTokenDecimalConstMeta =>
-          const TaskConstMeta(
-            debugName: "WalletToken_auto_accessor_set_token_decimal",
-            argNames: ["that", "tokenDecimal"],
-          );
-
-  @override
-  void crateApiWalletWalletTokenAutoAccessorSetTokenName(
-      {required WalletToken that, required String tokenName}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-            that, serializer);
-        sse_encode_String(tokenName, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 41)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_unit,
-        decodeErrorData: null,
-      ),
-      constMeta: kCrateApiWalletWalletTokenAutoAccessorSetTokenNameConstMeta,
-      argValues: [that, tokenName],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateApiWalletWalletTokenAutoAccessorSetTokenNameConstMeta =>
-          const TaskConstMeta(
-            debugName: "WalletToken_auto_accessor_set_token_name",
-            argNames: ["that", "tokenName"],
-          );
-
-  @override
-  void crateApiWalletWalletTokenAutoAccessorSetTransferFee(
-      {required WalletToken that, required BigInt transferFee}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-            that, serializer);
-        sse_encode_U128(transferFee, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 42)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_unit,
-        decodeErrorData: null,
-      ),
-      constMeta: kCrateApiWalletWalletTokenAutoAccessorSetTransferFeeConstMeta,
-      argValues: [that, transferFee],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateApiWalletWalletTokenAutoAccessorSetTransferFeeConstMeta =>
-          const TaskConstMeta(
-            debugName: "WalletToken_auto_accessor_set_transfer_fee",
-            argNames: ["that", "transferFee"],
-          );
-
-  @override
-  WalletToken crateApiWalletWalletTokenFromString({required String data}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_String(data, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 43)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData:
-            sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken,
-        decodeErrorData: sse_decode_AnyhowException,
-      ),
-      constMeta: kCrateApiWalletWalletTokenFromStringConstMeta,
-      argValues: [data],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta get kCrateApiWalletWalletTokenFromStringConstMeta =>
-      const TaskConstMeta(
-        debugName: "WalletToken_from_string",
-        argNames: ["data"],
-      );
-
-  @override
-  String crateApiWalletWalletTokenToString({required WalletToken that}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-            that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 44)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_String,
-        decodeErrorData: sse_decode_AnyhowException,
-      ),
-      constMeta: kCrateApiWalletWalletTokenToStringConstMeta,
-      argValues: [that],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta get kCrateApiWalletWalletTokenToStringConstMeta =>
-      const TaskConstMeta(
-        debugName: "WalletToken_to_string",
-        argNames: ["that"],
-      );
-
-  @override
   Wallet crateApiWalletWalletCreateChildWallet(
       {required Wallet that, required String path}) {
     return handler.executeSync(SyncTask(
@@ -1652,7 +1036,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWallet(
             that, serializer);
         sse_encode_String(path, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 45)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 25)!;
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -1678,7 +1062,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWallet(
             that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 46)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 26)!;
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -1703,7 +1087,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(seedPhrase, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 47)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 27)!;
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -1731,7 +1115,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWallet(
             that, serializer);
         sse_encode_list_prim_u_8_loose(message, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 48)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 28)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_list_prim_u_8_strict,
@@ -1756,7 +1140,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWallet(
             that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 49)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 29)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -1781,7 +1165,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWallet(
             that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 50)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 30)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -1800,12 +1184,11 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  Future<String> crateApiWalletGenerateSeedPhrase() {
-    return handler.executeNormal(NormalTask(
-      callFfi: (port_) {
+  String crateApiWalletGenerateSeedPhrase() {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 51, port: port_);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 31)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -1829,7 +1212,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(name, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 52)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 32)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -1847,12 +1230,11 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  Future<void> crateApiSimpleInitApp() {
-    return handler.executeNormal(NormalTask(
-      callFfi: (port_) {
+  void crateApiSimpleInitApp() {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 53, port: port_);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 33)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -1870,12 +1252,11 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  Future<WalletCollection> crateApiNftServiceWalletCollectionDefault() {
-    return handler.executeNormal(NormalTask(
-      callFfi: (port_) {
+  WalletCollection crateApiNftServiceWalletCollectionDefault() {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 54, port: port_);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 34)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_wallet_collection,
@@ -1900,7 +1281,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(data, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 55)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 35)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_wallet_collection,
@@ -1925,7 +1306,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_wallet_collection(that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 56)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 36)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -1948,7 +1329,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 57)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 37)!;
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -1975,7 +1356,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(owner, serializer);
         sse_encode_opt_String(subaccount, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 58)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 38)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -2001,7 +1382,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(owner, serializer);
         sse_encode_opt_String(subaccount, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 59)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 39)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -2024,11 +1405,10 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 60)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 40)!;
       },
       codec: SseCodec(
-        decodeSuccessData:
-            sse_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken,
+        decodeSuccessData: sse_decode_list_wallet_token,
         decodeErrorData: null,
       ),
       constMeta: kCrateApiWalletWalletContextGetAllSupportedTokensConstMeta,
@@ -2049,11 +1429,10 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 61)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 41)!;
       },
       codec: SseCodec(
-        decodeSuccessData:
-            sse_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken,
+        decodeSuccessData: sse_decode_list_wallet_token,
         decodeErrorData: null,
       ),
       constMeta: kCrateApiWalletWalletContextGetInitialSupportedTokensConstMeta,
@@ -2078,7 +1457,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_String(tokenSymbol, serializer);
         sse_encode_f_64(amount, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 62, port: port_);
+            funcId: 42, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_f_64,
@@ -2102,7 +1481,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(data, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 63)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 43)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -2126,7 +1505,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(text, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 64)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 44)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_bool,
@@ -2150,7 +1529,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(text, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 65)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 45)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_bool,
@@ -2174,7 +1553,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(mnemonic, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 66)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 46)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_bool,
@@ -2190,6 +1569,54 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(
         debugName: "wallet_context_verify_mnemonic",
         argNames: ["mnemonic"],
+      );
+
+  @override
+  WalletToken crateApiWalletWalletTokenFromString({required String data}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(data, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 47)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_wallet_token,
+        decodeErrorData: sse_decode_AnyhowException,
+      ),
+      constMeta: kCrateApiWalletWalletTokenFromStringConstMeta,
+      argValues: [data],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateApiWalletWalletTokenFromStringConstMeta =>
+      const TaskConstMeta(
+        debugName: "wallet_token_from_string",
+        argNames: ["data"],
+      );
+
+  @override
+  String crateApiWalletWalletTokenToString({required WalletToken that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_wallet_token(that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 48)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: sse_decode_AnyhowException,
+      ),
+      constMeta: kCrateApiWalletWalletTokenToStringConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateApiWalletWalletTokenToStringConstMeta =>
+      const TaskConstMeta(
+        debugName: "wallet_token_to_string",
+        argNames: ["that"],
       );
 
   RustArcIncrementStrongCountFnType
@@ -2239,14 +1666,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   RustArcDecrementStrongCountFnType
       get rust_arc_decrement_strong_count_Wallet => wire
           .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWallet;
-
-  RustArcIncrementStrongCountFnType
-      get rust_arc_increment_strong_count_WalletToken => wire
-          .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken;
-
-  RustArcDecrementStrongCountFnType
-      get rust_arc_decrement_strong_count_WalletToken => wire
-          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken;
 
   @protected
   AnyhowException dco_decode_AnyhowException(dynamic raw) {
@@ -2303,22 +1722,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  WalletToken
-      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-          dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return WalletTokenImpl.frbInternalDcoDecode(raw as List<dynamic>);
-  }
-
-  @protected
-  WalletToken
-      dco_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-          dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return WalletTokenImpl.frbInternalDcoDecode(raw as List<dynamic>);
-  }
-
-  @protected
   CyclesService
       dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerCyclesService(
           dynamic raw) {
@@ -2364,14 +1767,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return WalletImpl.frbInternalDcoDecode(raw as List<dynamic>);
-  }
-
-  @protected
-  WalletToken
-      dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-          dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return WalletTokenImpl.frbInternalDcoDecode(raw as List<dynamic>);
   }
 
   @protected
@@ -2434,14 +1829,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return WalletImpl.frbInternalDcoDecode(raw as List<dynamic>);
-  }
-
-  @protected
-  WalletToken
-      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-          dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return WalletTokenImpl.frbInternalDcoDecode(raw as List<dynamic>);
   }
 
   @protected
@@ -2508,6 +1895,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   WalletCollection dco_decode_box_autoadd_wallet_collection(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return dco_decode_wallet_collection(raw);
+  }
+
+  @protected
+  WalletToken dco_decode_box_autoadd_wallet_token(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_wallet_token(raw);
   }
 
   @protected
@@ -2610,17 +2003,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  List<WalletToken>
-      dco_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-          dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return (raw as List<dynamic>)
-        .map(
-            dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken)
-        .toList();
-  }
-
-  @protected
   List<int> dco_decode_list_prim_u_8_loose(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw as List<int>;
@@ -2655,6 +2037,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   List<SimpleTransaction> dco_decode_list_simple_transaction(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return (raw as List<dynamic>).map(dco_decode_simple_transaction).toList();
+  }
+
+  @protected
+  List<WalletToken> dco_decode_list_wallet_token(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_wallet_token).toList();
   }
 
   @protected
@@ -2848,6 +2236,25 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  WalletToken dco_decode_wallet_token(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 9)
+      throw Exception('unexpected arr length: expect 9 but see ${arr.length}');
+    return WalletToken(
+      symbol: dco_decode_String(arr[0]),
+      network: dco_decode_wallet_token_net_work(arr[1]),
+      tokenAddress: dco_decode_String(arr[2]),
+      tokenDecimal: dco_decode_opt_box_autoadd_u_8(arr[3]),
+      imageUrl: dco_decode_opt_String(arr[4]),
+      tokenName: dco_decode_String(arr[5]),
+      indexCanister: dco_decode_opt_String(arr[6]),
+      govCanister: dco_decode_opt_String(arr[7]),
+      transferFee: dco_decode_U128(arr[8]),
+    );
+  }
+
+  @protected
   WalletTokenNetWork dco_decode_wallet_token_net_work(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return WalletTokenNetWork.values[raw as int];
@@ -2915,24 +2322,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  WalletToken
-      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-          SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return WalletTokenImpl.frbInternalSseDecode(
-        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
-  }
-
-  @protected
-  WalletToken
-      sse_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-          SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return WalletTokenImpl.frbInternalSseDecode(
-        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
-  }
-
-  @protected
   CyclesService
       sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerCyclesService(
           SseDeserializer deserializer) {
@@ -2983,15 +2372,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return WalletImpl.frbInternalSseDecode(
-        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
-  }
-
-  @protected
-  WalletToken
-      sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-          SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return WalletTokenImpl.frbInternalSseDecode(
         sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
   }
 
@@ -3065,15 +2445,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  WalletToken
-      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-          SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return WalletTokenImpl.frbInternalSseDecode(
-        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
-  }
-
-  @protected
   String sse_decode_String(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var inner = sse_decode_list_prim_u_8_strict(deserializer);
@@ -3132,6 +2503,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return (sse_decode_wallet_collection(deserializer));
+  }
+
+  @protected
+  WalletToken sse_decode_box_autoadd_wallet_token(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_wallet_token(deserializer));
   }
 
   @protected
@@ -3228,22 +2606,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  List<WalletToken>
-      sse_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-          SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-
-    var len_ = sse_decode_i_32(deserializer);
-    var ans_ = <WalletToken>[];
-    for (var idx_ = 0; idx_ < len_; ++idx_) {
-      ans_.add(
-          sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-              deserializer));
-    }
-    return ans_;
-  }
-
-  @protected
   List<int> sse_decode_list_prim_u_8_loose(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var len_ = sse_decode_i_32(deserializer);
@@ -3295,6 +2657,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var ans_ = <SimpleTransaction>[];
     for (var idx_ = 0; idx_ < len_; ++idx_) {
       ans_.add(sse_decode_simple_transaction(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<WalletToken> sse_decode_list_wallet_token(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <WalletToken>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_wallet_token(deserializer));
     }
     return ans_;
   }
@@ -3518,6 +2892,30 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  WalletToken sse_decode_wallet_token(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_symbol = sse_decode_String(deserializer);
+    var var_network = sse_decode_wallet_token_net_work(deserializer);
+    var var_tokenAddress = sse_decode_String(deserializer);
+    var var_tokenDecimal = sse_decode_opt_box_autoadd_u_8(deserializer);
+    var var_imageUrl = sse_decode_opt_String(deserializer);
+    var var_tokenName = sse_decode_String(deserializer);
+    var var_indexCanister = sse_decode_opt_String(deserializer);
+    var var_govCanister = sse_decode_opt_String(deserializer);
+    var var_transferFee = sse_decode_U128(deserializer);
+    return WalletToken(
+        symbol: var_symbol,
+        network: var_network,
+        tokenAddress: var_tokenAddress,
+        tokenDecimal: var_tokenDecimal,
+        imageUrl: var_imageUrl,
+        tokenName: var_tokenName,
+        indexCanister: var_indexCanister,
+        govCanister: var_govCanister,
+        transferFee: var_transferFee);
+  }
+
+  @protected
   WalletTokenNetWork sse_decode_wallet_token_net_work(
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -3593,25 +2991,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   @protected
   void
-      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-          WalletToken self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(
-        (self as WalletTokenImpl).frbInternalSseEncode(move: true), serializer);
-  }
-
-  @protected
-  void
-      sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-          WalletToken self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(
-        (self as WalletTokenImpl).frbInternalSseEncode(move: false),
-        serializer);
-  }
-
-  @protected
-  void
       sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerCyclesService(
           CyclesService self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -3667,16 +3046,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_usize(
         (self as WalletImpl).frbInternalSseEncode(move: false), serializer);
-  }
-
-  @protected
-  void
-      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-          WalletToken self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(
-        (self as WalletTokenImpl).frbInternalSseEncode(move: false),
-        serializer);
   }
 
   @protected
@@ -3753,15 +3122,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  void
-      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-          WalletToken self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(
-        (self as WalletTokenImpl).frbInternalSseEncode(move: null), serializer);
-  }
-
-  @protected
   void sse_encode_String(String self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_list_prim_u_8_strict(utf8.encoder.convert(self), serializer);
@@ -3816,6 +3176,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       WalletCollection self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_wallet_collection(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_wallet_token(
+      WalletToken self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_wallet_token(self, serializer);
   }
 
   @protected
@@ -3895,18 +3262,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  void
-      sse_encode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-          List<WalletToken> self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_i_32(self.length, serializer);
-    for (final item in self) {
-      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-          item, serializer);
-    }
-  }
-
-  @protected
   void sse_encode_list_prim_u_8_loose(
       List<int> self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -3952,6 +3307,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_i_32(self.length, serializer);
     for (final item in self) {
       sse_encode_simple_transaction(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_wallet_token(
+      List<WalletToken> self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_wallet_token(item, serializer);
     }
   }
 
@@ -4132,6 +3497,20 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   @protected
   void sse_encode_wallet_context(WalletContext self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
+  }
+
+  @protected
+  void sse_encode_wallet_token(WalletToken self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.symbol, serializer);
+    sse_encode_wallet_token_net_work(self.network, serializer);
+    sse_encode_String(self.tokenAddress, serializer);
+    sse_encode_opt_box_autoadd_u_8(self.tokenDecimal, serializer);
+    sse_encode_opt_String(self.imageUrl, serializer);
+    sse_encode_String(self.tokenName, serializer);
+    sse_encode_opt_String(self.indexCanister, serializer);
+    sse_encode_opt_String(self.govCanister, serializer);
+    sse_encode_U128(self.transferFee, serializer);
   }
 
   @protected
@@ -4435,111 +3814,6 @@ class WalletImpl extends RustOpaque implements Wallet {
 
   String toIcpPrincipal() =>
       RustLib.instance.api.crateApiWalletWalletToIcpPrincipal(
-        that: this,
-      );
-}
-
-@sealed
-class WalletTokenImpl extends RustOpaque implements WalletToken {
-  // Not to be used by end users
-  WalletTokenImpl.frbInternalDcoDecode(List<dynamic> wire)
-      : super.frbInternalDcoDecode(wire, _kStaticData);
-
-  // Not to be used by end users
-  WalletTokenImpl.frbInternalSseDecode(BigInt ptr, int externalSizeOnNative)
-      : super.frbInternalSseDecode(ptr, externalSizeOnNative, _kStaticData);
-
-  static final _kStaticData = RustArcStaticData(
-    rustArcIncrementStrongCount:
-        RustLib.instance.api.rust_arc_increment_strong_count_WalletToken,
-    rustArcDecrementStrongCount:
-        RustLib.instance.api.rust_arc_decrement_strong_count_WalletToken,
-    rustArcDecrementStrongCountPtr:
-        RustLib.instance.api.rust_arc_decrement_strong_count_WalletTokenPtr,
-  );
-
-  String? get govCanister =>
-      RustLib.instance.api.crateApiWalletWalletTokenAutoAccessorGetGovCanister(
-        that: this,
-      );
-
-  String? get imageUrl =>
-      RustLib.instance.api.crateApiWalletWalletTokenAutoAccessorGetImageUrl(
-        that: this,
-      );
-
-  String? get indexCanister => RustLib.instance.api
-          .crateApiWalletWalletTokenAutoAccessorGetIndexCanister(
-        that: this,
-      );
-
-  WalletTokenNetWork get network =>
-      RustLib.instance.api.crateApiWalletWalletTokenAutoAccessorGetNetwork(
-        that: this,
-      );
-
-  String get symbol =>
-      RustLib.instance.api.crateApiWalletWalletTokenAutoAccessorGetSymbol(
-        that: this,
-      );
-
-  String get tokenAddress =>
-      RustLib.instance.api.crateApiWalletWalletTokenAutoAccessorGetTokenAddress(
-        that: this,
-      );
-
-  int? get tokenDecimal =>
-      RustLib.instance.api.crateApiWalletWalletTokenAutoAccessorGetTokenDecimal(
-        that: this,
-      );
-
-  String get tokenName =>
-      RustLib.instance.api.crateApiWalletWalletTokenAutoAccessorGetTokenName(
-        that: this,
-      );
-
-  BigInt get transferFee =>
-      RustLib.instance.api.crateApiWalletWalletTokenAutoAccessorGetTransferFee(
-        that: this,
-      );
-
-  set govCanister(String? govCanister) =>
-      RustLib.instance.api.crateApiWalletWalletTokenAutoAccessorSetGovCanister(
-          that: this, govCanister: govCanister);
-
-  set imageUrl(String? imageUrl) =>
-      RustLib.instance.api.crateApiWalletWalletTokenAutoAccessorSetImageUrl(
-          that: this, imageUrl: imageUrl);
-
-  set indexCanister(String? indexCanister) => RustLib.instance.api
-      .crateApiWalletWalletTokenAutoAccessorSetIndexCanister(
-          that: this, indexCanister: indexCanister);
-
-  set network(WalletTokenNetWork network) =>
-      RustLib.instance.api.crateApiWalletWalletTokenAutoAccessorSetNetwork(
-          that: this, network: network);
-
-  set symbol(String symbol) =>
-      RustLib.instance.api.crateApiWalletWalletTokenAutoAccessorSetSymbol(
-          that: this, symbol: symbol);
-
-  set tokenAddress(String tokenAddress) =>
-      RustLib.instance.api.crateApiWalletWalletTokenAutoAccessorSetTokenAddress(
-          that: this, tokenAddress: tokenAddress);
-
-  set tokenDecimal(int? tokenDecimal) =>
-      RustLib.instance.api.crateApiWalletWalletTokenAutoAccessorSetTokenDecimal(
-          that: this, tokenDecimal: tokenDecimal);
-
-  set tokenName(String tokenName) =>
-      RustLib.instance.api.crateApiWalletWalletTokenAutoAccessorSetTokenName(
-          that: this, tokenName: tokenName);
-
-  set transferFee(BigInt transferFee) =>
-      RustLib.instance.api.crateApiWalletWalletTokenAutoAccessorSetTransferFee(
-          that: this, transferFee: transferFee);
-
-  String toString() => RustLib.instance.api.crateApiWalletWalletTokenToString(
         that: this,
       );
 }

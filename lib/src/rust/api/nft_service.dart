@@ -71,7 +71,7 @@ class WalletCollection {
     required this.symbol,
   });
 
-  static Future<WalletCollection> default_() =>
+  static WalletCollection default_() =>
       RustLib.instance.api.crateApiNftServiceWalletCollectionDefault();
 
   static WalletCollection fromString({required String data}) =>

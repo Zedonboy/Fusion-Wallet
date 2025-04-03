@@ -45,3 +45,9 @@ app.*.map.json
 /android/app/release
 
 .cxx/
+.dfx/
+
+# Canister IDs
+canister_ids.json
+.well-known/
+.env

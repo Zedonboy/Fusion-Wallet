@@ -15,6 +15,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fusion_wallet/common_widgets/futureImageWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:fusion_wallet/controllers/utils.dart';
+import 'package:fusion_wallet/src/rust/api/canister.dart';
 import 'package:fusion_wallet/src/rust/api/ic_wallet_service.dart';
 import 'package:fusion_wallet/src/rust/api/nft_service.dart';
 import 'package:fusion_wallet/src/rust/api/wallet.dart';
@@ -29,11 +30,12 @@ class AppController extends GetxController {
   Rx<Wallet?> active_wallet = Rx(null);
   var enabledBiometric = false.obs;
   RxMap<String, WalletToken> tokens_map = RxMap();
+  RxMap<String, CanisterMetric> canister_map = RxMap();
   // RxList<WalletToken> tokens = WalletContext.getInitialSupportedTokens().obs;
   IcWalletService? ic_service;
   var token_image_map = RxMap<String, Widget?>();
   Timer? _balanceTimer;
-
+  Timer? _canisterTimer;
   RxMap<String, WalletCollection> collection = RxMap();
 
   /// Single map to hold all token data
@@ -63,8 +65,10 @@ class AppController extends GetxController {
     ever(active_wallet, (data) {
       // Cancel existing timer when wallet changes
       stop_balance_monitor();
+      stop_canister_monitor();
       ic_service = data?.createIcService();
       start_balance_monitor();
+      start_canister_monitor();
     });
   }
 
@@ -152,6 +156,7 @@ class AppController extends GetxController {
       token_image_map.value = createTokenImageMap(tokens_map.values.toList());
       listen_wallet();
     });
+    await loadCanisters();
   }
 
   void check_token_on_ic() {
@@ -203,7 +208,7 @@ class AppController extends GetxController {
     _balanceTimer = null;
   }
 
-  void start_balance_monitor() {
+  start_balance_monitor() async {
     // Cancel any existing timer
     _balanceTimer?.cancel();
 
@@ -214,6 +219,34 @@ class AppController extends GetxController {
     });
   }
 
+  void stop_canister_monitor() {
+    _canisterTimer?.cancel();
+    _canisterTimer = null;
+  }
+
+  start_canister_monitor() async {
+    stop_canister_monitor();
+    await check_canister_on_ic();
+    _canisterTimer = Timer.periodic(Duration(minutes: 10), (timer) {
+      print("Timer: Checking canister");
+      check_canister_on_ic();
+    });
+  }
+
+  Future<void> check_canister_on_ic() async {
+    var icService = ic_service!;
+
+    final canisterInfo = icService.createCanisterInfoService();
+    try {
+      for (var canister in canister_map.values) {
+        final canisterMetrics = await canisterInfo.getCanisterStatus(canisterId: canister.canisterId);
+        canister_map[canister.canisterId] = canisterMetrics;
+      }
+      canister_map.refresh();
+    } catch (e) {
+      print("Error checking canister: $e");
+    }
+  }
   void addToken(WalletToken token) {
 
     Future.microtask(() {
@@ -278,5 +311,37 @@ class AppController extends GetxController {
     }
 
     tokens_map.refresh();
+  }
+
+  // Canister Stuffs
+  void addCanister(CanisterMetric canister) {
+    canister_map[canister.canisterId] = canister;
+    canister_map.refresh();
+    saveCanisters();
+  }
+
+  Future<void> saveCanisters() async {
+    final prefs = await SharedPreferences.getInstance();
+    final canisterList = canister_map.values.map((t) => t.toJson()).toList();
+    await prefs.setString('saved_canisters', jsonEncode(canisterList));
+  }
+
+  Future<void> loadCanisters() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedCanisters = prefs.getString('saved_canisters');
+    if (savedCanisters != null) {
+      final List<dynamic> canisterList = jsonDecode(savedCanisters);
+      for (var canisterJson in canisterList) {
+        final canister = CanisterMetric.fromJson(canisterJson); 
+        canister_map[canister.canisterId] = canister;
+      }
+      canister_map.refresh();
+    } 
+  }
+
+  void removeCanister(String canisterId) {
+    canister_map.remove(canisterId);
+    canister_map.refresh();
+    saveCanisters();
   }
 }

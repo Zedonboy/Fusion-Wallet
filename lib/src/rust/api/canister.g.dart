@@ -8,7 +8,6 @@
  * (at your option) any later version.
  */
 
-
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 part of 'canister.dart';

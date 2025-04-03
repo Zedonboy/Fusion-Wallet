@@ -26,7 +26,9 @@ import 'package:intl/intl.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class TopUpScreen extends StatefulWidget {
-  TopUpScreen({super.key});
+  final String? canisterId;
+  
+  TopUpScreen({super.key, this.canisterId});
 
   @override
   State<TopUpScreen> createState() => _TopUpScreenState();
@@ -57,6 +59,10 @@ class _TopUpScreenState extends State<TopUpScreen> {
         calculated_cycles.value = cycles;
       }
     });
+
+    if (widget.canisterId != null) {
+      canisterIdController.text = widget.canisterId!;
+    }
     fetch_icp_balance();
   }
 

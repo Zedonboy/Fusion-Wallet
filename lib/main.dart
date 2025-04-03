@@ -25,20 +25,14 @@ import 'package:fusion_wallet/screens/DummyHomeScreen.dart';
 import 'package:fusion_wallet/screens/splashScreen.dart';
 import 'package:fusion_wallet/src/rust/frb_generated.dart';
 import 'package:get/get.dart';
-import 'package:pwa_install/pwa_install.dart';
 
 Future<void> main() async {
   await RustLib.init();
-  if(kIsWeb){
-     // Add this
-  PWAInstall().setup(installCallback: () {
-    debugPrint('APP INSTALLED!');
-  });
-
-  }
   WidgetsFlutterBinding.ensureInitialized();
+  
   runApp(const MyApp());
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -48,7 +42,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     AppController appController = Get.put(AppController());
     return GetMaterialApp(
-      title: 'Flutter Demo',
+      title: 'Fusion Wallet',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,

@@ -3,9 +3,7 @@
     "short_name": "Fusion",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#hexcode",
-    "theme_color": "#hexcode",
-    "description": "A new Flutter project.",
+    "description": "IC smartest Wallet",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

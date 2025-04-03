@@ -61,10 +61,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_WalletPtr => wire
       .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWallet;
 
-  CrossPlatformFinalizerArg
-      get rust_arc_decrement_strong_count_WalletTokenPtr => wire
-          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken;
-
   @protected
   AnyhowException dco_decode_AnyhowException(dynamic raw);
 
@@ -99,16 +95,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           dynamic raw);
 
   @protected
-  WalletToken
-      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-          dynamic raw);
-
-  @protected
-  WalletToken
-      dco_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-          dynamic raw);
-
-  @protected
   CyclesService
       dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerCyclesService(
           dynamic raw);
@@ -136,11 +122,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   Wallet
       dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWallet(
-          dynamic raw);
-
-  @protected
-  WalletToken
-      dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
           dynamic raw);
 
   @protected
@@ -181,11 +162,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           dynamic raw);
 
   @protected
-  WalletToken
-      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-          dynamic raw);
-
-  @protected
   String dco_decode_String(dynamic raw);
 
   @protected
@@ -216,6 +192,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   WalletCollection dco_decode_box_autoadd_wallet_collection(dynamic raw);
 
   @protected
+  WalletToken dco_decode_box_autoadd_wallet_token(dynamic raw);
+
+  @protected
   CanisterMetric dco_decode_canister_metric(dynamic raw);
 
   @protected
@@ -241,11 +220,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       dynamic raw);
 
   @protected
-  List<WalletToken>
-      dco_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-          dynamic raw);
-
-  @protected
   List<int> dco_decode_list_prim_u_8_loose(dynamic raw);
 
   @protected
@@ -262,6 +236,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<SimpleTransaction> dco_decode_list_simple_transaction(dynamic raw);
+
+  @protected
+  List<WalletToken> dco_decode_list_wallet_token(dynamic raw);
 
   @protected
   MintSuccess dco_decode_mint_success(dynamic raw);
@@ -329,6 +306,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   WalletContext dco_decode_wallet_context(dynamic raw);
 
   @protected
+  WalletToken dco_decode_wallet_token(dynamic raw);
+
+  @protected
   WalletTokenNetWork dco_decode_wallet_token_net_work(dynamic raw);
 
   @protected
@@ -365,16 +345,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           SseDeserializer deserializer);
 
   @protected
-  WalletToken
-      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-          SseDeserializer deserializer);
-
-  @protected
-  WalletToken
-      sse_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-          SseDeserializer deserializer);
-
-  @protected
   CyclesService
       sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerCyclesService(
           SseDeserializer deserializer);
@@ -402,11 +372,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   Wallet
       sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWallet(
-          SseDeserializer deserializer);
-
-  @protected
-  WalletToken
-      sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
           SseDeserializer deserializer);
 
   @protected
@@ -447,11 +412,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           SseDeserializer deserializer);
 
   @protected
-  WalletToken
-      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-          SseDeserializer deserializer);
-
-  @protected
   String sse_decode_String(SseDeserializer deserializer);
 
   @protected
@@ -480,6 +440,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  WalletToken sse_decode_box_autoadd_wallet_token(SseDeserializer deserializer);
+
+  @protected
   CanisterMetric sse_decode_canister_metric(SseDeserializer deserializer);
 
   @protected
@@ -506,11 +469,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
-  List<WalletToken>
-      sse_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-          SseDeserializer deserializer);
-
-  @protected
   List<int> sse_decode_list_prim_u_8_loose(SseDeserializer deserializer);
 
   @protected
@@ -529,6 +487,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   List<SimpleTransaction> sse_decode_list_simple_transaction(
       SseDeserializer deserializer);
+
+  @protected
+  List<WalletToken> sse_decode_list_wallet_token(SseDeserializer deserializer);
 
   @protected
   MintSuccess sse_decode_mint_success(SseDeserializer deserializer);
@@ -597,6 +558,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   WalletContext sse_decode_wallet_context(SseDeserializer deserializer);
 
   @protected
+  WalletToken sse_decode_wallet_token(SseDeserializer deserializer);
+
+  @protected
   WalletTokenNetWork sse_decode_wallet_token_net_work(
       SseDeserializer deserializer);
 
@@ -636,16 +600,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void
-      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-          WalletToken self, SseSerializer serializer);
-
-  @protected
-  void
-      sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-          WalletToken self, SseSerializer serializer);
-
-  @protected
-  void
       sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerCyclesService(
           CyclesService self, SseSerializer serializer);
 
@@ -673,11 +627,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void
       sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWallet(
           Wallet self, SseSerializer serializer);
-
-  @protected
-  void
-      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-          WalletToken self, SseSerializer serializer);
 
   @protected
   void sse_encode_I128(BigInt self, SseSerializer serializer);
@@ -717,11 +666,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           Wallet self, SseSerializer serializer);
 
   @protected
-  void
-      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-          WalletToken self, SseSerializer serializer);
-
-  @protected
   void sse_encode_String(String self, SseSerializer serializer);
 
   @protected
@@ -749,6 +693,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_box_autoadd_wallet_collection(
       WalletCollection self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_wallet_token(
+      WalletToken self, SseSerializer serializer);
 
   @protected
   void sse_encode_canister_metric(
@@ -779,11 +727,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       IcpXdrConversionRateResponse self, SseSerializer serializer);
 
   @protected
-  void
-      sse_encode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-          List<WalletToken> self, SseSerializer serializer);
-
-  @protected
   void sse_encode_list_prim_u_8_loose(List<int> self, SseSerializer serializer);
 
   @protected
@@ -802,6 +745,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_list_simple_transaction(
       List<SimpleTransaction> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_wallet_token(
+      List<WalletToken> self, SseSerializer serializer);
 
   @protected
   void sse_encode_mint_success(MintSuccess self, SseSerializer serializer);
@@ -870,6 +817,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_wallet_context(WalletContext self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_wallet_token(WalletToken self, SseSerializer serializer);
 
   @protected
   void sse_encode_wallet_token_net_work(
@@ -952,18 +902,6 @@ class RustLibWire implements BaseWire {
       wasmModule
           .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWallet(
               ptr);
-
-  void rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-          int ptr) =>
-      wasmModule
-          .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-              ptr);
-
-  void rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-          int ptr) =>
-      wasmModule
-          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-              ptr);
 }
 
 @JS('wasm_bindgen')
@@ -1018,13 +956,5 @@ extension type RustLibWasmModule._(JSObject _) implements JSObject {
 
   external void
       rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWallet(
-          int ptr);
-
-  external void
-      rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
-          int ptr);
-
-  external void
-      rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletToken(
           int ptr);
 }

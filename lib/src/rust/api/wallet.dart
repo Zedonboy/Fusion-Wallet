@@ -23,7 +23,7 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 // These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `CLIENT`
 // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `deref`, `initialize`
 
-Future<String> generateSeedPhrase() =>
+String generateSeedPhrase() =>
     RustLib.instance.api.crateApiWalletGenerateSeedPhrase();
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<Wallet>>
@@ -42,51 +42,6 @@ abstract class Wallet implements RustOpaqueInterface, IWalletService {
   String toAccountIdentifier();
 
   String toIcpPrincipal();
-}
-
-// Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<WalletToken>>
-abstract class WalletToken implements RustOpaqueInterface {
-  String? get govCanister;
-
-  String? get imageUrl;
-
-  String? get indexCanister;
-
-  WalletTokenNetWork get network;
-
-  String get symbol;
-
-  String get tokenAddress;
-
-  int? get tokenDecimal;
-
-  String get tokenName;
-
-  BigInt get transferFee;
-
-  set govCanister(String? govCanister);
-
-  set imageUrl(String? imageUrl);
-
-  set indexCanister(String? indexCanister);
-
-  set network(WalletTokenNetWork network);
-
-  set symbol(String symbol);
-
-  set tokenAddress(String tokenAddress);
-
-  set tokenDecimal(int? tokenDecimal);
-
-  set tokenName(String tokenName);
-
-  set transferFee(BigInt transferFee);
-
-  static WalletToken fromString({required String data}) =>
-      RustLib.instance.api.crateApiWalletWalletTokenFromString(data: data);
-
-  @override
-  String toString();
 }
 
 abstract class IWalletService {
@@ -141,6 +96,65 @@ class WalletContext {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is WalletContext && runtimeType == other.runtimeType;
+}
+
+class WalletToken {
+  final String symbol;
+  final WalletTokenNetWork network;
+  final String tokenAddress;
+  final int? tokenDecimal;
+  final String? imageUrl;
+  final String tokenName;
+  final String? indexCanister;
+  final String? govCanister;
+  final BigInt transferFee;
+
+  const WalletToken({
+    required this.symbol,
+    required this.network,
+    required this.tokenAddress,
+    this.tokenDecimal,
+    this.imageUrl,
+    required this.tokenName,
+    this.indexCanister,
+    this.govCanister,
+    required this.transferFee,
+  });
+
+  static WalletToken fromString({required String data}) =>
+      RustLib.instance.api.crateApiWalletWalletTokenFromString(data: data);
+
+  @override
+  String toString() => RustLib.instance.api.crateApiWalletWalletTokenToString(
+        that: this,
+      );
+
+  @override
+  int get hashCode =>
+      symbol.hashCode ^
+      network.hashCode ^
+      tokenAddress.hashCode ^
+      tokenDecimal.hashCode ^
+      imageUrl.hashCode ^
+      tokenName.hashCode ^
+      indexCanister.hashCode ^
+      govCanister.hashCode ^
+      transferFee.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is WalletToken &&
+          runtimeType == other.runtimeType &&
+          symbol == other.symbol &&
+          network == other.network &&
+          tokenAddress == other.tokenAddress &&
+          tokenDecimal == other.tokenDecimal &&
+          imageUrl == other.imageUrl &&
+          tokenName == other.tokenName &&
+          indexCanister == other.indexCanister &&
+          govCanister == other.govCanister &&
+          transferFee == other.transferFee;
 }
 
 enum WalletTokenNetWork {

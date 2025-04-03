@@ -112,7 +112,8 @@ String formatUsdPrice(double amount) {
   return formatted;
 }
 
-String normalizeBalance(BigInt value, int decimals) {
+
+String normalizeBalance(BigInt value, int decimals, {int? maxDecimalPlaces}) {
   if (value < BigInt.zero) return "0";
 
   print(value);
@@ -124,6 +125,14 @@ String normalizeBalance(BigInt value, int decimals) {
   } else {
     valueStr =
         "${valueStr.substring(0, valueStr.length - decimals)}.${valueStr.substring(valueStr.length - decimals)}";
+  }
+
+  // If maxDecimalPlaces is specified, limit the decimal places
+  if (maxDecimalPlaces != null && valueStr.contains('.')) {
+    final parts = valueStr.split('.');
+    if (parts[1].length > maxDecimalPlaces) {
+      valueStr = "${parts[0]}.${parts[1].substring(0, maxDecimalPlaces)}";
+    }
   }
 
   // Remove trailing zeros after decimal
@@ -153,3 +162,24 @@ BigInt decimalToBlockchainUnits(double amount, int decimals) {
   
   return result;
 }
+
+String formatBytes(BigInt bytes, {int decimals = 2}) {
+  if (bytes <= BigInt.zero) return "0 B";
+  
+  const suffixes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+  final i = (log(bytes.toDouble()) / log(1024)).floor();
+  
+  // Handle case where bytes is so large it exceeds our suffix list
+  if (i >= suffixes.length) {
+    return "Too large";
+  }
+  
+  // Calculate the value in the appropriate unit
+  final value = bytes / BigInt.from(pow(1024, i));
+  
+  // Format with the specified number of decimal places
+  return "${value.toStringAsFixed(decimals)} ${suffixes[i]}";
+}
+
+
+

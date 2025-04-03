@@ -19,7 +19,6 @@ import 'package:fusion_wallet/screens/pinCreateScreen.dart';
 import 'package:fusion_wallet/screens/pinScreen.dart';
 import 'package:fusion_wallet/src/rust/api/wallet.dart';
 import 'package:get/get.dart';
-import 'package:pwa_install/pwa_install.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -161,13 +160,6 @@ class _StartingPageState extends State<StartingPage> {
     appController.load();
     // TODO: implement initState
     super.initState();
-
-    if (kIsWeb) {
-      if (PWAInstall().installPromptEnabled) {
-        PWAInstall().promptInstall_();
-      }
-    }
-
     redirect();
   }
 

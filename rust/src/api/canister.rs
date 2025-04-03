@@ -43,7 +43,7 @@ impl ICCanisterInfoService {
         let canister_metric = CanisterMetric {
             memory_size: status.memory_size.0.try_into().unwrap(),
             cycles_balance: status.cycles.0.try_into().unwrap(),
-            status: status.status.to_string(),
+            status: status.status.to_string().to_lowercase(),
             canister_id: canister_id.to_string(),
             total_calls: query_stats.num_calls_total.0.try_into().unwrap(),
             total_outbound_bytes: query_stats.response_payload_bytes_total.0.try_into().unwrap(),

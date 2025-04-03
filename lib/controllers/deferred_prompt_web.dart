@@ -1,0 +1,20 @@
+/*
+ * Fusion Wallet - A non-custodial cryptocurrency wallet
+ * Copyright (C) 2025 Fusion Wallet
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ */
+
+
+// Only import and define deferredPrompt for web environment
+import 'dart:js_interop';
+
+@JS()
+external JSObject? get deferredPrompt;
+
+@JS("promptInstall")
+external void promptInstall();
+

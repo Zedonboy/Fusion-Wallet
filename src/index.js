@@ -6,6 +6,7 @@ async function identity_sign_in() {
 
     await authClient.login({
         onSuccess: () => {
+            console.log()
             console.log("Signed in")
         },
         onError: (error) => {

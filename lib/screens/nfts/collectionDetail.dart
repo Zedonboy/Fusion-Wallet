@@ -41,15 +41,17 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
 
   fetch() async {
     if (appController.ic_service == null ||
-        appController.active_wallet.value == null) return;
+        appController.active_wallet.value == null) {
+      return;
+    }
     final account = appController.active_wallet.value!.toIcpPrincipal();
     try {
       isLoading.value = true;
       final nftservice = appController.ic_service!.createCollectionService();
-      final items_list = await nftservice.getTokensOwnedByAccount(
+      final itemsList = await nftservice.getTokensOwnedByAccount(
           collection: widget.collection, account: account);
-      count.value = items_list.length;
-      this.items_list.value = items_list;
+      count.value = itemsList.length;
+      this.items_list.value = itemsList;
     } finally {
       isLoading.value = false;
     }
@@ -219,7 +221,7 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
                                     SizedBox(
                                       height: 16,
                                     ),
-                                    Container(
+                                    SizedBox(
                                       width: Get.width,
                                       child: Text(
                                         'No NFT items',

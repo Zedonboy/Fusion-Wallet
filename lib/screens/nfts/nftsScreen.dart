@@ -211,7 +211,7 @@ class _NftsScreenState extends State<NftsScreen> {
                             SizedBox(
                               height: 16,
                             ),
-                            Container(
+                            SizedBox(
                               width: Get.width,
                               child: Text(
                                 'No NFT Collection',

@@ -587,7 +587,7 @@ class _CreaateWalletStep2State extends State<CreaateWalletStep2> {
   }
 
   Future<void> _generateMnemonic() async {
-    String mnemonic = await generateSeedPhrase();
+    String mnemonic = generateSeedPhrase();
     // print("mnemonic $mnemonic");
     // bool isValid = bip39.validateMnemonic(mnemonic);
     // print("isValid ${bip39.validateMnemonic(mnemonic)}");

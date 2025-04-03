@@ -1,0 +1,3 @@
+[workspace]
+members = [ "src/fusion_register", "src/fusion_wallet", "rust"]
+resolver = "2"

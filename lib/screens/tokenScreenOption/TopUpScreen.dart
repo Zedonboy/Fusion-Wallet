@@ -28,7 +28,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 class TopUpScreen extends StatefulWidget {
   final String? canisterId;
   
-  TopUpScreen({super.key, this.canisterId});
+  const TopUpScreen({super.key, this.canisterId});
 
   @override
   State<TopUpScreen> createState() => _TopUpScreenState();
@@ -54,8 +54,8 @@ class _TopUpScreenState extends State<TopUpScreen> {
     topAmountController.addListener(() {
       final amt = topAmountController.text;
       if (amt.isNotEmpty) {
-        final amt_double = double.tryParse(amt) ?? 0.0;
-        final cycles = xdr_estimate.value.toInt() * amt_double;
+        final amtDouble = double.tryParse(amt) ?? 0.0;
+        final cycles = xdr_estimate.value.toInt() * amtDouble;
         calculated_cycles.value = cycles;
       }
     });
@@ -67,15 +67,15 @@ class _TopUpScreenState extends State<TopUpScreen> {
   }
 
   fetch_icp_balance() async {
-    final icp_token = WalletContext.getAllSupportedTokens()[1];
+    final icpToken = WalletContext.getAllSupportedTokens()[1];
     final account = appController.active_wallet.value?.toIcpPrincipal();
     if (account != null) {
       loading_balance.value = true;
       appController.ic_service!
-          .getBalance(token: icp_token, account: account)
+          .getBalance(token: icpToken, account: account)
           .then((value) {
         icp_balance.value =
-            normalizeBalance(value, icp_token.tokenDecimal ?? 8);
+            normalizeBalance(value, icpToken.tokenDecimal ?? 8);
       }).whenComplete(() {
         loading_balance.value = false;
       });
@@ -333,12 +333,12 @@ class _TopUpScreenState extends State<TopUpScreen> {
   topup() async {
     is_minting.value = true;
     final token = WalletContext.getAllSupportedTokens()[1];
-    final to_account = canisterIdController.text;
+    final toAccount = canisterIdController.text;
     var amount = BigInt.zero;
 
     if(showAsInteger.value){
-      final amt_str = topAmountController.text.replaceAll(',', '');
-      final amt = BigInt.tryParse(amt_str);
+      final amtStr = topAmountController.text.replaceAll(',', '');
+      final amt = BigInt.tryParse(amtStr);
       if (amt == null) {
         showToast("Invalid amount");
         is_minting.value = false;
@@ -346,13 +346,13 @@ class _TopUpScreenState extends State<TopUpScreen> {
       }
       amount = amt;
     }else{
-      final amount_double = double.tryParse(topAmountController.text);
-      if (amount_double == null) {
+      final amountDouble = double.tryParse(topAmountController.text);
+      if (amountDouble == null) {
         showToast("Invalid amount");
         is_minting.value = false;
         return;
       }
-      amount = decimalToBlockchainUnits(amount_double, token.tokenDecimal ?? 8);
+      amount = decimalToBlockchainUnits(amountDouble, token.tokenDecimal ?? 8);
     }
 
     if (amount <= BigInt.zero) {
@@ -362,9 +362,9 @@ class _TopUpScreenState extends State<TopUpScreen> {
     }
     try {
       
-      final cycles_service = appController.ic_service!.createCyclesService();
+      final cyclesService = appController.ic_service!.createCyclesService();
       final result =
-          await cycles_service.withdraw(to: to_account, amount: amount);
+          await cyclesService.withdraw(to: toAccount, amount: amount);
       Get.back();
       Get.bottomSheet(
           clipBehavior: Clip.antiAlias,

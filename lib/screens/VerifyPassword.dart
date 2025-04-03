@@ -41,7 +41,7 @@ class VerifyPassword extends StatefulWidget {
 }
 
 class _VerifyPasswordState extends State<VerifyPassword> {
-  TextEditingController passController = new TextEditingController();
+  TextEditingController passController = TextEditingController();
   var passError = ''.obs;
   var isVerifying = false.obs;
   bool canAuthenticateWithBiometrics = false;

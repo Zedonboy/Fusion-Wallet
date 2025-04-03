@@ -93,10 +93,10 @@ class _SwapScreenState extends State<SwapScreen> {
           !is_fetching_quote.value &&
           !top_focus.hasFocus) {
         try {
-          final bottom_amount = double.parse(bottomController.text);
-          final top_amount = bottom_amount / quote_mid_price.value;
+          final bottomAmount = double.parse(bottomController.text);
+          final topAmount = bottomAmount / quote_mid_price.value;
 
-          topController.text = top_amount.toStringAsFixed(6);
+          topController.text = topAmount.toStringAsFixed(6);
         } catch (e) {
           print("Error calculating reverse amount: $e");
         }
@@ -104,14 +104,14 @@ class _SwapScreenState extends State<SwapScreen> {
     });
 
     ever(top, (token) {
-      var token_data = appController.token_data_map[token.tokenAddress];
+      var tokenData = appController.token_data_map[token.tokenAddress];
       fetchQuoteForAmount("0");
-      if (token_data == null) {
-        final ic_service = appController.ic_service;
+      if (tokenData == null) {
+        final icService = appController.ic_service;
         final account = appController.active_wallet.value?.toIcpPrincipal();
-        if (ic_service == null || account == null) return;
+        if (icService == null || account == null) return;
         loading_top_bal.value = true;
-        ic_service.getBalance(token: token, account: account).then((bal) {
+        icService.getBalance(token: token, account: account).then((bal) {
           top_balance.value =
               double.tryParse(normalizeBalance(bal, token.tokenDecimal ?? 8)) ??
                   0.00;
@@ -122,7 +122,7 @@ class _SwapScreenState extends State<SwapScreen> {
         });
         // call ic for balance
       } else {
-        final bal = token_data.balance;
+        final bal = tokenData.balance;
         top_balance.value =
             double.tryParse(normalizeBalance(bal, token.tokenDecimal ?? 8)) ??
                 0.00;
@@ -130,14 +130,14 @@ class _SwapScreenState extends State<SwapScreen> {
     });
 
     ever(bottom, (token) {
-      var token_data = appController.token_data_map[token.tokenAddress];
+      var tokenData = appController.token_data_map[token.tokenAddress];
       fetchQuoteForAmount("0");
-      if (token_data == null) {
-        final ic_service = appController.ic_service;
+      if (tokenData == null) {
+        final icService = appController.ic_service;
         final account = appController.active_wallet.value?.toIcpPrincipal();
-        if (ic_service == null || account == null) return;
+        if (icService == null || account == null) return;
         loading_bottom_bal.value = true;
-        ic_service.getBalance(token: token, account: account).then((bal) {
+        icService.getBalance(token: token, account: account).then((bal) {
           bottom_balance.value =
               double.tryParse(normalizeBalance(bal, token.tokenDecimal ?? 8)) ??
                   0.00;
@@ -148,7 +148,7 @@ class _SwapScreenState extends State<SwapScreen> {
         });
         // call ic for balance
       } else {
-        final bal = token_data.balance;
+        final bal = tokenData.balance;
         bottom_balance.value =
             double.tryParse(normalizeBalance(bal, token.tokenDecimal ?? 8)) ??
                 0.00;
@@ -176,22 +176,22 @@ class _SwapScreenState extends State<SwapScreen> {
     is_fetching_quote.value = true;
 
     try {
-      final ic_service = appController.ic_service!;
-      final pay_amount = BigInt.from(
+      final icService = appController.ic_service!;
+      final payAmount = BigInt.from(
           double.parse(amount) * pow(10, top.value.tokenDecimal ?? 8));
 
-      final quote_reply = await ic_service.swapQuote(
+      final quoteReply = await icService.swapQuote(
           payToken: top.value,
           receiveToken: bottom.value,
-          payAmount: pay_amount);
+          payAmount: payAmount);
 
       // print("quote_reply: ${quote_reply.estimatedPayAmount}");
 
-      quote_mid_price.value = quote_reply.midPrice;
-      quote_estimated_fee_amount.value = quote_reply.estimatedFeeAmount;
+      quote_mid_price.value = quoteReply.midPrice;
+      quote_estimated_fee_amount.value = quoteReply.estimatedFeeAmount;
 
       quote_output_amount.value = normalizeBalance(
-          quote_reply.receiveAmount, bottom.value.tokenDecimal ?? 8);
+          quoteReply.receiveAmount, bottom.value.tokenDecimal ?? 8);
 
       bottomController.text = quote_output_amount.value;
     } catch (e) {
@@ -1086,15 +1086,15 @@ class _SwapScreenState extends State<SwapScreen> {
   }
 
   Widget selectToken({Function(WalletToken)? onSelect}) {
-    final tokens_map = {
+    final tokensMap = {
       for (var element in WalletContext.getAllSupportedTokens())
         element.tokenAddress: element
     };
-    tokens_map.addAll(appController.tokens_map);
+    tokensMap.addAll(appController.tokens_map);
     final searchController = TextEditingController();
     final isSearching = false.obs;
-    var filteredTokens = tokens_map.values;
-    var listLength = tokens_map.length.obs;
+    var filteredTokens = tokensMap.values;
+    var listLength = tokensMap.length.obs;
     Future? queryFuture;
     void performSearch(String query) {
       queryFuture?.ignore();
@@ -1103,7 +1103,7 @@ class _SwapScreenState extends State<SwapScreen> {
       //Simulate network delay
       queryFuture = Future.microtask(() {
         print(query);
-        filteredTokens = tokens_map.values
+        filteredTokens = tokensMap.values
             .where((token) =>
                 token.symbol.toLowerCase().contains(query.toLowerCase()))
             .toList();
@@ -1598,23 +1598,23 @@ class _SwapScreenState extends State<SwapScreen> {
   }
 
   swap() async {
-    final ic_service = appController.ic_service;
-    if (ic_service == null) {
+    final icService = appController.ic_service;
+    if (icService == null) {
       return;
     }
     try {
       loading_swap.value = true;
-      final top_amount = BigInt.from(double.parse(topController.text) *
+      final topAmount = BigInt.from(double.parse(topController.text) *
               pow(10, top.value.tokenDecimal ?? 8));
-      final amt = top_amount +
+      final amt = topAmount +
           (top.value.transferFee);
 
-      final allowance = await ic_service.getAllowance(
+      final allowance = await icService.getAllowance(
           token: top.value,
           owner: appController.active_wallet.value!.toIcpPrincipal(),
           spender: "2ipq2-uqaaa-aaaar-qailq-cai");
 
-      var allowance_expired = false;
+      var allowanceExpired = false;
       // Check if allowance has expired
       if (allowance.expiresAt != null) {
         final currentTime =
@@ -1623,26 +1623,26 @@ class _SwapScreenState extends State<SwapScreen> {
           print(
               "Allowance has expired. Current time: $currentTime, Expiry time: ${allowance.expiresAt}");
           // Set allowance to zero since it has expired
-          allowance_expired = true;
+          allowanceExpired = true;
         }
       }
 
-      if (allowance.allowance < amt || allowance_expired) {
-        final expires_at =
+      if (allowance.allowance < amt || allowanceExpired) {
+        final expiresAt =
             DateTime.now().add(Duration(minutes: 1)).millisecondsSinceEpoch *
                 1000000;
-        final height = await ic_service.approve(
+        final height = await icService.approve(
             token: top.value,
             spender: "2ipq2-uqaaa-aaaar-qailq-cai", // kong swap id
             amount: amt,
-            expiresAt: BigInt.from(expires_at));
+            expiresAt: BigInt.from(expiresAt));
         print("approve response: $height");
       }
 
-      final response = await ic_service.swap(
+      final response = await icService.swap(
           payToken: top.value,
           receiveToken: bottom.value,
-          payAmount: top_amount,
+          payAmount: topAmount,
           slippage: slippage.value < 0 ? null : slippage.value);
 
       Get.bottomSheet(
@@ -1670,18 +1670,18 @@ class _SwapScreenState extends State<SwapScreen> {
   }
 
   Widget swapCompleted(SwapResponse response) {
-    final pay_symbol = response.paySymbol;
-    final receive_symbol = response.receiveSymbol;
-    final pay_amount = response.payAmount;
-    final receive_amount = response.receiveAmount;
+    final paySymbol = response.paySymbol;
+    final receiveSymbol = response.receiveSymbol;
+    final payAmount = response.payAmount;
+    final receiveAmount = response.receiveAmount;
 
-    final decimal_receive =
-        receive_amount / BigInt.from(pow(10, bottom.value.tokenDecimal ?? 8));
-    final decimal_pay =
-        pay_amount / BigInt.from(pow(10, top.value.tokenDecimal ?? 8));
-    final receive_amount_str =
-        NumberFormat('#,###.########').format(decimal_receive);
-    final pay_amount_str = NumberFormat('#,###.########').format(decimal_pay);
+    final decimalReceive =
+        receiveAmount / BigInt.from(pow(10, bottom.value.tokenDecimal ?? 8));
+    final decimalPay =
+        payAmount / BigInt.from(pow(10, top.value.tokenDecimal ?? 8));
+    final receiveAmountStr =
+        NumberFormat('#,###.########').format(decimalReceive);
+    final payAmountStr = NumberFormat('#,###.########').format(decimalPay);
     return Container(
       // height: 430,
       width: Get.width,
@@ -1734,7 +1734,7 @@ class _SwapScreenState extends State<SwapScreen> {
                   fontWeight: FontWeight.w400),
               children: <TextSpan>[
                 TextSpan(
-                  text: ' $pay_amount_str $pay_symbol ',
+                  text: ' $payAmountStr $paySymbol ',
                   style: TextStyle(
                       fontSize: 13,
                       color: headingColor.value,
@@ -1743,7 +1743,7 @@ class _SwapScreenState extends State<SwapScreen> {
                 ),
                 TextSpan(text: getTranslated(context, "to get") ?? "to get"),
                 TextSpan(
-                  text: ' $receive_amount_str $receive_symbol ',
+                  text: ' $receiveAmountStr $receiveSymbol ',
                   style: TextStyle(
                       fontSize: 13,
                       color: headingColor.value,
@@ -1777,7 +1777,7 @@ class _SwapScreenState extends State<SwapScreen> {
   }
 
   Widget slippageSettings() {
-    var mini_slippage = slippage;
+    var miniSlippage = slippage;
 
     return Obx(() => Container(
           width: Get.width,
@@ -1865,7 +1865,7 @@ class _SwapScreenState extends State<SwapScreen> {
                     height: 25.0,
                     valueFontSize: 20.0,
                     toggleSize: 20.0,
-                    value: mini_slippage.value < 0,
+                    value: miniSlippage.value < 0,
                     borderRadius: 30.0,
                     toggleColor: lightColor,
                     activeColor: primaryAltColor.value,
@@ -1876,10 +1876,10 @@ class _SwapScreenState extends State<SwapScreen> {
                       
                       if (val) {
                         saveSlippage(-1.0);
-                        mini_slippage.value = -1.0;
+                        miniSlippage.value = -1.0;
                       } else {
                         saveSlippage(1.0);
-                        mini_slippage.value = 1.0;
+                        miniSlippage.value = 1.0;
                       }
                     },
                   ),
@@ -1888,7 +1888,7 @@ class _SwapScreenState extends State<SwapScreen> {
 
               SizedBox(height: 16),
 
-              if (mini_slippage.value > 0) ...[
+              if (miniSlippage.value > 0) ...[
                 SizedBox(
                   width: 197,
                   height: 40,
@@ -1899,7 +1899,7 @@ class _SwapScreenState extends State<SwapScreen> {
                     children: [
                       InkWell(
                         onTap: () {
-                          mini_slippage.value = updateCustomSlippage(false);
+                          miniSlippage.value = updateCustomSlippage(false);
                         },
                         child: Container(
                           width: 40,
@@ -1920,7 +1920,7 @@ class _SwapScreenState extends State<SwapScreen> {
                       ),
                       SizedBox(width: 32),
                       Text(
-                        mini_slippage.value.toStringAsFixed(1),
+                        miniSlippage.value.toStringAsFixed(1),
                         style: TextStyle(
                           color: Color(0xff76CF56),
                           fontSize: 24,
@@ -1932,7 +1932,7 @@ class _SwapScreenState extends State<SwapScreen> {
                       SizedBox(width: 32),
                       InkWell(
                         onTap: () {
-                          mini_slippage.value = updateCustomSlippage(true);
+                          miniSlippage.value = updateCustomSlippage(true);
                         },
                         child: Container(
                           padding: EdgeInsets.all(7.50),

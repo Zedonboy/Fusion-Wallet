@@ -51,3 +51,9 @@ app.*.map.json
 canister_ids.json
 .well-known/
 .env
+
+# Added by cargo
+
+/target
+/node_modules
+*.wasm

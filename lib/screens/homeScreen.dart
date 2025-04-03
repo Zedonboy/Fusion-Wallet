@@ -146,446 +146,462 @@ class _HomeScreenState extends State<HomeScreen>
     return Obx(() => Scaffold(
           backgroundColor: primaryBackgroundColor.value,
           body: SafeArea(
-            child: CustomScrollView(
-                // padding: EdgeInsets.symmetric(horizontal: 22, vertical: 20),
-                slivers: [
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 22, vertical: 20),
-                      child: Column(
-                        children: [
-                          // SizedBox(height: 40,),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              InkWell(
-                                onTap: () {
-                                  // Get.to(SettingsScreen());
-                                },
-                                child: Row(
+            child: NestedScrollView(
+              
+                headerSliverBuilder: (context, innerBoxIsScrolled) {
+                  return [
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 22, vertical: 20),
+                        child: Column(
+                          children: [
+                            // SizedBox(height: 40,),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    // Get.to(SettingsScreen());
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        "Main",
+                                        textAlign: TextAlign.start,
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                          color: headingColor.value,
+                                          fontFamily: "dmsans",
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 8,
+                                      ),
+                                      // Icon(
+                                      //   Icons.keyboard_arrow_down,
+                                      //   color: headingColor.value,
+                                      // )
+                                    ],
+                                  ),
+                                ),
+                                Row(
                                   children: [
-                                    Text(
-                                      "Main",
-                                      textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
-                                        color: headingColor.value,
-                                        fontFamily: "dmsans",
+                                    InkWell(
+                                      onTap: () {
+                                        isVisible.value == true
+                                            ? isVisible.value = false
+                                            : isVisible.value = true;
+                                      },
+                                      child: Container(
+                                        height: 32,
+                                        width: 32,
+                                        padding: EdgeInsets.all(8),
+                                        decoration: BoxDecoration(
+                                            color: appController.isDark.value ==
+                                                    true
+                                                ? Color(0xff1A2B56)
+                                                : inputFieldBackgroundColor
+                                                    .value,
+                                            borderRadius:
+                                                BorderRadius.circular(8)),
+                                        child: isVisible == true
+                                            ? Icon(
+                                                Icons.visibility_outlined,
+                                                color: headingColor.value,
+                                                size: 17,
+                                              )
+                                            : SvgPicture.asset(
+                                                "assets/svgs/hideBalance.svg",
+                                                color: appController
+                                                            .isDark.value ==
+                                                        true
+                                                    ? Color(0xffA2BBFF)
+                                                    : headingColor.value),
                                       ),
                                     ),
                                     SizedBox(
                                       width: 8,
                                     ),
-                                    // Icon(
-                                    //   Icons.keyboard_arrow_down,
-                                    //   color: headingColor.value,
-                                    // )
-                                  ],
-                                ),
-                              ),
-                              Row(
-                                children: [
-                                  InkWell(
-                                    onTap: () {
-                                      isVisible.value == true
-                                          ? isVisible.value = false
-                                          : isVisible.value = true;
-                                    },
-                                    child: Container(
-                                      height: 32,
-                                      width: 32,
-                                      padding: EdgeInsets.all(8),
-                                      decoration: BoxDecoration(
-                                          color: appController.isDark.value ==
-                                                  true
-                                              ? Color(0xff1A2B56)
-                                              : inputFieldBackgroundColor.value,
-                                          borderRadius:
-                                              BorderRadius.circular(8)),
-                                      child: isVisible == true
-                                          ? Icon(
-                                              Icons.visibility_outlined,
-                                              color: headingColor.value,
-                                              size: 17,
-                                            )
-                                          : SvgPicture.asset(
-                                              "assets/svgs/hideBalance.svg",
-                                              color:
-                                                  appController.isDark.value ==
-                                                          true
-                                                      ? Color(0xffA2BBFF)
-                                                      : headingColor.value),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 8,
-                                  ),
-                                  InkWell(
-                                    onTap: () {
-                                      var addr = appController
-                                          .active_wallet.value!
-                                          .toIcpPrincipal();
-                                      copyToClipboard(addr).then((value) => {
-                                            showToast(
-                                                "Principal Copied Successfully")
-                                          });
-                                    },
-                                    child: Container(
-                                      height: 32,
-                                      width: 32,
-                                      padding: EdgeInsets.all(8),
-                                      decoration: BoxDecoration(
-                                          color: appController.isDark.value ==
-                                                  true
-                                              ? Color(0xff1A2B56)
-                                              : inputFieldBackgroundColor.value,
-                                          borderRadius:
-                                              BorderRadius.circular(8)),
-                                      child: SvgPicture.asset(
-                                          "assets/svgs/u_copy-landscape.svg",
-                                          color:
-                                              appController.isDark.value == true
-                                                  ? Color(0xffA2BBFF)
-                                                  : headingColor.value),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 8,
-                                  ),
-                                  // InkWell( TODO (Qr Code scanner)
-                                  //     onTap: () {},
-                                  //     child: Container(
-                                  //       height: 32,
-                                  //       width: 32,
-                                  //       padding: EdgeInsets.all(8),
-                                  //       decoration: BoxDecoration(
-                                  //           color: appController.isDark.value == true
-                                  //               ? Color(0xff1A2B56)
-                                  //               : inputFieldBackgroundColor.value,
-                                  //           borderRadius: BorderRadius.circular(8)),
-                                  //       child: SvgPicture.asset(
-                                  //           "assets/svgs/ion_qr-code.svg",
-                                  //           color: appController.isDark.value == true
-                                  //               ? Color(0xffA2BBFF)
-                                  //               : headingColor.value),
-                                  //     ))
-                                ],
-                              )
-                            ],
-                          ),
-                          SizedBox(
-                            height: 32,
-                          ),
-
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              isVisible.value == true
-                                  ? Text(
-                                      "*****",
-                                      textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                        fontSize: 56,
-                                        fontWeight: FontWeight.w600,
-                                        color:
-                                            appController.isDark.value == true
-                                                ? Color(0xffFDFCFD)
-                                                : primaryAltColor.value,
-                                        fontFamily: "dmsans",
+                                    InkWell(
+                                      onTap: () {
+                                        var addr = appController
+                                            .active_wallet.value!
+                                            .toIcpPrincipal();
+                                        copyToClipboard(addr).then((value) => {
+                                              showToast(
+                                                  "Principal Copied Successfully")
+                                            });
+                                      },
+                                      child: Container(
+                                        height: 32,
+                                        width: 32,
+                                        padding: EdgeInsets.all(8),
+                                        decoration: BoxDecoration(
+                                            color: appController.isDark.value ==
+                                                    true
+                                                ? Color(0xff1A2B56)
+                                                : inputFieldBackgroundColor
+                                                    .value,
+                                            borderRadius:
+                                                BorderRadius.circular(8)),
+                                        child: SvgPicture.asset(
+                                            "assets/svgs/u_copy-landscape.svg",
+                                            color: appController.isDark.value ==
+                                                    true
+                                                ? Color(0xffA2BBFF)
+                                                : headingColor.value),
                                       ),
-                                    )
-                                  : Text(
-                                      calc_total_worth(),
-                                      textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                        fontSize: 50,
-                                        fontWeight: FontWeight.w600,
-                                        color: Color(0xffFDFCFD),
-                                        fontFamily: "dmsans",
-                                      ),
-                                    ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 24,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  Get.bottomSheet(
-                                      clipBehavior: Clip.antiAlias,
-                                      isScrollControlled: true,
-                                      backgroundColor:
-                                          appController.isDark.value == true
-                                              ? Color(0xffA2BBFF)
-                                              : primaryAltBackgroundColor.value,
-                                      shape: OutlineInputBorder(
-                                          borderSide: BorderSide.none,
-                                          borderRadius: BorderRadius.only(
-                                              topRight: Radius.circular(32),
-                                              topLeft: Radius.circular(32))),
-                                      selectToken(
-                                    onSelect: (p0) {
-                                      Get.back();
-                                      Get.to(() => SendScreen(token: p0));
-                                    },
-                                  ));
-                                  // Get.to(SelectTokenScreen());
-                                },
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      height: 56,
-                                      width: 56,
-                                      padding: EdgeInsets.all(16),
-                                      decoration: BoxDecoration(
-                                          color: Color(0xFF1A2B56),
-                                          borderRadius:
-                                              BorderRadius.circular(15)),
-                                      child: Center(
-                                          child: SvgPicture.asset(
-                                              "assets/svgs/sendIcon.svg",
-                                              height: 28,
-                                              width: 28,
-                                              color: appController
-                                                          .isDark.value ==
-                                                      true
-                                                  ? Color(0xFFA2BBFF)
-                                                  : primaryAltBackgroundColor
-                                                      .value)),
                                     ),
                                     SizedBox(
-                                      height: 12,
+                                      width: 8,
                                     ),
-                                    Text(
-                                      getTranslated(context, "Send") ?? "Send",
-                                      textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                        color:
-                                            appController.isDark.value == true
-                                                ? Color(0xffFDFCFD)
-                                                : primaryAltColor.value,
-                                        fontFamily: "dmsans",
-                                      ),
-                                    ),
+                                    // InkWell( TODO (Qr Code scanner)
+                                    //     onTap: () {},
+                                    //     child: Container(
+                                    //       height: 32,
+                                    //       width: 32,
+                                    //       padding: EdgeInsets.all(8),
+                                    //       decoration: BoxDecoration(
+                                    //           color: appController.isDark.value == true
+                                    //               ? Color(0xff1A2B56)
+                                    //               : inputFieldBackgroundColor.value,
+                                    //           borderRadius: BorderRadius.circular(8)),
+                                    //       child: SvgPicture.asset(
+                                    //           "assets/svgs/ion_qr-code.svg",
+                                    //           color: appController.isDark.value == true
+                                    //               ? Color(0xffA2BBFF)
+                                    //               : headingColor.value),
+                                    //     ))
                                   ],
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  Get.bottomSheet(
-                                      clipBehavior: Clip.antiAlias,
-                                      isScrollControlled: true,
-                                      backgroundColor:
-                                          appController.isDark.value == true
-                                              ? Color(0xffA2BBFF)
-                                              : primaryAltBackgroundColor.value,
-                                      shape: OutlineInputBorder(
-                                          borderSide: BorderSide.none,
-                                          borderRadius: BorderRadius.only(
-                                              topRight: Radius.circular(32),
-                                              topLeft: Radius.circular(32))),
-                                      selectToken(onSelect: (token) {
-                                    Get.back();
-                                    var addr = appController.active_wallet.value
-                                        ?.toIcpPrincipal();
+                                )
+                              ],
+                            ),
+                            SizedBox(
+                              height: 32,
+                            ),
 
-                                    if (addr == null) {
-                                      showToast(
-                                          "No Address or Principal ID found");
-                                      return;
-                                    }
-                                    Get.to(ReceiveScreen(
-                                        token: token, address: addr));
-                                  }));
-                                },
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      height: 56,
-                                      width: 56,
-                                      padding: EdgeInsets.all(16),
-                                      decoration: BoxDecoration(
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                isVisible.value == true
+                                    ? Text(
+                                        "*****",
+                                        textAlign: TextAlign.start,
+                                        style: TextStyle(
+                                          fontSize: 56,
+                                          fontWeight: FontWeight.w600,
                                           color:
                                               appController.isDark.value == true
-                                                  ? Color(0xFF1A2B56)
+                                                  ? Color(0xffFDFCFD)
                                                   : primaryAltColor.value,
-                                          borderRadius:
-                                              BorderRadius.circular(15)),
-                                      child: Center(
-                                          child: SvgPicture.asset(
-                                              "assets/svgs/receiveicon.svg",
-                                              height: 28,
-                                              width: 28,
-                                              color: appController
-                                                          .isDark.value ==
-                                                      true
-                                                  ? Color(0xFFA2BBFF)
-                                                  : primaryAltBackgroundColor
-                                                      .value)),
-                                    ),
-                                    SizedBox(
-                                      height: 12,
-                                    ),
-                                    Text(
-                                      getTranslated(context, "Receive") ??
-                                          "Receive",
-                                      textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                        color:
-                                            appController.isDark.value == true
-                                                ? Color(0xffFDFCFD)
-                                                : primaryAltColor.value,
-                                        fontFamily: "dmsans",
+                                          fontFamily: "dmsans",
+                                        ),
+                                      )
+                                    : Text(
+                                        calc_total_worth(),
+                                        textAlign: TextAlign.start,
+                                        style: TextStyle(
+                                          fontSize: 50,
+                                          fontWeight: FontWeight.w600,
+                                          color: Color(0xffFDFCFD),
+                                          fontFamily: "dmsans",
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                              ],
+                            ),
+                            SizedBox(
+                              height: 24,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    Get.bottomSheet(
+                                        clipBehavior: Clip.antiAlias,
+                                        isScrollControlled: true,
+                                        backgroundColor:
+                                            appController.isDark.value == true
+                                                ? Color(0xffA2BBFF)
+                                                : primaryAltBackgroundColor
+                                                    .value,
+                                        shape: OutlineInputBorder(
+                                            borderSide: BorderSide.none,
+                                            borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(32),
+                                                topLeft: Radius.circular(32))),
+                                        selectToken(
+                                      onSelect: (p0) {
+                                        Get.back();
+                                        Get.to(() => SendScreen(token: p0));
+                                      },
+                                    ));
+                                    // Get.to(SelectTokenScreen());
+                                  },
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        height: 56,
+                                        width: 56,
+                                        padding: EdgeInsets.all(16),
+                                        decoration: BoxDecoration(
+                                            color: Color(0xFF1A2B56),
+                                            borderRadius:
+                                                BorderRadius.circular(15)),
+                                        child: Center(
+                                            child: SvgPicture.asset(
+                                                "assets/svgs/sendIcon.svg",
+                                                height: 28,
+                                                width: 28,
+                                                color: appController
+                                                            .isDark.value ==
+                                                        true
+                                                    ? Color(0xFFA2BBFF)
+                                                    : primaryAltBackgroundColor
+                                                        .value)),
+                                      ),
+                                      SizedBox(
+                                        height: 12,
+                                      ),
+                                      Text(
+                                        getTranslated(context, "Send") ??
+                                            "Send",
+                                        textAlign: TextAlign.start,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          color:
+                                              appController.isDark.value == true
+                                                  ? Color(0xffFDFCFD)
+                                                  : primaryAltColor.value,
+                                          fontFamily: "dmsans",
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              // GestureDetector(
-                              //   onTap: () {
-                              //     // Get.to(SwapScreen());
-                              //   },
-                              //   child: Column(
-                              //     children: [
-                              //       Container(
-                              //         height: 56,
-                              //         width: 56,
-                              //         padding: EdgeInsets.all(16),
-                              //         decoration: BoxDecoration(
-                              //             color: appController.isDark.value == true
-                              //                 ? Color(0xFF1A2B56)
-                              //                 : primaryAltColor.value,
-                              //             borderRadius: BorderRadius.circular(15)),
-                              //         child: Center(
-                              //             child: SvgPicture.asset("assets/svgs/swap.svg",
-                              //                 height: 28,
-                              //                 width: 28,
-                              //                 color: appController.isDark.value == true
-                              //                     ? Color(0xFFA2BBFF)
-                              //                     : primaryAltBackgroundColor.value)),
-                              //       ),
-                              //       SizedBox(
-                              //         height: 12,
-                              //       ),
-                              //       Text(
-                              //         getTranslated(context, "Swap") ?? "Swap",
-                              //         textAlign: TextAlign.start,
-                              //         style: TextStyle(
-                              //           fontSize: 16,
-                              //           fontWeight: FontWeight.w600,
-                              //           color: appController.isDark.value == true
-                              //               ? Color(0xffFDFCFD)
-                              //               : primaryAltColor.value,
-                              //           fontFamily: "dmsans",
-                              //         ),
-                              //       ),
-                              //     ],
-                              //   ),
-                              // ),
-                              // GestureDetector(
-                              //   onTap: () {
-                              //     // Get.bottomSheet(
-                              //     //     clipBehavior: Clip.antiAlias,
-                              //     //     isScrollControlled: true,
-                              //     //     backgroundColor: primaryAltBackgroundColor.value,
-                              //     //     shape: OutlineInputBorder(
-                              //     //         borderSide: BorderSide.none,
-                              //     //         borderRadius: BorderRadius.only(
-                              //     //             topRight: Radius.circular(32),
-                              //     //             topLeft: Radius.circular(32))),
-                              //     //     selectTokenForBuy());
-                              //   },
-                              //   child: Column(
-                              //     children: [
-                              //       Container(
-                              //         height: 56,
-                              //         width: 56,
-                              //         padding: EdgeInsets.all(16),
-                              //         decoration: BoxDecoration(
-                              //             color: appController.isDark.value == true
-                              //                 ? Color(0xFF1A2B56)
-                              //                 : primaryAltColor.value,
-                              //             borderRadius: BorderRadius.circular(15)),
-                              //         child: Center(
-                              //             child: SvgPicture.asset(
-                              //           "assets/svgs/bolt.svg",
-                              //           height: 28,
-                              //           width: 28,
-                              //           color: appController.isDark.value == true
-                              //               ? Color(0xFFA2BBFF)
-                              //               : primaryAltBackgroundColor.value,
-                              //         )),
-                              //       ),
-                              //       SizedBox(
-                              //         height: 12,
-                              //       ),
-                              //       Text(
-                              //         getTranslated(context, "Fusion") ?? "Fusion",
-                              //         textAlign: TextAlign.start,
-                              //         style: TextStyle(
-                              //           fontSize: 16,
-                              //           fontWeight: FontWeight.w600,
-                              //           color: appController.isDark.value == true
-                              //               ? Color(0xffFDFCFD)
-                              //               : primaryAltColor.value,
-                              //           fontFamily: "dmsans",
-                              //         ),
-                              //       ),
-                              //     ],
-                              //   ),
-                              // ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 16,
-                          ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Get.bottomSheet(
+                                        clipBehavior: Clip.antiAlias,
+                                        isScrollControlled: true,
+                                        backgroundColor:
+                                            appController.isDark.value == true
+                                                ? Color(0xffA2BBFF)
+                                                : primaryAltBackgroundColor
+                                                    .value,
+                                        shape: OutlineInputBorder(
+                                            borderSide: BorderSide.none,
+                                            borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(32),
+                                                topLeft: Radius.circular(32))),
+                                        selectToken(onSelect: (token) {
+                                      Get.back();
+                                      var addr = appController
+                                          .active_wallet.value
+                                          ?.toIcpPrincipal();
 
-                          if (kIsWeb &&
-                              deferredPrompt != null &&
-                              isBackupReminderVisible.value)
-                            BackupReminderWidget(onClose: () {
-                              isBackupReminderVisible.value = false;
-                            }),
+                                      if (addr == null) {
+                                        showToast(
+                                            "No Address or Principal ID found");
+                                        return;
+                                      }
+                                      Get.to(ReceiveScreen(
+                                          token: token, address: addr));
+                                    }));
+                                  },
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        height: 56,
+                                        width: 56,
+                                        padding: EdgeInsets.all(16),
+                                        decoration: BoxDecoration(
+                                            color: appController.isDark.value ==
+                                                    true
+                                                ? Color(0xFF1A2B56)
+                                                : primaryAltColor.value,
+                                            borderRadius:
+                                                BorderRadius.circular(15)),
+                                        child: Center(
+                                            child: SvgPicture.asset(
+                                                "assets/svgs/receiveicon.svg",
+                                                height: 28,
+                                                width: 28,
+                                                color: appController
+                                                            .isDark.value ==
+                                                        true
+                                                    ? Color(0xFFA2BBFF)
+                                                    : primaryAltBackgroundColor
+                                                        .value)),
+                                      ),
+                                      SizedBox(
+                                        height: 12,
+                                      ),
+                                      Text(
+                                        getTranslated(context, "Receive") ??
+                                            "Receive",
+                                        textAlign: TextAlign.start,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          color:
+                                              appController.isDark.value == true
+                                                  ? Color(0xffFDFCFD)
+                                                  : primaryAltColor.value,
+                                          fontFamily: "dmsans",
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                // GestureDetector(
+                                //   onTap: () {
+                                //     // Get.to(SwapScreen());
+                                //   },
+                                //   child: Column(
+                                //     children: [
+                                //       Container(
+                                //         height: 56,
+                                //         width: 56,
+                                //         padding: EdgeInsets.all(16),
+                                //         decoration: BoxDecoration(
+                                //             color: appController.isDark.value == true
+                                //                 ? Color(0xFF1A2B56)
+                                //                 : primaryAltColor.value,
+                                //             borderRadius: BorderRadius.circular(15)),
+                                //         child: Center(
+                                //             child: SvgPicture.asset("assets/svgs/swap.svg",
+                                //                 height: 28,
+                                //                 width: 28,
+                                //                 color: appController.isDark.value == true
+                                //                     ? Color(0xFFA2BBFF)
+                                //                     : primaryAltBackgroundColor.value)),
+                                //       ),
+                                //       SizedBox(
+                                //         height: 12,
+                                //       ),
+                                //       Text(
+                                //         getTranslated(context, "Swap") ?? "Swap",
+                                //         textAlign: TextAlign.start,
+                                //         style: TextStyle(
+                                //           fontSize: 16,
+                                //           fontWeight: FontWeight.w600,
+                                //           color: appController.isDark.value == true
+                                //               ? Color(0xffFDFCFD)
+                                //               : primaryAltColor.value,
+                                //           fontFamily: "dmsans",
+                                //         ),
+                                //       ),
+                                //     ],
+                                //   ),
+                                // ),
+                                // GestureDetector(
+                                //   onTap: () {
+                                //     // Get.bottomSheet(
+                                //     //     clipBehavior: Clip.antiAlias,
+                                //     //     isScrollControlled: true,
+                                //     //     backgroundColor: primaryAltBackgroundColor.value,
+                                //     //     shape: OutlineInputBorder(
+                                //     //         borderSide: BorderSide.none,
+                                //     //         borderRadius: BorderRadius.only(
+                                //     //             topRight: Radius.circular(32),
+                                //     //             topLeft: Radius.circular(32))),
+                                //     //     selectTokenForBuy());
+                                //   },
+                                //   child: Column(
+                                //     children: [
+                                //       Container(
+                                //         height: 56,
+                                //         width: 56,
+                                //         padding: EdgeInsets.all(16),
+                                //         decoration: BoxDecoration(
+                                //             color: appController.isDark.value == true
+                                //                 ? Color(0xFF1A2B56)
+                                //                 : primaryAltColor.value,
+                                //             borderRadius: BorderRadius.circular(15)),
+                                //         child: Center(
+                                //             child: SvgPicture.asset(
+                                //           "assets/svgs/bolt.svg",
+                                //           height: 28,
+                                //           width: 28,
+                                //           color: appController.isDark.value == true
+                                //               ? Color(0xFFA2BBFF)
+                                //               : primaryAltBackgroundColor.value,
+                                //         )),
+                                //       ),
+                                //       SizedBox(
+                                //         height: 12,
+                                //       ),
+                                //       Text(
+                                //         getTranslated(context, "Fusion") ?? "Fusion",
+                                //         textAlign: TextAlign.start,
+                                //         style: TextStyle(
+                                //           fontSize: 16,
+                                //           fontWeight: FontWeight.w600,
+                                //           color: appController.isDark.value == true
+                                //               ? Color(0xffFDFCFD)
+                                //               : primaryAltColor.value,
+                                //           fontFamily: "dmsans",
+                                //         ),
+                                //       ),
+                                //     ],
+                                //   ),
+                                // ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 16,
+                            ),
 
-                          // Expanded(
-                          //     child: TabBarView(
-                          //   // physics: NeverScrollableScrollPhysics(),
-                          //   controller: _tabController,
-                          //   children: [tokenTab(), canisterTab()],
-                          // ))
-                        ],
+                            if (kIsWeb &&
+                                deferredPrompt != null &&
+                                isBackupReminderVisible.value)
+                              BackupReminderWidget(onClose: () {
+                                isBackupReminderVisible.value = false;
+                              }),
+
+                            // Expanded(
+                            //     child: TabBarView(
+                            //   // physics: NeverScrollableScrollPhysics(),
+                            //   controller: _tabController,
+                            //   children: [tokenTab(), canisterTab()],
+                            // ))
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  SliverPersistentHeader(
-                    delegate: _SliverAppBarDelegate(
-                      TabBar(
-                        tabs: myTabs,
-                        controller: _tabController,
-                        dividerColor: primaryAltBackgroundColor.value,
-                        indicatorColor: primaryColor.value,
+                    SliverPersistentHeader(
+                      delegate: _SliverAppBarDelegate(
+                        TabBar(
+                          tabs: myTabs,
+                          controller: _tabController,
+                          dividerColor: primaryAltBackgroundColor.value,
+                          indicatorColor: primaryColor.value,
+                        ),
                       ),
-                    ),
-                    pinned: true,
+                      pinned: true,
+                    )
+                  ];
+                },
+                // padding: EdgeInsets.symmetric(horizontal: 22, vertical: 20),
+                body: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 22, vertical: 0),
+                  child: TabBarView(
+                    physics: AlwaysScrollableScrollPhysics(),
+                    controller: _tabController,
+                    children: [
+                      SingleChildScrollView(
+                          key: PageStorageKey("tokenTab"),
+                          child: tokenTab()),
+                      SingleChildScrollView(
+                          key: PageStorageKey("canisterTab"),
+                          child: canisterTab())
+                    ],
                   ),
-
-                  SliverPadding(padding: EdgeInsets.only(bottom: 0, top: 20, left: 22, right: 22), sliver: SliverFillRemaining(child: TabBarView(
-                        physics: NeverScrollableScrollPhysics(),
-                        controller: _tabController,
-                        children: [tokenTab(), canisterTab()],
-                      ))
-                  )
-                ]),
-          ),
+                ))),
         ));
   }
 
@@ -610,7 +626,6 @@ class _HomeScreenState extends State<HomeScreen>
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(),
-              
               GestureDetector(
                 onTap: () {
                   Get.to(ImportCanister());
@@ -650,7 +665,8 @@ class _HomeScreenState extends State<HomeScreen>
                   );
                 },
                 itemBuilder: (BuildContext context, int index) {
-                  final canister = appController.canister_map.values.elementAt(index);
+                  final canister =
+                      appController.canister_map.values.elementAt(index);
                   return Container(
                       height: 72,
                       width: Get.width,
@@ -658,14 +674,16 @@ class _HomeScreenState extends State<HomeScreen>
                       decoration: BoxDecoration(
                           color: inputFieldBackgroundColor2.value,
                           borderRadius: BorderRadius.circular(16),
-                          border: Border.all(width: 1, color: primaryAltBgColor2)),
+                          border:
+                              Border.all(width: 1, color: primaryAltBgColor2)),
                       child: Material(
                           clipBehavior: Clip.antiAlias,
                           color: Colors.transparent,
                           borderRadius: BorderRadius.circular(16),
                           child: InkWell(
                               onTap: () {
-                                Get.to(() => CanisterMetricScreen(canisterMetric: canister));
+                                Get.to(() => CanisterMetricScreen(
+                                    canisterMetric: canister));
                               },
                               child: Container(
                                 color: Colors.transparent,
@@ -678,11 +696,16 @@ class _HomeScreenState extends State<HomeScreen>
                                       height: 8,
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
-                                        color: canister.status.toLowerCase() == "running"
-                                            ? Color(0xff56CDAD) // Green for running
-                                            : canister.status.toLowerCase() == "stopping"
-                                                ? Color(0xff9E9E9E) // Grey for stopping
-                                                : Color(0xffE53935), // Red for stopped
+                                        color: canister.status.toLowerCase() ==
+                                                "running"
+                                            ? Color(
+                                                0xff56CDAD) // Green for running
+                                            : canister.status.toLowerCase() ==
+                                                    "stopping"
+                                                ? Color(
+                                                    0xff9E9E9E) // Grey for stopping
+                                                : Color(
+                                                    0xffE53935), // Red for stopped
                                       ),
                                     ),
                                     SizedBox(
@@ -694,7 +717,8 @@ class _HomeScreenState extends State<HomeScreen>
                                           Expanded(
                                             child: Column(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment.spaceBetween,
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
                                                 Expanded(
                                                   child: Row(
@@ -704,7 +728,8 @@ class _HomeScreenState extends State<HomeScreen>
                                                     children: [
                                                       Text(
                                                         canister.canisterId,
-                                                        textAlign: TextAlign.start,
+                                                        textAlign:
+                                                            TextAlign.start,
                                                         style: TextStyle(
                                                           fontSize: 16,
                                                           fontWeight:
@@ -713,7 +738,8 @@ class _HomeScreenState extends State<HomeScreen>
                                                                       .isDark
                                                                       .value ==
                                                                   true
-                                                              ? Color(0xffFDFCFD)
+                                                              ? Color(
+                                                                  0xffFDFCFD)
                                                               : primaryAltColor
                                                                   .value,
                                                           fontFamily: "dmsans",
@@ -721,16 +747,24 @@ class _HomeScreenState extends State<HomeScreen>
                                                       ),
                                                       Text(
                                                         canister.status,
-                                                        textAlign: TextAlign.start,
+                                                        textAlign:
+                                                            TextAlign.start,
                                                         style: TextStyle(
                                                           fontSize: 14,
                                                           fontWeight:
                                                               FontWeight.w600,
-                                                          color: canister.status.toLowerCase() == "running"
-                                                              ? Color(0xff56CDAD) // Green for running
-                                                              : canister.status.toLowerCase() == "stopping"
-                                                                  ? Color(0xff9E9E9E) // Grey for stopping
-                                                                  : Color(0xffE53935), // Red for stopped
+                                                          color: canister.status
+                                                                      .toLowerCase() ==
+                                                                  "running"
+                                                              ? Color(
+                                                                  0xff56CDAD) // Green for running
+                                                              : canister.status
+                                                                          .toLowerCase() ==
+                                                                      "stopping"
+                                                                  ? Color(
+                                                                      0xff9E9E9E) // Grey for stopping
+                                                                  : Color(
+                                                                      0xffE53935), // Red for stopped
                                                           fontFamily: "dmsans",
                                                         ),
                                                       ),
@@ -748,24 +782,28 @@ class _HomeScreenState extends State<HomeScreen>
                                                     children: [
                                                       Text(
                                                         "Memory: ${formatBytes(canister.memorySize)}",
-                                                        textAlign: TextAlign.start,
+                                                        textAlign:
+                                                            TextAlign.start,
                                                         style: TextStyle(
                                                           fontSize: 12,
                                                           fontWeight:
                                                               FontWeight.w400,
-                                                          color: lightAltTextColor
-                                                              .value,
+                                                          color:
+                                                              lightAltTextColor
+                                                                  .value,
                                                           fontFamily: "dmsans",
                                                         ),
                                                       ),
                                                       Text(
                                                         "Cycles: ${normalizeBalance(canister.cyclesBalance, 12, maxDecimalPlaces: 2)}T",
-                                                        textAlign: TextAlign.start,
+                                                        textAlign:
+                                                            TextAlign.start,
                                                         style: TextStyle(
                                                           fontSize: 12,
                                                           fontWeight:
                                                               FontWeight.w600,
-                                                          color: Color(0xff56CDAD),
+                                                          color:
+                                                              Color(0xff56CDAD),
                                                           fontFamily: "dmsans",
                                                         ),
                                                       ),
@@ -786,7 +824,7 @@ class _HomeScreenState extends State<HomeScreen>
       ],
     );
   }
-  
+
   Widget _buildEmptyState() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 40, horizontal: 20),
@@ -804,7 +842,9 @@ class _HomeScreenState extends State<HomeScreen>
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w600,
-              color: appController.isDark.value ? Color(0xffFDFCFD) : primaryAltColor.value,
+              color: appController.isDark.value
+                  ? Color(0xffFDFCFD)
+                  : primaryAltColor.value,
               fontFamily: "dmsans",
             ),
           ),
@@ -867,7 +907,6 @@ class _HomeScreenState extends State<HomeScreen>
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(),
-              
               GestureDetector(
                 onTap: () {
                   Get.to(SelectTokenScreen());

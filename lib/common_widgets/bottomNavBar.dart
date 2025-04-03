@@ -14,7 +14,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fusion_wallet/controllers/appController.dart';
 import 'package:fusion_wallet/screens/homeScreen.dart';
-import 'package:fusion_wallet/screens/nfts/nftsDetail.dart';
 import 'package:fusion_wallet/screens/nfts/nftsScreen.dart';
 import 'package:fusion_wallet/screens/settings.dart';
 import 'package:fusion_wallet/screens/swapScreen.dart';

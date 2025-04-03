@@ -17,7 +17,7 @@ import 'package:get/get.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 
 class QRcodeScreen extends StatefulWidget {
-  const QRcodeScreen({Key? key}) : super(key: key);
+  const QRcodeScreen({super.key});
 
   @override
   State<StatefulWidget> createState() => _QRcodeScreenState();

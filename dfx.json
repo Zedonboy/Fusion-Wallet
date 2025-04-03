@@ -1,6 +1,23 @@
 {
     "canisters": {
+      "fusion-register": {
+        "candid": "src/fusion_register/fusion_register.did",
+        "declarations": {
+          "node_compatibility": true
+        },
+        "package": "fusion_register",
+        "type": "rust"
+      },
       
+      "fusion-wallet": {
+        "candid": "src/fusion_wallet/fusion_wallet.did",
+        "declarations": {
+          "node_compatibility": true
+        },
+        "package": "fusion_wallet",
+        "type": "rust"
+      },
+
       "fusion-web": {
         "source": [
           "build/web/"

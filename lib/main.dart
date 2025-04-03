@@ -18,7 +18,6 @@
 //  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //  */
 // 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fusion_wallet/controllers/appController.dart';
 import 'package:fusion_wallet/screens/DummyHomeScreen.dart';

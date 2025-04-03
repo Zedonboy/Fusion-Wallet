@@ -19,7 +19,6 @@ import 'package:fusion_wallet/common_widgets/commonWidgets.dart';
 import 'package:fusion_wallet/common_widgets/inputField.dart';
 import 'package:fusion_wallet/constants/colors.dart';
 import 'package:fusion_wallet/controllers/appController.dart';
-import 'package:fusion_wallet/controllers/extensions.dart';
 import 'package:fusion_wallet/controllers/utils.dart';
 import 'package:fusion_wallet/localization/language_constants.dart';
 import 'package:fusion_wallet/screens/QRcodeScreen.dart';

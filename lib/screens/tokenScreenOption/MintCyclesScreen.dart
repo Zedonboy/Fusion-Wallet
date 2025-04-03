@@ -25,7 +25,7 @@ import 'package:intl/intl.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class MintCyclesScreen extends StatefulWidget {
-  MintCyclesScreen({super.key});
+  const MintCyclesScreen({super.key});
 
   @override
   State<MintCyclesScreen> createState() => _MintCyclesScreenState();
@@ -48,8 +48,8 @@ class _MintCyclesScreenState extends State<MintCyclesScreen> {
     topAmountController.addListener(() {
       final amt = topAmountController.text;
       if (amt.isNotEmpty) {
-        final amt_double = double.tryParse(amt) ?? 0.0;
-        final cycles = xdr_estimate.value.toInt() * amt_double;
+        final amtDouble = double.tryParse(amt) ?? 0.0;
+        final cycles = xdr_estimate.value.toInt() * amtDouble;
         calculated_cycles.value = cycles;
       }
     });
@@ -59,9 +59,9 @@ class _MintCyclesScreenState extends State<MintCyclesScreen> {
 
   fetch_xdr_estimate() async {
     final account = appController.active_wallet.value?.toIcpPrincipal();
-    final cycles_service = appController.ic_service!.createCyclesService();
+    final cyclesService = appController.ic_service!.createCyclesService();
     loading_xdr_estimate.value = true;
-    cycles_service.getIcpXdrConversionRate().then((value) {
+    cyclesService.getIcpXdrConversionRate().then((value) {
       print(value);
       final estimate = value.data.xdrPermyriadPerIcp;
       xdr_estimate.value = estimate;
@@ -73,15 +73,15 @@ class _MintCyclesScreenState extends State<MintCyclesScreen> {
   }
 
   fetch_icp_balance() async {
-    final icp_token = WalletContext.getAllSupportedTokens()[0];
+    final icpToken = WalletContext.getAllSupportedTokens()[0];
     final account = appController.active_wallet.value?.toIcpPrincipal();
     if (account != null) {
       loading_balance.value = true;
       appController.ic_service!
-          .getBalance(token: icp_token, account: account)
+          .getBalance(token: icpToken, account: account)
           .then((value) {
         icp_balance.value =
-            normalizeBalance(value, icp_token.tokenDecimal ?? 8);
+            normalizeBalance(value, icpToken.tokenDecimal ?? 8);
       }).whenComplete(() {
         loading_balance.value = false;
       });
@@ -340,14 +340,14 @@ class _MintCyclesScreenState extends State<MintCyclesScreen> {
 
   mint_cycles() async {
     is_minting.value = true;
-    final icp_token = WalletContext.getAllSupportedTokens()[0];
-    final account_principal =
+    final icpToken = WalletContext.getAllSupportedTokens()[0];
+    final accountPrincipal =
         appController.active_wallet.value!.toIcpPrincipal();
-    final to_account = WalletContext.generateAccountId(
-        owner: cycles_minting_canister, subaccount: account_principal);
+    final toAccount = WalletContext.generateAccountId(
+        owner: cycles_minting_canister, subaccount: accountPrincipal);
     final amount = decimalToBlockchainUnits(
         double.tryParse(topAmountController.text) ?? 0,
-        icp_token.tokenDecimal ?? 8);
+        icpToken.tokenDecimal ?? 8);
     if (amount <= BigInt.zero) {
       showToast("Amount must be greater than 0");
       is_minting.value = false;
@@ -357,11 +357,11 @@ class _MintCyclesScreenState extends State<MintCyclesScreen> {
     final memo = BigInt.from(0x544e494d);
 
     try {
-      final block_height = await appController.ic_service!
-          .icpAccountIdSend(to: to_account, amount: amount, memo: memo);
-      final cycles_service = appController.ic_service!.createCyclesService();
+      final blockHeight = await appController.ic_service!
+          .icpAccountIdSend(to: toAccount, amount: amount, memo: memo);
+      final cyclesService = appController.ic_service!.createCyclesService();
       final result =
-          await cycles_service.notifyMintCycles(blockIndex: block_height);
+          await cyclesService.notifyMintCycles(blockIndex: blockHeight);
       Get.back();
       Get.bottomSheet(
           clipBehavior: Clip.antiAlias,

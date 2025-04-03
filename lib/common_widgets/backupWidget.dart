@@ -20,7 +20,7 @@ import '../../constants/colors.dart';
 class BackupReminderWidget extends StatefulWidget {
   final VoidCallback? onClose;
   
-  const BackupReminderWidget({Key? key, this.onClose}) : super(key: key);
+  const BackupReminderWidget({super.key, this.onClose});
   
   @override
   _BackupReminderWidgetState createState() => _BackupReminderWidgetState();

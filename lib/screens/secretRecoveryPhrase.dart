@@ -17,7 +17,6 @@ import 'package:fusion_wallet/controllers/appController.dart';
 import 'package:fusion_wallet/screens/VerifyPassword.dart';
 import 'package:fusion_wallet/screens/pinScreen.dart';
 import 'package:fusion_wallet/screens/secretRecoveryPhrase2.dart';
-import 'package:fusion_wallet/src/rust/api/wallet.dart';
 import 'package:get/get.dart';
 import 'package:page_transition/page_transition.dart';
 import '../../constants/colors.dart';

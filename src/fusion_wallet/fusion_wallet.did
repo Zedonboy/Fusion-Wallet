@@ -1,0 +1,1 @@
+service : { export_candid : () -> (text) query }

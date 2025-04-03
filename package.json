@@ -1,0 +1,23 @@
+{
+  "name": "flutter_fusion_wallet",
+  "version": "1.0.0",
+  "description": "[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) [![Flutter](https://img.shields.io/badge/Flutter-3.x-blue)](https://flutter.dev) [![Internet Computer](https://img.shields.io/badge/ICP-Ready-green)](https://internetcomputer.org/)",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^5.98.0",
+    "webpack-cli": "^6.0.1"
+  },
+  "dependencies": {
+    "@dfinity/auth-client": "^2.4.0"
+  }
+}

@@ -78,9 +78,9 @@ class AppController extends GetxController {
     }
 
     try {
-      final all_tokens = WalletContext.getAllSupportedTokens();
+      final allTokens = WalletContext.getAllSupportedTokens();
       
-      for (var token in all_tokens) {
+      for (var token in allTokens) {
         final balance = await ic_service!.getBalance(token: token, account: active_wallet.value!.toIcpPrincipal());
         
         // Check if balance is greater than 0 and token fee

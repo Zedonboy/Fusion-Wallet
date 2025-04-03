@@ -1,0 +1,4 @@
+service : {
+  export_candid : () -> (text) query;
+  get_wallet_address : () -> (opt text) query;
+}

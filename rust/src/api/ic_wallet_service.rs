@@ -41,7 +41,7 @@ use crate::api::icp_index_service::{
 };
 
 use super::{
-    canister::ICCanisterInfoService, cmc::CyclesService, constants::{CYCLES_MINTING_CANISTER, KONG_SWAP_ID, MAINNET_LEDGER_CANISTER_ID}, index_service::{GetTransactionsResult, IcIndexService, Transaction, TransactionWithId}, nft_service::ICCollectionService, swap_service::{KongSwapService, SwapArgs}, utils::{format_amount, AccountIdentifier, BlockIndex, Memo, TokenMetadata, Tokens, TransferArgs, DEFAULT_FEE}, wallet::{WalletToken, WalletTokenNetWork}
+    canister::ICCanisterInfoService, cmc::CyclesService, constants::{CYCLES_MINTING_CANISTER, KONG_SWAP_ID, MAINNET_LEDGER_CANISTER_ID}, index_service::{GetTransactionsResult, IcIndexService, Transaction, TransactionWithId}, nft_service::ICCollectionService, payment_service::PaymentService, swap_service::{KongSwapService, SwapArgs}, utils::{format_amount, AccountIdentifier, BlockIndex, Memo, TokenMetadata, Tokens, TransferArgs, DEFAULT_FEE}, wallet::{WalletToken, WalletTokenNetWork}
 };
 
 pub struct ICWalletService {
@@ -365,6 +365,12 @@ impl ICWalletService {
     #[flutter_rust_bridge::frb(sync)]
     pub fn create_cycles_service(&self) -> anyhow::Result<CyclesService> {
         let service = CyclesService::new(Principal::from_text(CYCLES_MINTING_CANISTER)?, self.ic_agent.clone());
+        Ok(service)
+    }
+
+    #[flutter_rust_bridge::frb(sync)]
+    pub fn create_payment_service(&self) -> anyhow::Result<PaymentService> {
+        let service = PaymentService::new(self.ic_agent.clone());
         Ok(service)
     }
 

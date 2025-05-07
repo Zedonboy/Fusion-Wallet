@@ -1,0 +1,33 @@
+{
+  "name": "fusion_wallet_frontend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "setup": "npm i && dfx canister create fusion_wallet_backend && dfx generate fusion_wallet_backend && dfx deploy",
+    "start": "vite --port 3000",
+    "prebuild": "dfx generate",
+    "build": "tsc && vite build",
+    "format": "prettier --write \"src/**/*.{json,js,jsx,ts,tsx,css,scss}\"",
+    "dev": "vite dev"
+  },
+  "dependencies": {
+    "@dfinity/agent": "^2.1.3",
+    "@dfinity/candid": "^2.1.3",
+    "@dfinity/principal": "^2.1.3",
+    "@tailwindcss/vite": "^4.0.0",
+    "tailwindcss": "^4.0.0"
+  },
+  "devDependencies": {
+    "@sveltejs/adapter-static": "^3.0.4",
+    "@sveltejs/kit": "^2.5.26",
+    "@sveltejs/vite-plugin-svelte": "^3.1.2",
+    "dotenv": "^16.3.1",
+    "sass": "^1.63.6",
+    "svelte": "^4.2.19",
+    "svelte-check": "^4.0.1",
+    "typescript": "^5.6.2",
+    "vite": "^5.4.3",
+    "vite-plugin-environment": "^1.1.3"
+  }
+}

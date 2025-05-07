@@ -8,7 +8,6 @@
  * (at your option) any later version.
  */
 
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fusion_wallet/constants/colors.dart';
@@ -212,69 +211,66 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
             SizedBox(
               height: 18,
             ),
-            if (widget.token.tokenAddress == "ryjl3-tyaaa-aaaaa-aaaba-cai") ...[
-              Text(
-                getTranslated(context, "For ICP Account ID Only") ??
-                    "For ICP Account ID Only",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                  color: lightTextColor.value,
-                  fontFamily: "dmsans",
-                ),
+            Text(
+              getTranslated(context, "For Account ID Only") ??
+                  "For Account ID Only",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: lightTextColor.value,
+                fontFamily: "dmsans",
               ),
-              SizedBox(
-                height: 16,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      copyToClipboard(acc_id);
-                    },
-                    child: Container(
-                      // width: 190,
-                      height: 33,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                      decoration: ShapeDecoration(
-                        color: Color(0x191C1924),
-                        shape: RoundedRectangleBorder(
-                          side: BorderSide(width: 0.50, color: cardcolor.value),
-                          borderRadius: BorderRadius.circular(100),
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            address_shortener(acc_id,
-                                start_count: 8, end_count: 5),
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                          SizedBox(width: 4),
-                          Container(
-                            width: 20,
-                            height: 20,
-                            clipBehavior: Clip.antiAlias,
-                            decoration: BoxDecoration(),
-                            child: SvgPicture.asset("assets/svg/Icons.svg"),
-                          ),
-                        ],
+            ),
+            SizedBox(
+              height: 16,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    copyToClipboard(acc_id);
+                  },
+                  child: Container(
+                    // width: 190,
+                    height: 33,
+                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: ShapeDecoration(
+                      color: Color(0x191C1924),
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(width: 0.50, color: cardcolor.value),
+                        borderRadius: BorderRadius.circular(100),
                       ),
                     ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          address_shortener(acc_id,
+                              start_count: 8, end_count: 5),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        SizedBox(width: 4),
+                        Container(
+                          width: 20,
+                          height: 20,
+                          clipBehavior: Clip.antiAlias,
+                          decoration: BoxDecoration(),
+                          child: SvgPicture.asset("assets/svg/Icons.svg"),
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
-            ],
+                ),
+              ],
+            ),
             SizedBox(
               height: 44,
             ),

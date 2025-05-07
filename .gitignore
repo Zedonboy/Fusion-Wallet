@@ -57,3 +57,8 @@ canister_ids.json
 /target
 /node_modules
 *.wasm
+/dist
+/output
+/declarations
+
+test.json

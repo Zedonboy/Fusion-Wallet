@@ -10,6 +10,7 @@
 
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fusion_wallet/common_widgets/bottomRectangularbtn.dart';
@@ -37,7 +38,7 @@ class _MintCyclesScreenState extends State<MintCyclesScreen> {
   var loading_balance = false.obs;
   var loading_xdr_estimate = false.obs;
   var icp_balance = "".obs;
-  var xdr_estimate = BigInt.from(0).obs;
+  var xdr_estimate = 0.0.obs;
   var calculated_cycles = 0.0.obs;
   var is_minting = false.obs;
   // final tokenPrice = 12.50; // Example price - replace with actual token price
@@ -64,7 +65,7 @@ class _MintCyclesScreenState extends State<MintCyclesScreen> {
     cyclesService.getIcpXdrConversionRate().then((value) {
       print(value);
       final estimate = value.data.xdrPermyriadPerIcp;
-      xdr_estimate.value = estimate;
+      xdr_estimate.value = estimate.toDouble() / 10000;
     }).onError((error, stackTrace) {
       print(error);
     }).whenComplete(() {
@@ -224,7 +225,7 @@ class _MintCyclesScreenState extends State<MintCyclesScreen> {
   @override
   Widget build(BuildContext context) {
     return Obx(() => Container(
-          height: Get.height * 0.5,
+          height: Get.height * (kIsWeb ? 0.7 : 0.5),
           padding: EdgeInsets.symmetric(horizontal: 22, vertical: 20),
           child: Column(
             children: [
@@ -283,7 +284,7 @@ class _MintCyclesScreenState extends State<MintCyclesScreen> {
                           ),
                         ),
                         Text(
-                          "${NumberFormat("#,###").format(xdr_estimate.value.toInt())} Trillion Cycles",
+                          "${NumberFormat("#.###").format(xdr_estimate.value)} Trillion Cycles",
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w400,

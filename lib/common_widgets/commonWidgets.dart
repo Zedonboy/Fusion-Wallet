@@ -48,6 +48,18 @@ class CommonWidgets {
     );
   }
 
+  showErrorSnackbar(String title, String description) {
+    Get.snackbar(
+      title,
+      description,
+      backgroundColor: Colors.red,
+      colorText: Colors.white,
+      snackStyle: SnackStyle.FLOATING,
+      snackPosition: SnackPosition.TOP,
+      duration: Duration(seconds: 3),
+    );
+  }
+
   static Widget confirmStatus(String title, String description) {
     return Container(
       height: Get.height * 0.4,

@@ -8,19 +8,44 @@
         "package": "fusion_register",
         "type": "rust"
       },
-      
-      "fusion-wallet": {
-        "candid": "src/fusion_wallet/fusion_wallet.did",
+
+
+      "fusion_pay": {
+        "candid": "src/fusion_pay/fusion_pay.did",
         "declarations": {
           "node_compatibility": true
         },
-        "package": "fusion_wallet",
+        "package": "fusion_pay",
         "type": "rust"
+      },
+
+      "fusion_homepage": {
+        
+        "source": [
+          "src/fusion_homepage/dist"
+        ],
+        "type": "assets",
+        "workspace": "fusion_wallet_frontend"
+      },
+
+      "fusion_docs": {
+        "source": [
+          "src/fusion_docs/out"
+        ],
+        "type": "assets",
+        "workspace": "fusion_docs"
       },
 
       "fusion-web": {
         "source": [
           "build/web/"
+        ],
+        "type": "assets"
+      },
+
+      "fusion-onchain-web": {
+        "source": [
+          "build/onchain_web/"
         ],
         "type": "assets"
       }

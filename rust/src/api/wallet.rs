@@ -1,41 +1,38 @@
 /**
  * Copyright (C) 2025 Fusion Wallet
- * 
+ *
  * This file is part of Fusion Wallet.
- * 
+ *
  * Fusion Wallet is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Fusion Wallet is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Fusion Wallet.  If not, see <https://www.gnu.org/licenses/>.
  */
-
-use std::{
-    str::FromStr,
-    sync::{Arc},
-};
+use std::{str::FromStr, string, sync::Arc, time::{SystemTime, UNIX_EPOCH}};
 
 use anyhow::{bail, Error, Ok};
-use bip32::{
-    secp256k1::ecdsa::{SigningKey},
-    DerivationPath, ExtendedPrivateKey, XPrv,
-};
+use bip32::{secp256k1::ecdsa::SigningKey, DerivationPath, ExtendedPrivateKey, XPrv};
 use bip39::{Mnemonic, Seed};
 // use bitcoin::NetworkKind;
 use candid::Principal;
 use flutter_rust_bridge::frb;
-use ic_agent::{identity::Secp256k1Identity, Identity};
+use ic_agent::{
+    identity::{BasicIdentity, DelegatedIdentity, Delegation, Secp256k1Identity, SignedDelegation},
+    Identity,
+};
 // use ic_ledger_types::AccountIdentifier;
 use icrc_ledger_types::icrc1::account::{principal_to_subaccount, Account};
 use k256::{
     ecdsa::Signature,
+    elliptic_curve::rand_core,
     sha2::{Digest, Sha256},
     SecretKey,
 };
@@ -43,8 +40,15 @@ use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
+use der::{Encode, asn1::BitStringRef};
+use spki::{AlgorithmIdentifier, SubjectPublicKeyInfoRef};
+use const_oid::ObjectIdentifier;
+
 use super::{
-    constants::IC_HOST_URL, http_service::HttpWalletService, ic_wallet_service::ICWalletService, utils::{AccountIdentifier, Subaccount}
+    constants::IC_HOST_URL,
+    http_service::HttpWalletService,
+    ic_wallet_service::ICWalletService,
+    utils::{ascii_to_hardened_derivation_path, AccountIdentifier, Subaccount},
 };
 use lazy_static::lazy_static;
 
@@ -85,21 +89,183 @@ impl WalletToken {
     }
 
     #[flutter_rust_bridge::frb(sync)]
-    pub fn from_string(data : &str) -> anyhow::Result<Self> {
+    pub fn from_string(data: &str) -> anyhow::Result<Self> {
         let value = serde_json::from_str(data)?;
         Ok(value)
     }
 }
 
+pub trait IWallet {
+    fn from_seed(seed_phrase: String) -> anyhow::Result<Self>
+    where
+        Self: Sized;
+    #[frb(ignore)]
+    fn from_private_key(key: ExtendedPrivateKey<SigningKey>) -> Self
+    where
+        Self: Sized;
+    fn to_icp_principal(&self) -> anyhow::Result<String>;
+    fn to_account_identifier(&self) -> anyhow::Result<String>;
+    fn create_ic_service(&self) -> anyhow::Result<ICWalletService>;
+}
+
+pub struct SessionKey(ed25519_consensus::SigningKey);
+
+
+#[frb]
+pub struct DelegationParams {
+    pub key: Vec<u8>,
+    pub expiration: u64,
+    pub signable: Vec<u8>,
+    #[frb(non_final)]
+    pub signature: Option<Vec<u8>>,
+}
+
+pub struct OnChainWallet {
+    // identity: DelegatedIdentity,
+    ic_agent: Arc<ic_agent::Agent>,
+}
+
+impl OnChainWallet {
+    pub fn generate_session_key() -> SessionKey {
+        let rng = rand_core::OsRng;
+        let s_k = ed25519_consensus::SigningKey::new(rng);
+        SessionKey(s_k)
+    }
+
+    pub fn get_delegation_params(session_key: &SessionKey, expiration: u64) -> DelegationParams {
+        let basic = BasicIdentity::from_signing_key(session_key.0.clone());
+        let delegation = Delegation {
+            pubkey: basic.public_key().unwrap(),
+            expiration,
+            targets: None,
+        };
+
+        DelegationParams {
+            key: basic.public_key().unwrap(),
+            expiration,
+            signable: delegation.signable(),
+            signature: None,
+        }
+    }
+
+    pub fn from_delegation(
+        delegation_params: DelegationParams,
+        session_key: SessionKey,
+        from_key: Vec<u8>,
+    ) -> anyhow::Result<Self> {
+        let delegation = Delegation {
+            pubkey: delegation_params.key,
+            expiration: delegation_params.expiration,
+            targets: None,
+        };
+
+        if delegation_params.signature.is_none() {
+            bail!("Signature is required");
+        }
+
+        let signed_delegation = SignedDelegation {
+            delegation,
+            signature: delegation_params.signature.unwrap(),
+        };
+
+        let basic_identity = BasicIdentity::from_signing_key(session_key.0);
+
+        let boxed_identity = Box::new(basic_identity);
+
+        let der_pk = Self::ed25519_public_key_to_der(&from_key)?;
+
+        let identity = DelegatedIdentity::new(der_pk, boxed_identity, vec![signed_delegation])?;
+
+        #[cfg(not(target_family = "wasm"))]
+        let agent = ic_agent::Agent::builder()
+            .with_url(IC_HOST_URL)
+            .with_identity(identity)
+            .with_arc_http_middleware(CLIENT.clone())
+            .build()?;
+
+        #[cfg(target_family = "wasm")]
+        let agent = ic_agent::Agent::builder()
+            .with_url(IC_HOST_URL)
+            .with_identity(identity)
+            .build()?;
+
+        Ok(OnChainWallet {
+            ic_agent: Arc::new(agent),
+        })
+    }
+
+    fn ed25519_public_key_to_der(public_key: &[u8]) -> anyhow::Result<Vec<u8>> {
+        const ED25519_OID: ObjectIdentifier = ObjectIdentifier::new_unwrap("1.3.101.112");
+
+        // Validate the Ed25519 public key length (should be 32 bytes)
+        if public_key.len() != 32 {
+            return Err(anyhow::anyhow!("Invalid Ed25519 public key length"));
+        }
+
+        // Create the algorithm identifier for Ed25519
+        let algorithm = AlgorithmIdentifier {
+            oid: ED25519_OID,
+            parameters: None,
+        };
+
+        // Create a BitString from the public key
+        // Note: For Ed25519 in DER, the key is directly encoded as a BitString
+        let subject_public_key = BitStringRef::new(0, public_key)?;
+
+        // Create the SubjectPublicKeyInfo structure
+        let spki = SubjectPublicKeyInfoRef {
+            algorithm,
+            subject_public_key,
+        };
+        // Encode to DER format
+        Ok(spki.to_der()?)
+    }
+}
+
+impl IWallet for OnChainWallet {
+    #[flutter_rust_bridge::frb(sync)]
+    fn from_seed(seed_phrase: String) -> anyhow::Result<Self> {
+        bail!("Not implemented")
+    }
+
+    #[frb(ignore)]
+    fn from_private_key(key: ExtendedPrivateKey<SigningKey>) -> Self
+    where
+        Self: Sized,
+    {
+        todo!()
+    }
+
+    fn to_icp_principal(&self) -> anyhow::Result<String> {
+        let snder = self
+            .ic_agent
+            .get_principal()
+            .map_err(|mssg| Error::msg(mssg))?;
+
+        Ok(snder.to_text())
+    }
+
+    fn to_account_identifier(&self) -> anyhow::Result<String> {
+        let principal_str = self.to_icp_principal()?;
+        let owner = Principal::from_text(principal_str)?;
+        let account_id = AccountIdentifier::new(&owner, &Subaccount([0; 32]));
+        Ok(account_id.to_hex())
+    }
+
+    fn create_ic_service(&self) -> anyhow::Result<ICWalletService> {
+        let service = ICWalletService::new(self.ic_agent.clone());
+        Ok(service)
+    }
+}
 
 pub struct Wallet {
     key: ExtendedPrivateKey<SigningKey>,
     seed: Option<Seed>,
 }
 
-impl Wallet {
+impl IWallet for crate::api::wallet::Wallet {
     #[flutter_rust_bridge::frb(sync)]
-    pub fn from_seed(seed_phrase: String) -> anyhow::Result<Self> {
+    fn from_seed(seed_phrase: String) -> anyhow::Result<Self> {
         let f = WalletContext::verify_mnemonic(&seed_phrase);
         if (!f) {
             bail!("Invalid Seed Phrase");
@@ -107,16 +273,16 @@ impl Wallet {
         let mnemonic = Mnemonic::from_phrase(&seed_phrase, bip39::Language::English)?;
         let seed = Seed::new(&mnemonic, "");
         let root = XPrv::new(seed.clone())?;
-       
+
         Ok(Self {
             seed: Some(seed),
-            key: root
+            key: root,
         })
     }
 
+    #[frb(ignore)]
     fn from_private_key(key: ExtendedPrivateKey<SigningKey>) -> Self {
-        
-        Wallet { key, seed: None}
+        Self { key, seed: None }
     }
 
     // #[flutter_rust_bridge::frb(sync)]
@@ -129,7 +295,7 @@ impl Wallet {
     // }
 
     #[flutter_rust_bridge::frb(sync)]
-    pub fn to_icp_principal(&self) -> anyhow::Result<String> {
+    fn to_icp_principal(&self) -> anyhow::Result<String> {
         let priv_key = self.key.private_key().to_bytes();
         let sk = SecretKey::from_bytes(&priv_key)?;
         let identity = Secp256k1Identity::from_private_key(sk);
@@ -138,7 +304,7 @@ impl Wallet {
     }
 
     #[flutter_rust_bridge::frb(sync)]
-    pub fn to_account_identifier(&self) -> anyhow::Result<String> {
+    fn to_account_identifier(&self) -> anyhow::Result<String> {
         let principal_str = self.to_icp_principal()?;
         let owner = Principal::from_text(principal_str)?;
         let account_id = AccountIdentifier::new(&owner, &Subaccount([0; 32]));
@@ -146,10 +312,10 @@ impl Wallet {
     }
 
     #[flutter_rust_bridge::frb(sync)]
-    pub fn create_ic_service(&self) -> anyhow::Result<ICWalletService> {
+    fn create_ic_service(&self) -> anyhow::Result<ICWalletService> {
         let secret_key = SecretKey::from_bytes(&self.key.private_key().to_bytes())?;
         let identity = Secp256k1Identity::from_private_key(secret_key);
-        
+
         #[cfg(not(target_family = "wasm"))]
         let agent = ic_agent::Agent::builder()
             .with_url(IC_HOST_URL)
@@ -164,20 +330,6 @@ impl Wallet {
         let arc_agent = Arc::new(agent);
         let service = ICWalletService::new(arc_agent);
         Ok(service)
-    }
-
-
-
-    fn ascii_to_hardened_derivation_path(input: &str) -> anyhow::Result<DerivationPath> {
-        let path_string = input
-            .chars()
-            .map(|c| format!("{}'", c as u32))
-            .collect::<Vec<String>>()
-            .join("/");
-
-        let full_path = format!("m/{}", path_string);
-        let derive_path = DerivationPath::from_str(&full_path)?;
-        Ok(derive_path)
     }
 }
 
@@ -210,7 +362,7 @@ impl IWalletService for Wallet {
     #[flutter_rust_bridge::frb(sync)]
     fn create_child_wallet(&self, path: &str) -> anyhow::Result<Wallet> {
         // Parse the derivation path
-        let derivation_path = Wallet::ascii_to_hardened_derivation_path(path)?;
+        let derivation_path = ascii_to_hardened_derivation_path(path)?;
 
         if self.seed.is_none() {
             return Err(Error::msg("This is not a master key"));
@@ -251,7 +403,7 @@ impl WalletContext {
                 token_name: "Internet Computer".to_string(),
                 index_canister: Some("qhbym-qaaaa-aaaaa-aaafq-cai".to_string()),
                 transfer_fee: 10000,
-                gov_canister: Some("rrkah-fqaaa-aaaaa-aaaaq-cai".to_string())
+                gov_canister: Some("rrkah-fqaaa-aaaaa-aaaaq-cai".to_string()),
             },
             WalletToken {
                 symbol: "TCYCLES".to_string(),
@@ -262,7 +414,7 @@ impl WalletContext {
                 token_name: "Trillion Cycles".to_string(),
                 index_canister: Some("ul4oc-4iaaa-aaaaq-qaabq-cai".to_string()),
                 transfer_fee: 100_000_000,
-                gov_canister: None
+                gov_canister: None,
             },
             WalletToken {
                 symbol: "ckETH".to_string(),
@@ -307,10 +459,10 @@ impl WalletContext {
                 index_canister: None,
                 gov_canister: None,
                 transfer_fee: 1000000,
-            }
+            },
         ]
     }
-    
+
     #[flutter_rust_bridge::frb(sync)]
     pub fn get_all_supported_tokens() -> Vec<WalletToken> {
         vec![
@@ -324,7 +476,7 @@ impl WalletContext {
                 token_name: "Internet Computer".to_string(),
                 index_canister: Some("qhbym-qaaaa-aaaaa-aaafq-cai".to_string()),
                 transfer_fee: 10000,
-                gov_canister: Some("rrkah-fqaaa-aaaaa-aaaaq-cai".to_string())
+                gov_canister: Some("rrkah-fqaaa-aaaaa-aaaaq-cai".to_string()),
             },
             WalletToken {
                 symbol: "TCYCLES".to_string(),
@@ -335,7 +487,7 @@ impl WalletContext {
                 token_name: "Trillion Cycles".to_string(),
                 index_canister: Some("ul4oc-4iaaa-aaaaq-qaabq-cai".to_string()),
                 transfer_fee: 100_000_000,
-                gov_canister: None
+                gov_canister: None,
             },
             WalletToken {
                 symbol: "ckBTC".to_string(),
@@ -502,7 +654,6 @@ impl WalletContext {
                 gov_canister: Some("xomae-vyaaa-aaaaq-aabhq-cai".to_string()),
                 transfer_fee: 100000,
             },
-
             WalletToken {
                 symbol: "CTZ".to_string(),
                 network: WalletTokenNetWork::InternetComputer,
@@ -798,7 +949,7 @@ impl WalletContext {
                 token_name: "WaterNeuron".to_string(),
                 index_canister: Some("iidmm-fiaaa-aaaaq-aadmq-cai".to_string()),
                 gov_canister: Some("jfnic-kaaaa-aaaaq-aadla-cai".to_string()),
-                transfer_fee: 1000000
+                transfer_fee: 1000000,
             },
             WalletToken {
                 symbol: "DOLR".to_string(),
@@ -843,8 +994,7 @@ impl WalletContext {
                 index_canister: None,
                 gov_canister: None,
                 transfer_fee: 1000000,
-            }
-            // Add more WalletToken instances as needed
+            }, // Add more WalletToken instances as needed
         ]
     }
     #[flutter_rust_bridge::frb(sync)]
@@ -882,23 +1032,28 @@ impl WalletContext {
     #[flutter_rust_bridge::frb(sync)]
     pub fn generate_account_id(owner: &str, subaccount: Option<String>) -> anyhow::Result<String> {
         let owner = Principal::from_text(owner)?;
-        let subaccount = subaccount.map_or(Subaccount::empty(), |s| Subaccount::from(Principal::from_text(s).unwrap()));
+        let subaccount = subaccount.map_or(Subaccount::empty(), |s| {
+            Subaccount::from(Principal::from_text(s).unwrap())
+        });
         let account_id = AccountIdentifier::new(&owner, &subaccount);
         Ok(account_id.to_hex())
     }
 
     #[flutter_rust_bridge::frb(sync)]
-    pub fn generate_icrc_account(owner: &str, subaccount: Option<String>) -> anyhow::Result<String> {
+    pub fn generate_icrc_account(
+        owner: &str,
+        subaccount: Option<String>,
+    ) -> anyhow::Result<String> {
         let owner = Principal::from_text(owner)?;
 
-        let acc = Account{
+        let acc = Account {
             owner,
-            subaccount: subaccount.map_or(None, |s| Some(principal_to_subaccount(Principal::from_text(s).unwrap()))),
+            subaccount: subaccount.map_or(None, |s| {
+                Some(principal_to_subaccount(Principal::from_text(s).unwrap()))
+            }),
         };
         Ok(acc.to_string())
     }
-
-
 
     pub async fn get_token_worth(token_symbol: String, amount: f64) -> f64 {
         let symbol = if token_symbol.starts_with("ck") {
@@ -931,5 +1086,153 @@ impl WalletContext {
             }
             None => 0.0,
         }
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use std::time::{SystemTime, UNIX_EPOCH};
+
+    use candid::{decode_one, encode_args, Decode};
+    use der::{AnyRef, Decode, SliceReader};
+    use ic_agent::Agent;
+    use k256::pkcs8::der::asn1::BitStringRef;
+    use spki::SubjectPublicKeyInfo;
+    /// [`SubjectPublicKeyInfo`] with [`AnyRef`] algorithm parameters, and [`BitStringRef`] params.
+pub type SubjectPublicKeyInfoRef<'a> = SubjectPublicKeyInfo<AnyRef<'a>, BitStringRef<'a>>;
+
+    use super::*;
+
+    #[tokio::test]
+    async fn test_get_token_worth() {
+        let agent = Agent::builder()
+            .with_url("http://localhost:4943")
+            .build()
+            .unwrap();
+        agent.fetch_root_key().await.unwrap();
+        let session_key = OnChainWallet::generate_session_key();
+
+        let time = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap()
+            .as_nanos();
+
+
+        let basic = BasicIdentity::from_signing_key(session_key.0);
+
+        let delegation = Delegation {
+            pubkey: basic.public_key().unwrap(),
+            expiration: (time + 3 * 3600 * 1_000_000_000) as u64, //3 hours,
+            targets: None,
+        };
+        let delegation_bytes = delegation.signable(); //OnChainWallet::get_delegation_bytes(&session_key);
+
+        let register = Principal::from_text("cgpjn-omaaa-aaaaa-qaakq-cai").unwrap();
+        // let result = agent.update(&register, "provision_wallet").with_arg(encode_args(()).unwrap()).call_and_wait().await.unwrap();
+        // let wallet_id = decode_one::<Result<String, String>>(&result).unwrap();
+
+        // assert!(wallet_id.is_ok());
+
+        // let wallet_id = wallet_id.unwrap();
+        // println!("wallet_id: {}", wallet_id);
+
+        let wallet_principal = Principal::from_text("dmalx-m4aaa-aaaaa-qaanq-cai").unwrap();
+        let result = agent
+            .update(&wallet_principal, "schnorr_ed25519_signature")
+            .with_arg(encode_args((&delegation_bytes, None::<Vec<u8>>)).unwrap())
+            .call_and_wait()
+            .await
+            .unwrap();
+        let signature = decode_one::<Vec<u8>>(&result).unwrap();
+        println!("signature: {:?}", signature);
+
+        // getting root public key
+        let result = agent
+            .update(&wallet_principal, "get_schnorr_ed25519_public_key")
+            .with_arg(encode_args((None::<Vec<u8>>,)).unwrap())
+            .call_and_wait()
+            .await
+            .unwrap();
+        let public_key = decode_one::<Vec<u8>>(&result).unwrap();
+        
+        let pk = ed25519_public_key_to_der(&public_key).unwrap();
+
+        let signed_delegation = SignedDelegation {
+            delegation,
+            signature,
+        };
+
+        // println!("public_key: {:?}", public_key);
+
+        let mut reader = SliceReader::new(&mut pk.as_slice()).unwrap();
+        let spki = spki::SubjectPublicKeyInfoRef::decode(&mut reader).unwrap();
+
+
+        let vk = ed25519_consensus::VerificationKey::try_from(spki.subject_public_key.raw_bytes()).unwrap();
+
+        let sig = ed25519_consensus::Signature::try_from(&signed_delegation.signature[..]).unwrap();
+
+        let result = vk.verify(&sig, &signed_delegation.delegation.signable()).unwrap();
+
+        let boxed = Box::new(basic);
+
+      
+
+        let delegation = DelegatedIdentity::new(pk, boxed, vec![signed_delegation]).unwrap();
+
+        println!("Principal: {:?}", delegation.sender().unwrap().to_text());
+
+        let ic_agent = Agent::builder().with_url("http://localhost:4943").with_identity(delegation).build().unwrap();
+        ic_agent.fetch_root_key().await.unwrap();
+
+        let result = ic_agent.query(&register, "get_deposit_address").with_arg(encode_args(()).unwrap()).call().await.unwrap();
+        let deposit_address = decode_one::<String>(&result).unwrap();
+        println!("deposit_address: {:?}", deposit_address);
+
+        let d = AccountIdentifier::new(&register, &Subaccount::from(Principal::from_text(ic_agent.get_principal().unwrap().to_text()).unwrap()));
+        println!("d: {:?}", d.to_hex());
+
+
+        println!("onchain: works");
+    }
+
+    // fn der_encode_public_key(public_key: Vec<u8>) -> Vec<u8> {
+    //     // see Section 4 "SubjectPublicKeyInfo" in https://tools.ietf.org/html/rfc8410
+
+    //     let id_ed25519 = oid!(1, 3, 101, 112);
+    //     let algorithm = Sequence(0, vec![ObjectIdentifier(0, id_ed25519)]);
+    //     let subject_public_key = BitString(0, public_key.len() * 8, public_key);
+    //     let subject_public_key_info = Sequence(0, vec![algorithm, subject_public_key]);
+    //     to_der(&subject_public_key_info).unwrap()
+    // }
+
+    const ED25519_OID: ObjectIdentifier = ObjectIdentifier::new_unwrap("1.3.101.112");
+
+    fn ed25519_public_key_to_der(public_key: &[u8]) -> anyhow::Result<Vec<u8>> {
+        // Validate the Ed25519 public key length (should be 32 bytes)
+        if public_key.len() != 32 {
+            return Err(anyhow::anyhow!("Invalid Ed25519 public key length"));
+        }
+
+        // Create the algorithm identifier for Ed25519
+        let algorithm = AlgorithmIdentifier {
+            oid: ED25519_OID,
+            parameters: None,
+        };
+
+        // Create a BitString from the public key
+        // Note: For Ed25519 in DER, the key is directly encoded as a BitString
+        let subject_public_key = BitStringRef::new(0, public_key)?;
+
+        // Create the SubjectPublicKeyInfo structure
+        let spki = SubjectPublicKeyInfoRef {
+            algorithm,
+            subject_public_key,
+        };
+
+        let d = spki.subject_public_key.raw_bytes();
+
+        // Encode to DER format
+        Ok(spki.to_der()?)
     }
 }

@@ -10,6 +10,7 @@
 
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fusion_wallet/common_widgets/bottomRectangularbtn.dart';
@@ -267,7 +268,7 @@ class _TopUpScreenState extends State<TopUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Obx(() => Container(
-          height: Get.height * 0.5,
+          height: Get.height * (kIsWeb ? 0.7 : 0.5),
           padding: EdgeInsets.symmetric(horizontal: 22, vertical: 20),
           child: Column(
             children: [

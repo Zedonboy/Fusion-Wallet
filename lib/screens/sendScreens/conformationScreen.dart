@@ -20,6 +20,7 @@ import 'package:fusion_wallet/controllers/utils.dart';
 import 'package:fusion_wallet/localization/language_constants.dart';
 import 'package:fusion_wallet/screens/VerifyPassword.dart';
 import 'package:fusion_wallet/screens/pinScreen.dart';
+import 'package:fusion_wallet/screens/splashScreen.dart';
 import 'package:fusion_wallet/src/rust/api/wallet.dart';
 import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
@@ -462,10 +463,15 @@ class _ConformationScreenState extends State<ConformationScreen> {
 
   void trigger_pin_sequence() {
     if (kIsWeb) {
-      Get.to(() => VerifyPassword(onPasswordVerified: (p0) {
+      if(ONCHAIN_WEB) {
+        start_sending();
+      } else {
+        Get.to(() => VerifyPassword(onPasswordVerified: (p0) {
             Get.back();
             start_sending();
           },));
+      }
+      
     } else {
       Get.to(() => PinScreen(
           isSignin: false,

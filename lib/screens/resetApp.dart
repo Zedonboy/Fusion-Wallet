@@ -147,9 +147,13 @@ class _ResetAppState extends State<ResetApp> {
                   GestureDetector(
                     onTap: () {
                       if (kIsWeb) {
-                        Get.to(() => VerifyPassword(onPasswordVerified: (p0) {
-                              clear_app_data();
-                            },));
+                        if(ONCHAIN_WEB) {
+                          clear_app_data();
+                        } else {
+                          Get.to(() => VerifyPassword(onPasswordVerified: (p0) {
+                                clear_app_data();
+                              },));
+                        }
                       } else {
                         Get.to(PinScreen(
                           onPinConfirm: (data) {

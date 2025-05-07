@@ -1,0 +1,56 @@
+{
+  "name": "fusion-connect",
+  "version": "0.1.0",
+  "description": "Fusion Wallet connection library",
+  "main": "dist/fusion-connect.umd.js",
+  "module": "dist/fusion-connect.es.js",
+  "types": "dist/index.d.ts",
+  "private": true,
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && tsc --emitDeclarationOnly",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@chainsafe/libp2p-noise": "16.1.2",
+    "@chainsafe/libp2p-yamux": "7.0.1",
+    "@dfinity/identity": "2.4.1",
+    "@libp2p/bootstrap": "11.0.35",
+    "@libp2p/circuit-relay-v2": "3.2.11",
+    "@libp2p/identify": "3.0.29",
+    "@libp2p/interface": "2.9.0",
+    "@libp2p/ping": "2.0.29",
+    "@libp2p/tcp": "^10.1.10",
+    "@libp2p/webrtc": "5.2.12",
+    "@libp2p/websockets": "9.2.10",
+    "@multiformats/multiaddr-matcher": "1.7.0",
+    "cbor": "10.0.3",
+    "it-length-prefixed-stream": "2.0.1",
+    "libp2p": "2.8.5",
+    "qrcode-generator": "^1.4.4"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.4",
+    "@tailwindcss/vite": "^4.1.4",
+    "autoprefixer": "^10.4.14",
+    "postcss": "^8.4.24",
+    "tailwindcss": "^4.1.4",
+    "typescript": "^5.0.4",
+    "vite": "6.3.2"
+  },
+  "peerDependencies": {
+    "tailwindcss": "4.1.4"
+  },
+  "keywords": [
+    "fusion",
+    "wallet",
+    "connect",
+    "libp2p"
+  ],
+  "author": "Fusion Wallet",
+  "license": "GPL-3.0"
+}

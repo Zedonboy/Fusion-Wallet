@@ -10,8 +10,6 @@
     security_policy: "standard",
 
     headers: {
-      "Cross-Origin-Opener-Policy": "same-origin",
-      "Cross-Origin-Embedder-Policy": "require-corp",
       "Permissions-Policy": "camera=*",
       "Content-Security-Policy": "default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; script-src * 'unsafe-inline' 'unsafe-eval' data: blob:; connect-src * data: blob:; img-src * data: blob:; style-src * 'unsafe-inline'; font-src * data:; object-src *; media-src * data: blob:; frame-src *; worker-src * data: blob:; frame-ancestors *; form-action *;",
     },

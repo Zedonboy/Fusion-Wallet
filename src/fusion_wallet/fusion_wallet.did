@@ -1,1 +1,11 @@
-service : { export_candid : () -> (text) query }
+type Result = variant { Ok : principal; Err : text };
+service : {
+  export_candid : () -> (text) query;
+  get_ecdsa_public_key : (opt blob) -> (blob);
+  get_ecdsa_signature : (blob, opt blob) -> (blob);
+  get_prime_controller : () -> (Result);
+  get_schnorr_ed25519_public_key : (opt blob) -> (blob);
+  get_schnorr_secp256k1_public_key : (opt blob) -> (blob);
+  schnorr_ed25519_signature : (blob, opt blob) -> (blob);
+  schnorr_secp256k1_signature : (blob, opt blob) -> (blob);
+}

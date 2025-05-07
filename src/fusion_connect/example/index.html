@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fusion Connect Demo</title>
+  <link rel="stylesheet" href="../dist/style.css">
+</head>
+<body class="p-8 bg-gray-100">
+  <div class="max-w-2xl mx-auto space-y-4">
+    <h1 class="text-3xl font-bold text-gray-800">Fusion Connect Demo</h1>
+    
+    <div class="space-y-4">
+      <button 
+        id="connectButton"
+        class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+      >
+        Connect Wallet
+      </button>
+      
+      <button 
+        id="getDelegationButton"
+        class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:opacity-50"
+        disabled
+      >
+        Get Delegation
+      </button>
+      
+      <div id="status" class="p-4 bg-white rounded shadow"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { FusionClient } from '../dist/fusion-connect.es.js';
+    
+    let client;
+    
+    document.getElementById('connectButton').addEventListener('click', async () => {
+      try {
+        client = await FusionClient.create();
+        
+        await client.login({
+          onSuccess: () => {
+            document.getElementById('getDelegationButton').disabled = false;
+            updateStatus('Connected to wallet!', 'text-green-600');
+          }
+        });
+        
+      } catch (error) {
+        console.error('Connection error:', error);
+        updateStatus(`Connection failed: ${error.message}`, 'text-red-600');
+      }
+    });
+
+    document.getElementById('getDelegationButton').addEventListener('click', async () => {
+      try {
+        if (!client) throw new Error('Client not initialized');
+        
+        const delegation = await client.get_delegation();
+        updateStatus('Delegation received!', 'text-green-600');
+        console.log('Delegation identity:', delegation);
+        
+        // You can now use the delegation identity to make authenticated calls
+        // For example:
+        // const actor = createActor(icpLedgerCanisterId, {
+        //   agentOptions: { identity: delegation }
+        // });
+        
+      } catch (error) {
+        console.error('Delegation error:', error);
+        updateStatus(`Delegation failed: ${error.message}`, 'text-red-600');
+      }
+    });
+
+    function updateStatus(text, colorClass = 'text-gray-800') {
+      const statusDiv = document.getElementById('status');
+      statusDiv.innerHTML = `<p class="${colorClass}">${text}</p>`;
+    }
+  </script>
+</body>
+</html> 

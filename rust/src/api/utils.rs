@@ -1,6 +1,7 @@
 use core::fmt;
-use std::{collections::HashMap, fmt::{Display, Formatter}, ops::{Add, AddAssign, Sub, SubAssign}};
+use std::{collections::HashMap, fmt::{Display, Formatter}, ops::{Add, AddAssign, Sub, SubAssign}, str::FromStr};
 
+use bip32::DerivationPath;
 use candid::{CandidType, Nat, Principal};
 use flutter_rust_bridge::frb;
 use icrc_ledger_types::icrc::generic_metadata_value::MetadataValue;
@@ -10,6 +11,26 @@ use serde::{Deserialize, Serialize};
 pub const DEFAULT_FEE: Tokens = Tokens { e8s: 10_000 };
 /// The sequence number of a block in the Tokens ledger blockchain.
 pub type BlockIndex = u64;
+
+#[derive(CandidType, Serialize, Deserialize)]
+pub struct ICPayment{
+    pub amount: u64,
+    pub token_address: String,
+    pub recipient: String,
+    pub memo: String,
+    pub id: String
+}
+
+#[derive(CandidType, Deserialize, Clone, Default)]
+pub struct PaymentLink {
+    pub amount: String,
+    pub qr_data: String,
+    pub token_symbol: String,
+    pub id: String,
+    pub memo: String,
+    pub created_at: u64,
+    pub recipient: String,
+}
 
 
 #[frb(ignore)]
@@ -32,6 +53,19 @@ impl Default for TokenMetadata {
             logo: None
         }
     }
+}
+
+#[frb(ignore)]
+pub fn ascii_to_hardened_derivation_path(input: &str) -> anyhow::Result<DerivationPath> {
+    let path_string = input
+        .chars()
+        .map(|c| format!("{}'", c as u32))
+        .collect::<Vec<String>>()
+        .join("/");
+
+    let full_path = format!("m/{}", path_string);
+    let derive_path = DerivationPath::from_str(&full_path)?;
+    Ok(derive_path)
 }
 
 impl TokenMetadata {

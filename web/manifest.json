@@ -6,6 +6,8 @@
     "description": "IC smartest Wallet",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
+    "background_color": "#09080C",
+    "theme_color": "#09080C",
     "icons": [
         {
             "src": "icons/Icon-192.png",

@@ -23,6 +23,17 @@
             "program": "lib/main.dart"
         },
         {
+            "name": "onchain_web",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart",
+            "args": [
+                "--dart-define=ONCHAIN_WEB=true",
+                "-d",
+                "chrome"
+            ]
+        },
+        {
             "name": "Flutter",
             "type": "dart",
             "request": "launch",

@@ -16,6 +16,7 @@ k256 = "0.13.4"
 serde = { version = "1.0", features = ["derive"] }
 reqwest = { version = "=0.12.14", features = ["rustls-tls", "json"], default-features = false}
 serde_json = "1.0.133"
+ed25519-consensus = "2.1.0"
 # bitcoin = "0.32.5"
 icrc-ledger-types = "0.1.8"
 icrc7-types = "0.1.0"
@@ -28,6 +29,9 @@ crc32fast = "1.4.2"
 lazy_static = "1.5.0"
 anyhow = "1.0"
 # getrandom = { version = "^0.2.15", features = ["wasm_js"] }
+spki = "0.7.3"
+const-oid = "0.9.6"
+der = "0.7.9"
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 ic-agent = { version = "0.40", features = ["wasm-bindgen"] }
@@ -37,3 +41,8 @@ ic-agent = "0.40.0"
 
 [dev-dependencies]
 tokio = { version = "1.41.1", features = ["full"] }
+
+
+[profile.release]
+lto = true
+strip = true

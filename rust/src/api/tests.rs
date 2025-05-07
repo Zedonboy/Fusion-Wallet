@@ -1,4 +1,4 @@
-use crate::api::wallet::{Wallet, WalletContext};
+use crate::api::wallet::{IWallet, Wallet, WalletContext};
 
 use super::wallet::generate_seed_phrase;
 

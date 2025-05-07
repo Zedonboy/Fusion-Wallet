@@ -13,7 +13,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fusion_wallet/common_widgets/bottomNavBar.dart';
 import 'package:fusion_wallet/controllers/appController.dart';
+import 'package:fusion_wallet/controllers/deferred_prompt.dart' as deferred_prompt;
 import 'package:fusion_wallet/screens/PasswordCreateScreen.dart';
+
 import 'package:fusion_wallet/screens/VerifyPassword.dart';
 import 'package:fusion_wallet/screens/pinCreateScreen.dart';
 import 'package:fusion_wallet/screens/pinScreen.dart';
@@ -25,6 +27,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../constants/colors.dart';
 // import '../commonWidgets/bottomNav/bottomNavBar.dart';
 // import '../commonWidgets/navCustom.dart';
+
+const ONCHAIN_WEB = bool.fromEnvironment('ONCHAIN_WEB', defaultValue: false);
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -166,6 +170,11 @@ class _StartingPageState extends State<StartingPage> {
   redirect() async {
     SharedPreferences sharedPref = await SharedPreferences.getInstance();
     final storage = FlutterSecureStorage();
+
+    if (ONCHAIN_WEB && kIsWeb) {
+      Get.offAll(() => deferred_prompt.OnchainSignInScreen());
+      return;
+    }
 
     if (await storage.containsKey(key: 'encrypted_mnemonic')) {
       if (kIsWeb) {

@@ -1,2 +1,3 @@
 cargo build --release --target wasm32-unknown-unknown --package fusion_wallet && cp target/wasm32-unknown-unknown/release/fusion_wallet.wasm src/bin && candid-extractor target/wasm32-unknown-unknown/release/fusion_wallet.wasm > src/fusion_wallet/fusion_wallet.did
 cargo build --release --target wasm32-unknown-unknown --package fusion_register && candid-extractor target/wasm32-unknown-unknown/release/fusion_register.wasm > src/fusion_register/fusion_register.did
+cargo build --release --target wasm32-unknown-unknown --package fusion_pay && candid-extractor target/wasm32-unknown-unknown/release/fusion_pay.wasm > src/fusion_pay/fusion_pay.did

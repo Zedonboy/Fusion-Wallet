@@ -1,0 +1,11 @@
+[package]
+name = "fusion_connect_relay"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+clap = { version = "4.5.37", features = ["derive"] }
+tokio = { version = "1.44.2", features = ["full"] }
+futures = { version = "0.3.31" }
+libp2p = { version = "0.55.0", features = ["tokio", "noise", "macros", "ping", "tcp", "identify", "yamux", "relay", "quic"] }
+tracing-subscriber = { version = "*", features = ["env-filter"] }

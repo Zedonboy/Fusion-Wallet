@@ -8,16 +8,30 @@
     "test": "test"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prod-build": "NODE_ENV=production webpack",
+    "dev-build": "NODE_ENV=development webpack",
+    "build": "npm run build --ws"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "dotenv": "^16.4.7",
+    "dotenv-webpack": "^8.1.0",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^4.1.4",
     "webpack": "^5.98.0",
-    "webpack-cli": "^6.0.1"
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.1"
   },
   "dependencies": {
-    "@dfinity/auth-client": "^2.4.0"
-  }
+    "@dfinity/auth-client": "^2.4.1"
+  },
+  "workspaces": [
+    "src/fusion_homepage",
+    "src/fusion_docs",
+    "src/fusion_connect"
+  ]
 }

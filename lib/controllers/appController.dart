@@ -27,7 +27,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AppController extends GetxController {
   var isDark = true.obs;
   RxInt selectedBOttomTabIndex = RxInt(0);
-  Rx<Wallet?> active_wallet = Rx(null);
+  Rx<IWallet?> active_wallet = Rx(null);
   var enabledBiometric = false.obs;
   RxMap<String, WalletToken> tokens_map = RxMap();
   RxMap<String, CanisterMetric> canister_map = RxMap();
@@ -37,6 +37,8 @@ class AppController extends GetxController {
   Timer? _balanceTimer;
   Timer? _canisterTimer;
   RxMap<String, WalletCollection> collection = RxMap();
+
+  CanisterMetric? onchain_wallet_canister_metric;
 
   /// Single map to hold all token data
   var token_data_map = RxMap<String, TokenData>();

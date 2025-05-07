@@ -1,0 +1,27 @@
+type HttpRequest = record {
+  url : text;
+  method : text;
+  body : blob;
+  headers : vec record { text; text };
+  certificate_version : opt nat16;
+};
+type HttpResponse = record {
+  body : blob;
+  headers : vec record { text; text };
+  upgrade : opt bool;
+  status_code : nat16;
+};
+type PaymentLink = record {
+  id : text;
+  token_symbol : text;
+  amount : float32;
+  qr_data : text;
+};
+type Result = variant { Ok : text; Err : text };
+service : () -> {
+  __candid_method_export_candid : () -> (text) query;
+  create_payment_link : (PaymentLink) -> (Result);
+  export_candid : () -> (text) query;
+  get_payment_links : () -> (vec PaymentLink) query;
+  http_request : (HttpRequest) -> (HttpResponse) query;
+}

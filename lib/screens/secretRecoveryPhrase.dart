@@ -18,7 +18,7 @@ import 'package:fusion_wallet/screens/VerifyPassword.dart';
 import 'package:fusion_wallet/screens/pinScreen.dart';
 import 'package:fusion_wallet/screens/secretRecoveryPhrase2.dart';
 import 'package:get/get.dart';
-import 'package:page_transition/page_transition.dart';
+// import 'package:page_transition/page_transition.dart';
 import '../../constants/colors.dart';
 
 class SecretRecoveryPharase extends StatefulWidget {
@@ -368,14 +368,9 @@ class _SecretRecoveryPharaseState extends State<SecretRecoveryPharase> {
                         onTapFunc: () {
                           if(kIsWeb) {
                             Get.to(() => VerifyPassword(onPasswordVerified: (p0) {
-                                  Navigator.pushReplacement(
-                                    context,
-                                    PageTransition(
-                                        duration: Duration(milliseconds: 100),
-                                        type: PageTransitionType.fade,
-                                        child: SecretRecoveryPharase2(
-                                          mnemonic: p0,
-                                        )));
+                                  Get.to(() => SecretRecoveryPharase2(
+                                        mnemonic: p0,
+                                      ), transition: Transition.fade, duration: Duration(milliseconds: 100));
                                 }, ));
                           } else {
                             Get.to(PinScreen(

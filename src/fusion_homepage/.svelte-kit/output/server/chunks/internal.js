@@ -117,7 +117,34 @@ const options = {
   root: Root,
   service_worker: false,
   templates: {
-    app: ({ head, body, assets: assets2, nonce, env }) => '<!DOCTYPE html>\n<html lang="en">\n\n<head>\n	<meta charset="utf-8" />\n	<link rel="icon" href="' + assets2 + '/favicon.ico" />\n	<meta name="viewport" content="width=device-width" />\n	<title>IC Hello Starter</title>\n	<script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"><\/script>\n	' + head + '\n</head>\n\n<body data-sveltekit-preload-data="hover">\n	<div style="display: contents">' + body + "</div>\n</body>\n\n</html>",
+    app: ({ head, body, assets: assets2, nonce, env }) => '<!DOCTYPE html>\n<html lang="en">\n\n<head>\n	<meta charset="utf-8" />\n	<link rel="icon" href="' + assets2 + '/favicon.ico" />\n	<meta name="viewport" content="width=device-width" />\n	<title>IC Hello Starter</title>\n	<script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"><\/script>\n	' + head + `
+</head>
+
+<body data-sveltekit-preload-data="hover">
+	<script type="module">
+		// Import the functions you need from the SDKs you need
+		import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+		import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-analytics.js";
+		// TODO: Add SDKs for Firebase products that you want to use
+		// https://firebase.google.com/docs/web/setup#available-libraries
+	  
+		// Your web app's Firebase configuration
+		// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+		const firebaseConfig = {
+		  apiKey: "AIzaSyCTH1wX9OtivcKqOm7d3GthqKMIfOpG_Lo",
+		  authDomain: "fusion-homepage.firebaseapp.com",
+		  projectId: "fusion-homepage",
+		  storageBucket: "fusion-homepage.firebasestorage.app",
+		  messagingSenderId: "629747054420",
+		  appId: "1:629747054420:web:94996fe2475769c81abac1",
+		  measurementId: "G-HSVEJ4S13T"
+		};
+	  
+		// Initialize Firebase
+		const app = initializeApp(firebaseConfig);
+		const analytics = getAnalytics(app);
+	  <\/script>
+	<div style="display: contents">` + body + "</div>\n</body>\n\n</html>",
     error: ({ status, message }) => '<!doctype html>\n<html lang="en">\n	<head>\n		<meta charset="utf-8" />\n		<title>' + message + `</title>
 
 		<style>
@@ -189,7 +216,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "ycyafx"
+  version_hash: "cgktjw"
 };
 async function get_hooks() {
   let handle;

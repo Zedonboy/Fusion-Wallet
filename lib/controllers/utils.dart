@@ -201,25 +201,15 @@ String getPathAndQuery(Uri uri) {
   return "${uri.path}?${uri.query}";
 }
 
-@HiveType(typeId: 0)
 class AppNotification extends HiveObject {
-  @HiveField(0)
   String id;
-  @HiveField(1)
   String title;
-  @HiveField(2)
   String body;
-  @HiveField(3)
   String? imageUrl;
-  @HiveField(4)
   DateTime timestamp;
-  @HiveField(5)
   Map<String, dynamic>? data;
-  @HiveField(6)
   bool isRead = false;
-  @HiveField(7)
   String? appName;
-  @HiveField(8)
   String? canisterId;
 
   AppNotification({
@@ -303,6 +293,3 @@ class AppNotification extends HiveObject {
     );
   }
 }
-
-
-

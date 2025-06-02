@@ -11,6 +11,8 @@
 </head>
 
 <body data-sveltekit-preload-data="hover">
+	
+	<div style="display: contents">%sveltekit.body%</div>
 	<script type="module">
 		// Import the functions you need from the SDKs you need
 		import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
@@ -34,7 +36,6 @@
 		const app = initializeApp(firebaseConfig);
 		const analytics = getAnalytics(app);
 	  </script>
-	<div style="display: contents">%sveltekit.body%</div>
 </body>
 
 </html>

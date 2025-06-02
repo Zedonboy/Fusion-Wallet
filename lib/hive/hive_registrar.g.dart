@@ -3,19 +3,16 @@
 // Check in to version control
 
 import 'package:hive_ce/hive.dart';
-import 'package:fusion_wallet/controllers/utils.dart';
 import 'package:fusion_wallet/hive/hive_adapters.dart';
 
 extension HiveRegistrar on HiveInterface {
   void registerAdapters() {
-    registerAdapter(AppNotificationAdapter());
     registerAdapter(AppNotificationAdapter());
   }
 }
 
 extension IsolatedHiveRegistrar on IsolatedHiveInterface {
   void registerAdapters() {
-    registerAdapter(AppNotificationAdapter());
     registerAdapter(AppNotificationAdapter());
   }
 }

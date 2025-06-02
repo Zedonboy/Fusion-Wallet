@@ -227,17 +227,19 @@ class _NotificationSettingScreenState extends State<NotificationSettingScreen> {
                                     return;
                                   }
                                   var fcmtoken;
-                                  if (Platform.isAndroid) {
-                                    fcmtoken = await FirebaseMessaging.instance
-                                        .getToken();
-                                  } else if (kIsWeb) {
+                                  if (kIsWeb) {
                                     fcmtoken = await FirebaseMessaging.instance
                                         .getToken(
                                             vapidKey:
                                                 "BBINmbRDeR2QwM6PeLgWQHGQkYNWaTZcf6kYL4TpcL1EHLGh3t6ip4BLRAv_5FGiiyx_ioh07UaJAaDMj5KJGCU");
+                                  } else {
+                                    if (Platform.isAndroid) {
+                                    fcmtoken = await FirebaseMessaging.instance
+                                        .getToken();
                                   } else if (Platform.isIOS) {
                                     fcmtoken = await FirebaseMessaging.instance
                                         .getAPNSToken();
+                                  }
                                   }
 
                                   final service = appController.ic_service!

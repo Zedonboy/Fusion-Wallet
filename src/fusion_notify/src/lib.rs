@@ -19,7 +19,7 @@ mod fcm_api;
 mod utils;
 use ic_stable_structures::{
     memory_manager::{MemoryId, MemoryManager},
-    BTreeMap, DefaultMemoryImpl,
+    StableBTreeMap, DefaultMemoryImpl,
 };
 use utils::AppSet;
 
@@ -32,10 +32,10 @@ thread_local! {
         RefCell::new(MemoryManager::init(DefaultMemoryImpl::default()));
 
     // Map of user to their device tokens (both owned and delegated)
-    static USER_TOKENS: RefCell<BTreeMap<Principal, utils::AppSet, Memory>> = RefCell::new(BTreeMap::new(MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(0))),));
+    static USER_TOKENS: RefCell<StableBTreeMap<Principal, utils::AppSet, Memory>> = RefCell::new(StableBTreeMap::init(MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(0))),));
 
     // Map of user to their canister permissions (canister_id -> permission)
-    static USER_CANISTER_PERMISSIONS: RefCell<BTreeMap<Principal, utils::AppPermissionMap, Memory>> = RefCell::new(BTreeMap::new(MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(1))),));
+    static USER_CANISTER_PERMISSIONS: RefCell<StableBTreeMap<Principal, utils::AppPermissionMap, Memory>> = RefCell::new(StableBTreeMap::init(MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(1))),));
 }
 
 // Device token management

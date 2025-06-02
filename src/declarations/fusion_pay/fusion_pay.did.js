@@ -1,4 +1,10 @@
 export const idlFactory = ({ IDL }) => {
+  const PaymentLinkRequest = IDL.Record({
+    'memo' : IDL.Text,
+    'token_address' : IDL.Text,
+    'amount' : IDL.Text,
+  });
+  const Result = IDL.Variant({ 'Ok' : IDL.Text, 'Err' : IDL.Text });
   const PaymentLink = IDL.Record({
     'id' : IDL.Text,
     'token_symbol' : IDL.Text,
@@ -8,7 +14,6 @@ export const idlFactory = ({ IDL }) => {
     'amount' : IDL.Text,
     'qr_data' : IDL.Text,
   });
-  const Result = IDL.Variant({ 'Ok' : IDL.Text, 'Err' : IDL.Text });
   const HttpRequest = IDL.Record({
     'url' : IDL.Text,
     'method' : IDL.Text,
@@ -23,8 +28,7 @@ export const idlFactory = ({ IDL }) => {
     'status_code' : IDL.Nat16,
   });
   return IDL.Service({
-    '__candid_method_export_candid' : IDL.Func([], [IDL.Text], ['query']),
-    'create_payment_link' : IDL.Func([PaymentLink], [Result], []),
+    'create_payment_link' : IDL.Func([PaymentLinkRequest], [Result], []),
     'export_candid' : IDL.Func([], [IDL.Text], ['query']),
     'get_payment_links' : IDL.Func([], [IDL.Vec(PaymentLink)], ['query']),
     'http_request' : IDL.Func([HttpRequest], [HttpResponse], ['query']),

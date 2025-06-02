@@ -11,9 +11,12 @@
 
 import 'dart:math';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:fusion_wallet/constants/colors.dart';
+import 'package:fusion_wallet/controllers/extensions.dart';
 // import 'package:fluttertoast/fluttertoast_web.dart';
 import 'package:intl/intl.dart';
 import 'package:hive_ce/hive.dart';
@@ -24,7 +27,11 @@ Future<void> copyToClipboard(String copiedText) async {
 }
 
 showToast(message, {Color color = Colors.red}) {
-  Fluttertoast.showToast(msg: message);
+  if (kIsWeb) {
+    Fluttertoast.showToast(msg: message, webBgColor: primaryAltBgColor2.toHex(), textColor: headingColor.value, fontSize: 12.0);
+  } else {
+    Fluttertoast.showToast(msg: message);
+  }
   
   // Fluttertoast.showToast(
   //     msg: "$message",

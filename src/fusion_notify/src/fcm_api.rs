@@ -83,7 +83,7 @@ pub async fn send_message(message : NotifyMessage, token : String, free_cycles :
     msg_cycles_accept128(cycles_cost);
 
     // Make the HTTP outcall
-    let (response,) = http_request(canister_request_arg, cycles_cost)
+    let (response,) = http_request(canister_request_arg, 15_000_000_000)
     .await
     .map_err(|e| format!("HTTP request failed: {:?}", e))?;
 

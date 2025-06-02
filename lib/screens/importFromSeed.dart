@@ -17,6 +17,7 @@ import 'package:fusion_wallet/common_widgets/bottomNavBar.dart';
 import 'package:fusion_wallet/common_widgets/bottomRectangularbtn.dart';
 import 'package:fusion_wallet/common_widgets/commonWidgets.dart';
 import 'package:fusion_wallet/common_widgets/inputField.dart';
+import 'package:fusion_wallet/constants/config.dart';
 import 'package:fusion_wallet/src/rust/api/wallet.dart';
 import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
@@ -322,7 +323,7 @@ class _ImportFromSeedState extends State<ImportFromSeed> {
 
     final pass_hash_key = WalletContext.hashData(data: widget.pin);
 
-    await storage.write(key: 'pin', value: pass_hash_key);
+    await storage.write(key: PIN_HASH_KEY, value: pass_hash_key);
   }
 
   verifyFields() async {
@@ -356,41 +357,6 @@ class _ImportFromSeedState extends State<ImportFromSeed> {
         mnemonicError.value = 'Invalid Secret Phrase';
         importLoader.value = false;
       }
-    }
-  }
-
-  enableBiometric(context, val) async {
-    final LocalAuthentication auth = LocalAuthentication();
-    final canAuthenticateWithBiometrics = await auth.canCheckBiometrics;
-    final isDeviceSupported = await auth.isDeviceSupported();
-    SharedPreferences sharedPref = await SharedPreferences.getInstance();
-    if (isDeviceSupported && canAuthenticateWithBiometrics) {
-      try {
-        final bool didAuthenticate = await auth
-            .authenticate(
-          localizedReason: 'Please authenticate to show account balance',
-          options: const AuthenticationOptions(
-              useErrorDialogs: false, stickyAuth: true),
-        )
-            .then((value) async {
-          if (value == true) {
-            await sharedPref.setBool('FingerPrintEnable', val);
-            setState(() {
-              appController.enabledBiometric.value = val;
-            });
-          }
-          return value;
-        });
-        print('didAuth============$didAuthenticate');
-        await auth.stopAuthentication();
-      } on PlatformException catch (e) {
-        print('ex============$e');
-      }
-    } else {
-      await sharedPref.setBool('FingerPrintEnable', val);
-      setState(() {
-        appController.enabledBiometric.value = val;
-      });
     }
   }
 

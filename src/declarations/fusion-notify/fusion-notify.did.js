@@ -11,17 +11,24 @@ export const idlFactory = ({ IDL }) => {
     'app_info' : AppInfo,
   });
   const HttpHeader = IDL.Record({ 'value' : IDL.Text, 'name' : IDL.Text });
-  const HttpRequestResult = IDL.Record({
+  const HttpResponse = IDL.Record({
     'status' : IDL.Nat,
     'body' : IDL.Vec(IDL.Nat8),
     'headers' : IDL.Vec(HttpHeader),
   });
   const TransformArgs = IDL.Record({
     'context' : IDL.Vec(IDL.Nat8),
-    'response' : HttpRequestResult,
+    'response' : HttpResponse,
   });
+  const NotifyMessage = IDL.Record({
+    'title' : IDL.Text,
+    'body' : IDL.Text,
+    'action_url' : IDL.Opt(IDL.Text),
+    'icon_url' : IDL.Opt(IDL.Text),
+    'data_type' : IDL.Opt(IDL.Text),
+  });
+  const Result = IDL.Variant({ 'Ok' : IDL.Null, 'Err' : IDL.Text });
   return IDL.Service({
-    '__candid_method_export_candid' : IDL.Func([], [IDL.Text], ['query']),
     'add_app_permission' : IDL.Func([IDL.Text, AppInfo], [], []),
     'add_device_token' : IDL.Func([IDL.Text], [], []),
     'export_candid' : IDL.Func([], [IDL.Text], ['query']),
@@ -36,14 +43,20 @@ export const idlFactory = ({ IDL }) => {
         ['query'],
       ),
     'get_device_tokens' : IDL.Func([], [IDL.Vec(IDL.Text)], ['query']),
-    'http_transform' : IDL.Func(
-        [TransformArgs],
-        [HttpRequestResult],
-        ['query'],
-      ),
+    'http_transform' : IDL.Func([TransformArgs], [HttpResponse], ['query']),
     'remove_canister_permission' : IDL.Func([IDL.Principal], [], []),
     'remove_device_token' : IDL.Func([IDL.Text], [], []),
-    'send_test_message' : IDL.Func([IDL.Text, IDL.Text, IDL.Text], [], []),
+    'send_notification' : IDL.Func(
+        [NotifyMessage, IDL.Principal],
+        [Result],
+        [],
+      ),
+    'send_test_message' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Text],
+        [Result],
+        [],
+      ),
+    'send_transfer_message' : IDL.Func([IDL.Text, IDL.Nat64], [Result], []),
     'update_canister_permission' : IDL.Func([IDL.Principal, IDL.Bool], [], []),
   });
 };

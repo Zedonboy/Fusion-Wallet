@@ -100,7 +100,7 @@ thread_local! {
     static ENCODED_RESPONSES: RefCell<HashMap<(String, String), CertifiedHttpResponse<'static>>> = RefCell::new(HashMap::new());
     static RESPONSES: RefCell<HashMap<String, CertifiedHttpResponse<'static>>> = RefCell::new(HashMap::new());
     static TEMPLATE_ENGINE: RefCell<Handlebars<'static>> = RefCell::new(Handlebars::new());
-    static PAYMENT_LINK_STORE: RefCell<StableBTreeMap<String, PaymentLink, Memory>> = RefCell::new(StableBTreeMap::new(MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(0))),));
+    static PAYMENT_LINK_STORE: RefCell<StableBTreeMap<String, PaymentLink, Memory>> = RefCell::new(StableBTreeMap::init(MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(0))),));
    static USER_PAYMENT_LINKS: RefCell<HashMap<Principal, Vec<String>>> = RefCell::new(HashMap::new());
 }
 const CHARGE_PAGE_TEMPLATE: &str = include_str!("../frontend/dist/payment.html");

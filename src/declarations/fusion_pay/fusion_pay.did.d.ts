@@ -24,11 +24,15 @@ export interface PaymentLink {
   'amount' : string,
   'qr_data' : string,
 }
+export interface PaymentLinkRequest {
+  'memo' : string,
+  'token_address' : string,
+  'amount' : string,
+}
 export type Result = { 'Ok' : string } |
   { 'Err' : string };
 export interface _SERVICE {
-  '__candid_method_export_candid' : ActorMethod<[], string>,
-  'create_payment_link' : ActorMethod<[PaymentLink], Result>,
+  'create_payment_link' : ActorMethod<[PaymentLinkRequest], Result>,
   'export_candid' : ActorMethod<[], string>,
   'get_payment_links' : ActorMethod<[], Array<PaymentLink>>,
   'http_request' : ActorMethod<[HttpRequest], HttpResponse>,

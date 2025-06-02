@@ -31,7 +31,6 @@ handle_uri_path (Uri uri) async {
       final amount = uri.queryParameters["amount"];
       final recipient = uri.queryParameters["recipient"];
       if (token == null) {
-        showToast("Invalid QR");
         return;
       }
 
@@ -42,7 +41,6 @@ handle_uri_path (Uri uri) async {
       Get.to(() => SendScreen(token: wallet_token!,  amount: amount, recipient: recipient,));
       break;
     default:
-      showToast("Invalid URI");
       break;
   }
 }

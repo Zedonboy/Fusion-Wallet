@@ -137,6 +137,14 @@ class _PinScreenState extends State<PinScreen>
     super.dispose();
   }
 
+  Future<void> save_credential(String pin) async {
+    final storage = FlutterSecureStorage();
+
+    final pass_hash_key = WalletContext.hashData(data: pin);
+
+    await storage.write(key: PIN_HASH_KEY, value: pass_hash_key);
+  }
+
   void process_pin(String pin) {
     var key = WalletContext.hashData(data: pin);
     appController.decryptMnemonic(key).then((data) {
@@ -145,6 +153,9 @@ class _PinScreenState extends State<PinScreen>
         _pinController.clear();
       } else {
         _errorMessage.value = '';
+        save_credential(pin).then((value) => {
+          
+        },);
         widget.onPinConfirm?.call(data);
         return;
       }

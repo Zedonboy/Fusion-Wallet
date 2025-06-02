@@ -151,11 +151,6 @@ class _HomeScreenState extends State<HomeScreen>
 
     final app_links = AppLinks();
 
-    app_links.getInitialLink().then((uri) {
-      if(uri != null) {
-        handle_uri_path(uri);
-      }
-    });
 
     app_links.uriLinkStream.listen((uri) {
       handle_uri_path(uri);

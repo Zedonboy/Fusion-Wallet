@@ -20,10 +20,14 @@ type PaymentLink = record {
   amount : text;
   qr_data : text;
 };
+type PaymentLinkRequest = record {
+  memo : text;
+  token_address : text;
+  amount : text;
+};
 type Result = variant { Ok : text; Err : text };
 service : () -> {
-  __candid_method_export_candid : () -> (text) query;
-  create_payment_link : (PaymentLink) -> (Result);
+  create_payment_link : (PaymentLinkRequest) -> (Result);
   export_candid : () -> (text) query;
   get_payment_links : () -> (vec PaymentLink) query;
   http_request : (HttpRequest) -> (HttpResponse) query;

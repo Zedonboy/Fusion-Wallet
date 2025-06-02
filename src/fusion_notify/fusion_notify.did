@@ -10,23 +10,32 @@ type CanisterPermissionInfo = record {
   app_info : AppInfo;
 };
 type HttpHeader = record { value : text; name : text };
-type HttpRequestResult = record {
+type HttpResponse = record {
   status : nat;
   body : blob;
   headers : vec HttpHeader;
 };
-type TransformArgs = record { context : blob; response : HttpRequestResult };
+type NotifyMessage = record {
+  title : text;
+  body : text;
+  action_url : opt text;
+  icon_url : opt text;
+  data_type : opt text;
+};
+type Result = variant { Ok; Err : text };
+type TransformArgs = record { context : blob; response : HttpResponse };
 service : {
-  __candid_method_export_candid : () -> (text) query;
   add_app_permission : (text, AppInfo) -> ();
   add_device_token : (text) -> ();
   export_candid : () -> (text) query;
   get_all_device_tokens : () -> (vec record { text; vec text }) query;
   get_canister_permissions : () -> (vec CanisterPermissionInfo) query;
   get_device_tokens : () -> (vec text) query;
-  http_transform : (TransformArgs) -> (HttpRequestResult) query;
+  http_transform : (TransformArgs) -> (HttpResponse) query;
   remove_canister_permission : (principal) -> ();
   remove_device_token : (text) -> ();
-  send_test_message : (text, text, text) -> ();
+  send_notification : (NotifyMessage, principal) -> (Result);
+  send_test_message : (text, text, text) -> (Result);
+  send_transfer_message : (text, nat64) -> (Result);
   update_canister_permission : (principal, bool) -> ();
 }

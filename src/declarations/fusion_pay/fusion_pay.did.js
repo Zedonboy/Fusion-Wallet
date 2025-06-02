@@ -2,7 +2,10 @@ export const idlFactory = ({ IDL }) => {
   const PaymentLink = IDL.Record({
     'id' : IDL.Text,
     'token_symbol' : IDL.Text,
-    'amount' : IDL.Float32,
+    'memo' : IDL.Text,
+    'recipient' : IDL.Text,
+    'created_at' : IDL.Nat64,
+    'amount' : IDL.Text,
     'qr_data' : IDL.Text,
   });
   const Result = IDL.Variant({ 'Ok' : IDL.Text, 'Err' : IDL.Text });

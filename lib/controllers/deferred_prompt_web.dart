@@ -66,6 +66,23 @@ void onchain_logout() async {
   await logout().toDart;
 }
 
+
+Future<String?> init_provision_wallet() async {
+  final x = await get_deposit_address().toDart;
+  return x?.toString();
+}
+
+Future<void> check_provision_status() async {
+   final wallet_id = await provision_wallet().toDart;
+      if (wallet_id == null) {
+        Get.back();
+        CommonWidgets()
+            .showErrorSnackbar('Error!', 'Error Provisioning Wallet');
+        return;
+      }
+      await onchain_wallet_setup(wallet_id);
+}
+
 final appController = Get.find<AppController>();
 
 onchain_wallet_setup(JSString wallet_id) async {

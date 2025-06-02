@@ -6,7 +6,7 @@ use flutter_rust_bridge::frb;
 use ic_agent::identity::Secp256k1Identity;
 use k256::{elliptic_curve::rand_core, Secp256k1, SecretKey};
 
-use super::utils::{ICPayment, PaymentLink};
+use super::utils::{ICPayment, PaymentLinkRequest, PaymentLink};
 
 /**
  * Copyright (C) 2025 Fusion Wallet
@@ -52,7 +52,7 @@ impl PaymentService {
         return Ok(payments);
     }
 
-    pub async fn create_payment_link(&self, arg: &PaymentLink) -> anyhow::Result<String> {
+    pub async fn create_payment_link(&self, arg: PaymentLinkRequest) -> anyhow::Result<String> {
         let canister_id = Principal::from_text(PAYMENT_CANISTER_ID)?;
         let result = self
             .ic_agent

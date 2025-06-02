@@ -11,6 +11,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_switch/flutter_switch.dart';
 import 'package:fusion_wallet/common_widgets/customNamPad.dart';
 import 'package:fusion_wallet/constants/colors.dart';
 import 'package:fusion_wallet/controllers/appController.dart';
@@ -74,7 +75,7 @@ class _PinCreationScreenState extends State<PinCreationScreen> {
                   borderRadius: BorderRadius.only(
                       topRight: Radius.circular(32),
                       topLeft: Radius.circular(32))),
-              secureYourWalletBottomSheet());
+              SafeArea(child: secureYourWalletBottomSheet()));
         } else {
           Get.off(() => ImportFromSeed(
                 pin: _pinController.text,
@@ -116,10 +117,10 @@ class _PinCreationScreenState extends State<PinCreationScreen> {
   @override
   Widget build(BuildContext context) {
     return Obx(
-      () => Scaffold(
-        backgroundColor: primaryAltBackgroundColor.value,
-        body: SafeArea(
-          child: Padding(
+      () => SafeArea(
+        child: Scaffold(
+          backgroundColor: primaryAltBackgroundColor.value,
+          body: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 22.0, vertical: 20),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -213,49 +214,58 @@ class _PinCreationScreenState extends State<PinCreationScreen> {
                         ),
                       ),
                     ),
+                    SizedBox(height: 8,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(Icons.fingerprint, size: 20, color: primaryAltColor.value,),
+                            SizedBox(width: 8,),
+                        Text(
+                          'Authenticate with Biometric',
+                          style: TextStyle(
+                            color: primaryAltColor.value,
+                            fontSize: 12,
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.w500,
+                          ),
+                        )
+                          ],
+                        ),
+                        
+                        FlutterSwitch(
+                          activeColor: Colors.greenAccent,
+                          inactiveColor: Colors.grey,
+                          width: 40.0,
+                          toggleColor: headingColor.value,
+                          height: 20.0,
+                          valueFontSize: 10.0,
+                          toggleSize: 18.0,
+                          value: appController.enabledBiometric.value,
+                          borderRadius: 16.0,
+                          padding: 2.0,
+                          showOnOff: false,
+                          onToggle: (val) => enableBiometric(val),
+                        ),
+                      ],
+                    ),
                     // const SizedBox(height: 66),
                   ],
                 ),
               ],
             ),
-          ),
+          )
         ),
       ),
     );
   }
 
-  enableBiometric(context, val) async {
+  enableBiometric(bool val) async {
     final LocalAuthentication auth = LocalAuthentication();
     final canAuthenticateWithBiometrics = await auth.canCheckBiometrics;
-    final isDeviceSupported = await auth.isDeviceSupported();
-    SharedPreferences sharedPref = await SharedPreferences.getInstance();
-    if (isDeviceSupported && canAuthenticateWithBiometrics) {
-      try {
-        final bool didAuthenticate = await auth
-            .authenticate(
-          localizedReason: 'Please authenticate to show account balance',
-          options: const AuthenticationOptions(
-              useErrorDialogs: false, stickyAuth: true),
-        )
-            .then((value) async {
-          if (value == true) {
-            await sharedPref.setBool('FingerPrintEnable', val);
-            setState(() {
-              appController.enabledBiometric.value = val;
-            });
-          }
-          return value;
-        });
-        print('didAuth============$didAuthenticate');
-        await auth.stopAuthentication();
-      } on PlatformException catch (e) {
-        print('ex============$e');
-      }
-    } else {
-      await sharedPref.setBool('FingerPrintEnable', val);
-      setState(() {
-        appController.enabledBiometric.value = val;
-      });
+    if(canAuthenticateWithBiometrics) {
+      appController.enabledBiometric.value = val;
     }
   }
 
@@ -404,67 +414,47 @@ class _PinCreationScreenState extends State<PinCreationScreen> {
           SizedBox(
             height: 24,
           ),
-          // GestureDetector(
-          //   onTap: () async {
-          //     final prefs = await SharedPreferences.getInstance();
-          //     prefs.setBool('backReminder', true);
-          //     // String mnemonic = bip39.generateMnemonic();
-          //     // print("mnemonic $mnemonic");
-          //     // bool isValid = bip39.validateMnemonic(mnemonic);
-          //     // print("isValid ${bip39.validateMnemonic(mnemonic)}");
-          //     if(true){
-
-          //       // print(mnemonic);
-          //       // final keypair = await Ed25519HDKeyPair.fromMnemonic(mnemonic);
-          //       // print("keypair ${keypair.address}");
-          //       // print("keypair ${keypair.publicKey}");
-          //       // print("mnemonic ${mnemonic}");
-          //       final storage = FlutterSecureStorage();
-          //       await storage.write(key: 'password', value: passController.text);
-          //       // await storage.write(key: 'privKey', value: keypair.address);
-          //       // await storage.write(key: 'mnemonic', value: mnemonic);
-          //       Navigator.pop(context);
-          //       Navigator.pushReplacement(
-          //         context,
-          //         PageTransition(
-          //           duration: Duration(milliseconds: 100),
-          //           type: PageTransitionType.topToBottom,
-          //           child: BottomBar(),
-          //         ),
-          //       );
-          //     }
-          //   },
-          //   child: Container(
-          //     width: Get.width,
-          //     height: 48,
-          //     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          //     decoration: ShapeDecoration(
-          //       shape: RoundedRectangleBorder(
-          //         borderRadius: BorderRadius.circular(100),
-          //       ),
-          //     ),
-          //     child: Column(
-          //       mainAxisSize: MainAxisSize.min,
-          //       mainAxisAlignment: MainAxisAlignment.center,
-          //       crossAxisAlignment: CrossAxisAlignment.center,
-          //       children: [
-          //         Text(
-          //           'Remind Me Later',
-          //           style: TextStyle(
-          //             color: primaryColor.value,
-          //             fontSize: 16,
-          //             fontFamily: 'Poppins',
-          //             fontWeight: FontWeight.w600,
-          //             height: 0.09,
-          //           ),
-          //         ),
-          //       ],
-          //     ),
-          //   ),
-          // ),
-          // SizedBox(
-          //   height: 16,
-          // ),
+          GestureDetector(
+            onTap: () async {
+              final prefs = await SharedPreferences.getInstance();
+              prefs.setBool('backReminder', true);
+              // String mnemonic = bip39.generateMnemonic();
+              // print("mnemonic $mnemonic");
+              // bool isValid = bip39.validateMnemonic(mnemonic);
+              // print("isValid ${bip39.validateMnemonic(mnemonic)}");
+              
+            },
+            child: Container(
+              width: Get.width,
+              height: 48,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: ShapeDecoration(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(100),
+                ),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    'Remind Me Later',
+                    style: TextStyle(
+                      color: primaryColor.value,
+                      fontSize: 16,
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w600,
+                      height: 0.09,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 16,
+          ),
           GestureDetector(
             onTap: () {
               Get.back();
@@ -477,7 +467,7 @@ class _PinCreationScreenState extends State<PinCreationScreen> {
                     borderRadius: BorderRadius.only(
                         topRight: Radius.circular(32),
                         topLeft: Radius.circular(32))),
-                seedPhraseBottomSheet(),
+                SafeArea(child: seedPhraseBottomSheet()),
               );
             },
             child: Container(

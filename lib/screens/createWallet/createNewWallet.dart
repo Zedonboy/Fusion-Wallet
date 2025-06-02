@@ -698,7 +698,7 @@ class _CreaateNewWalletState extends State<CreaateNewWallet> {
     } else if (!hasSpecialCharacters.hasMatch(passController.text)) {
       passError.value = 'Minimum 1 special character required';
     } else if (passController.text != confirmPassController.text) {
-      confirmPassError.value = 'Password didn’t match with the first one.';
+      confirmPassError.value = 'Password didn\'t match with the first one.';
     } else if (isCheck.value == false) {
       checkBoxErr.value = 'Please accept our terms & conditions.';
     } else {
@@ -747,5 +747,12 @@ class _CreaateNewWalletState extends State<CreaateNewWallet> {
         appController.enabledBiometric.value = val;
       });
     }
+  }
+
+  @override
+  void dispose() {
+    passController.dispose();
+    confirmPassController.dispose();
+    super.dispose();
   }
 }

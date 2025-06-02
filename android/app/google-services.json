@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "202331414286",
+    "project_id": "fusion-wallet-c2a67",
+    "storage_bucket": "fusion-wallet-c2a67.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:202331414286:android:7ec9effa3061446243815f",
+        "android_client_info": {
+          "package_name": "me.fusionwallet.android"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCq7_CQGbkU946b-IhTC85hU1Ux06dLLI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

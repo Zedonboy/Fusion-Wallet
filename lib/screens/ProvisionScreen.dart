@@ -18,17 +18,13 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated_web.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fusion_wallet/common_widgets/bottomNavBar.dart';
 import 'package:fusion_wallet/common_widgets/bottomRectangularbtn.dart';
 import 'package:fusion_wallet/common_widgets/commonWidgets.dart';
 import 'package:fusion_wallet/constants/colors.dart';
 import 'package:fusion_wallet/controllers/appController.dart';
-import 'package:fusion_wallet/controllers/deferred_prompt_web.dart';
+import 'package:fusion_wallet/controllers/deferred_prompt.dart';
 import 'package:fusion_wallet/controllers/utils.dart';
-import 'package:fusion_wallet/src/rust/api/wallet.dart';
 import 'package:get/get.dart';
 
 class ProvisionScreen extends StatefulWidget {
@@ -45,14 +41,14 @@ class _ProvisionScreenState extends State<ProvisionScreen> {
   @override
   void initState() {
     super.initState();
-    get_deposit_address().toDart.then((value) {
+    init_provision_wallet().then((value) {
       if (value != null) {
-        walletAddress.value = value.toString();
+        walletAddress.value = value;
       } else {
-        CommonWidgets()
-            .showErrorSnackbar('Error!', 'Error Getting Deposit Address');
+        CommonWidgets().showErrorSnackbar('Error!', 'Error Getting Deposit Address');
       }
     });
+    
   }
 
   @override
@@ -379,15 +375,7 @@ class _ProvisionScreenState extends State<ProvisionScreen> {
     );
 
     try {
-      final wallet_id = await provision_wallet().toDart;
-      if (wallet_id == null) {
-        Get.back();
-        CommonWidgets()
-            .showErrorSnackbar('Error!', 'Error Provisioning Wallet');
-        return;
-      }
-      await onchain_wallet_setup(wallet_id);
-      
+      await check_provision_status();
     } catch (e) {
       Get.back();
       print(e);

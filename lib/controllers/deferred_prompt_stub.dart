@@ -43,6 +43,14 @@ Future<String?> get_deposit_address() async {
   return null;
 }
 
+Future<String?> init_provision_wallet() async {
+  return null;
+}
+
+Future<void> check_provision_status() async {
+  return;
+}
+
 class OnchainSignInScreen extends StatefulWidget {
   const OnchainSignInScreen({super.key});
 

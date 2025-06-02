@@ -14,7 +14,7 @@ import 'wallet.dart';
 abstract class HttpWalletService implements RustOpaqueInterface {
   Future<GithubRelease> getLatestRelease();
 
-  Future<double> getPrice({required WalletToken token});
+  Future<double?> getPrice({required WalletToken token});
 }
 
 class GithubRelease {

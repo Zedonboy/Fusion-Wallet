@@ -8,14 +8,14 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 // These functions are ignored because they are not marked as `pub`: `as_bytes`, `check_sum`, `e8s`, `format_amount`, `from_e8s`, `from_metadata_records`, `from_slice`, `generate_checksum`, `new`, `to_hex`
 // These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `AccountIdParseError`, `AccountIdentifier`, `ChecksumError`, `ICPayment`, `Memo`, `Subaccount`, `Timestamp`, `TokenMetadata`, `Tokens`, `TransferArgs`, `TransferError`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `_ty`, `_ty`, `_ty`, `_ty`, `_ty`, `_ty`, `_ty`, `_ty`, `_ty`, `_ty`, `add_assign`, `add`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `cmp`, `cmp`, `cmp`, `cmp`, `cmp`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `hash`, `hash`, `hash`, `hash`, `hash`, `id`, `id`, `id`, `id`, `id`, `id`, `id`, `id`, `id`, `id`, `idl_serialize`, `idl_serialize`, `idl_serialize`, `idl_serialize`, `idl_serialize`, `idl_serialize`, `idl_serialize`, `idl_serialize`, `idl_serialize`, `idl_serialize`, `partial_cmp`, `partial_cmp`, `partial_cmp`, `partial_cmp`, `partial_cmp`, `sub_assign`, `sub`, `try_from`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `_ty`, `_ty`, `_ty`, `_ty`, `_ty`, `_ty`, `_ty`, `_ty`, `_ty`, `_ty`, `_ty`, `add_assign`, `add`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `cmp`, `cmp`, `cmp`, `cmp`, `cmp`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `hash`, `hash`, `hash`, `hash`, `hash`, `id`, `id`, `id`, `id`, `id`, `id`, `id`, `id`, `id`, `id`, `id`, `idl_serialize`, `idl_serialize`, `idl_serialize`, `idl_serialize`, `idl_serialize`, `idl_serialize`, `idl_serialize`, `idl_serialize`, `idl_serialize`, `idl_serialize`, `idl_serialize`, `partial_cmp`, `partial_cmp`, `partial_cmp`, `partial_cmp`, `partial_cmp`, `sub_assign`, `sub`, `try_from`
 // These functions are ignored (category: IgnoreBecauseExplicitAttribute): `ascii_to_hardened_derivation_path`, `from_hex`, `from`, `try_from`
 // These functions are ignored (category: IgnoreBecauseNotAllowedOwner): `empty`
 // These functions are ignored (category: IgnoreBecauseOwnerTyShouldIgnore): `default`
 
 class PaymentLink {
-  final String amount;
   final String qrData;
+  final String amount;
   final String tokenSymbol;
   final String id;
   final String memo;
@@ -23,8 +23,8 @@ class PaymentLink {
   final String recipient;
 
   const PaymentLink({
-    required this.amount,
     required this.qrData,
+    required this.amount,
     required this.tokenSymbol,
     required this.id,
     required this.memo,
@@ -37,8 +37,8 @@ class PaymentLink {
 
   @override
   int get hashCode =>
-      amount.hashCode ^
       qrData.hashCode ^
+      amount.hashCode ^
       tokenSymbol.hashCode ^
       id.hashCode ^
       memo.hashCode ^
@@ -50,11 +50,35 @@ class PaymentLink {
       identical(this, other) ||
       other is PaymentLink &&
           runtimeType == other.runtimeType &&
-          amount == other.amount &&
           qrData == other.qrData &&
+          amount == other.amount &&
           tokenSymbol == other.tokenSymbol &&
           id == other.id &&
           memo == other.memo &&
           createdAt == other.createdAt &&
           recipient == other.recipient;
+}
+
+class PaymentLinkRequest {
+  final String amount;
+  final String tokenAddress;
+  final String memo;
+
+  const PaymentLinkRequest({
+    required this.amount,
+    required this.tokenAddress,
+    required this.memo,
+  });
+
+  @override
+  int get hashCode => amount.hashCode ^ tokenAddress.hashCode ^ memo.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PaymentLinkRequest &&
+          runtimeType == other.runtimeType &&
+          amount == other.amount &&
+          tokenAddress == other.tokenAddress &&
+          memo == other.memo;
 }

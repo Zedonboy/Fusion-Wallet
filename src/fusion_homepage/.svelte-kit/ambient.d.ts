@@ -44,6 +44,7 @@ declare module '$env/static/private' {
 	export const TERM_PROGRAM_VERSION: string;
 	export const npm_package_json: string;
 	export const NVM_INC: string;
+	export const PERLLIB: string;
 	export const CANISTER_CANDID_PATH: string;
 	export const DFX_VERSION: string;
 	export const GNOME_SHELL_SESSION_MODE: string;
@@ -122,7 +123,9 @@ declare module '$env/static/private' {
 	export const XDG_DATA_DIRS: string;
 	export const npm_config_global_prefix: string;
 	export const npm_command: string;
+	export const QT_PLUGIN_PATH: string;
 	export const CANISTER_ID: string;
+	export const CANISTER_ID_FUSION_NOTIFY: string;
 	export const NODE_ENV: string;
 	export const PNPM_HOME: string;
 	export const ANDROID_NDK_HOME: string;
@@ -177,6 +180,7 @@ declare module '$env/dynamic/private' {
 		TERM_PROGRAM_VERSION: string;
 		npm_package_json: string;
 		NVM_INC: string;
+		PERLLIB: string;
 		CANISTER_CANDID_PATH: string;
 		DFX_VERSION: string;
 		GNOME_SHELL_SESSION_MODE: string;
@@ -255,7 +259,9 @@ declare module '$env/dynamic/private' {
 		XDG_DATA_DIRS: string;
 		npm_config_global_prefix: string;
 		npm_command: string;
+		QT_PLUGIN_PATH: string;
 		CANISTER_ID: string;
+		CANISTER_ID_FUSION_NOTIFY: string;
 		NODE_ENV: string;
 		PNPM_HOME: string;
 		ANDROID_NDK_HOME: string;

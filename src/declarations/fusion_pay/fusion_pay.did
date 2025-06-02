@@ -14,7 +14,10 @@ type HttpResponse = record {
 type PaymentLink = record {
   id : text;
   token_symbol : text;
-  amount : float32;
+  memo : text;
+  recipient : text;
+  created_at : nat64;
+  amount : text;
   qr_data : text;
 };
 type Result = variant { Ok : text; Err : text };

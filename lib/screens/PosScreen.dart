@@ -438,14 +438,10 @@ class _PosScreenState extends State<PosScreen> {
                                           }
                                           final qr_data =
                                               "icp:mainnet/${widget.token.tokenAddress}/icrc1_transfer?amount=${amountController.text}&memo=${toAddressController.text}&to=${appController.active_wallet.value!.toIcpPrincipal()}";
-                                          final link = PaymentLink(
+                                          final link = PaymentLinkRequest(
                                               amount: amountController.text,
-                                              qrData: qr_data,
-                                              tokenSymbol: widget.token.symbol,
-                                              id: "fsf",
                                               memo: memo,
-                                              createdAt: BigInt.zero,
-                                              recipient: "");
+                                              tokenAddress: widget.token.tokenAddress);
                                           final link_id = await payment
                                               .createPaymentLink(arg: link);
                                           print(link_id);

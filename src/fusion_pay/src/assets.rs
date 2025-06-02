@@ -19,7 +19,7 @@ use handlebars::Handlebars;
  * along with Fusion Wallet.  If not, see <https://www.gnu.org/licenses/>.
  */
 use ic_cdk::{
-    api::{canister_cycle_balance, certified_data_set, data_certificate, msg_caller},
+    api::{ canister_balance, canister_balance128, data_certificate, set_certified_data},
     *,
 };
 use ic_http_certification::{
@@ -33,6 +33,7 @@ use lazy_static::lazy_static;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 use std::{cell::RefCell, collections::HashMap};
+use ic_stable_structures::{memory_manager::{MemoryId, MemoryManager, VirtualMemory}, DefaultMemoryImpl, StableBTreeMap, Storable};
 
 #[derive(Debug, Clone, Serialize)]
 pub struct Metrics {
@@ -48,15 +49,37 @@ struct ICPayment {
     memo: String,
 }
 
-#[derive(CandidType, Deserialize, Clone, Default)]
-pub struct PaymentLink {
+#[derive(CandidType, Deserialize)]
+pub struct PaymentLinkRequest {
     pub amount: String,
+    pub token_address: String,
+    pub memo: String,
+}
+
+#[derive(Deserialize, Clone, Default, Serialize, CandidType)]
+pub struct PaymentLink {
     pub qr_data: String,
+    pub amount : String,
     pub token_symbol: String,
     pub id: String,
     pub memo: String,
     pub created_at: u64,
     pub recipient: String,
+}
+
+impl Storable for PaymentLink {
+    
+    fn to_bytes(&self) -> std::borrow::Cow<[u8]> {
+        let mut bytes = Vec::new();
+        ciborium::ser::into_writer(&self, &mut bytes).unwrap();
+        std::borrow::Cow::Owned(bytes)
+    }
+    
+    fn from_bytes(bytes: std::borrow::Cow<[u8]>) -> Self {
+        ciborium::de::from_reader(bytes.as_ref()).unwrap()
+    }
+    
+    const BOUND: ic_stable_structures::storable::Bound = ic_stable_structures::storable::Bound::Unbounded;
 }
 
 // Storage
@@ -66,12 +89,18 @@ struct CertifiedHttpResponse<'a> {
     certification: HttpCertification,
 }
 
+type Memory = VirtualMemory<DefaultMemoryImpl>;
+
 thread_local! {
+    // return a memory that can be used by stable structures.
+    static MEMORY_MANAGER: RefCell<MemoryManager<DefaultMemoryImpl>> =
+        RefCell::new(MemoryManager::init(DefaultMemoryImpl::default()));
+        
     static HTTP_TREE: RefCell<HttpCertificationTree> = RefCell::new(HttpCertificationTree::default());
     static ENCODED_RESPONSES: RefCell<HashMap<(String, String), CertifiedHttpResponse<'static>>> = RefCell::new(HashMap::new());
     static RESPONSES: RefCell<HashMap<String, CertifiedHttpResponse<'static>>> = RefCell::new(HashMap::new());
     static TEMPLATE_ENGINE: RefCell<Handlebars<'static>> = RefCell::new(Handlebars::new());
-    static PAYMENT_LINK_STORE: RefCell<HashMap<String, PaymentLink>> = RefCell::new(HashMap::new());
+    static PAYMENT_LINK_STORE: RefCell<StableBTreeMap<String, PaymentLink, Memory>> = RefCell::new(StableBTreeMap::new(MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(0))),));
    static USER_PAYMENT_LINKS: RefCell<HashMap<Principal, Vec<String>>> = RefCell::new(HashMap::new());
 }
 const CHARGE_PAGE_TEMPLATE: &str = include_str!("../frontend/dist/payment.html");
@@ -140,7 +169,7 @@ pub fn add_payment_link(payment: PaymentLink) {
     });
 
     USER_PAYMENT_LINKS.with_borrow_mut(|store| {
-        store.entry(msg_caller()).or_insert(vec![]).push(id.clone());
+        store.entry(caller()).or_insert(vec![]).push(id.clone());
     });
 
     update_certified_data();
@@ -150,7 +179,7 @@ pub fn get_payment_links(caller: Principal) -> Vec<PaymentLink> {
     USER_PAYMENT_LINKS.with_borrow(|store| {
         store.get(&caller).unwrap_or(&vec![]).iter().map(|id| {
             PAYMENT_LINK_STORE.with_borrow(|store| {
-                store.get(id).cloned().unwrap_or_default()
+                store.get(id).unwrap_or_default()
             })
         }).collect()
     })
@@ -165,6 +194,7 @@ fn add_payment_response(payment: &PaymentLink) {
                     "message": format!("Pay {} {}", payment.amount, payment.token_symbol),
                     "qr_data": payment.qr_data,
                     "memo": payment.memo,
+                    "http_url": payment.qr_data.replace("fusion://", "https://")
                 }),
             )
             .unwrap()
@@ -191,7 +221,7 @@ fn add_payment_response(payment: &PaymentLink) {
 
 fn certify_payment_link() {
     PAYMENT_LINK_STORE.with_borrow(|store| for (id, payment) in store.iter() {
-        add_payment_response(payment);
+        add_payment_response(&payment);
     });
 }
 
@@ -396,7 +426,7 @@ fn certify_asset_response(
 
 fn update_certified_data() {
     HTTP_TREE.with_borrow(|http_tree| {
-        certified_data_set(&http_tree.root_hash());
+        set_certified_data(&http_tree.root_hash());
     });
 }
 
@@ -494,7 +524,7 @@ pub fn asset_handler(req: &HttpRequest) -> HttpResponse<'static> {
 
 fn create_metrics_response() -> HttpResponse<'static> {
     let metrics = Metrics {
-        cycle_balance: canister_cycle_balance(),
+        cycle_balance: canister_balance128(),
     };
     let body = serde_json::to_vec(&metrics).expect("Failed to serialize metrics");
     let additional_headers = vec![

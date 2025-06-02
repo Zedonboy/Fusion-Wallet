@@ -1,3 +1,19 @@
 [workspace]
 members = [ "src/fusion_register", "src/fusion_wallet", "rust", "src/fusion_connect_relay", "src/fusion_notify", "src/fusion_pay"]
 resolver = "2"
+
+[workspace.dependencies]
+ic-cdk = "0.17"
+candid = "0.10"
+ic-cdk-timers = "0.11"
+ic-stable-structures = "0.6.8"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+hex = "0.4"
+ciborium = "0.2.2"
+icrc-ledger-types = "0.1.9"
+lazy_static = "1.5.0"
+include_dir = { version = "0.7", features = ["glob"] }
+handlebars = "6.3.2"
+ic-ledger-types = "0.14.0"
+ic-http-certification = "3.0.3"

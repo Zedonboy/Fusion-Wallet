@@ -31,7 +31,12 @@ import 'package:get/get.dart';
 // import '../codeScanner.dart';
 class SendScreen extends StatefulWidget {
   WalletToken token;
-  SendScreen({super.key, required this.token});
+  String? amount;
+  String? memo;
+  String? recipient;
+  SendScreen({super.key, required this.token, this.amount, this.memo, this.recipient});
+  
+
 
   @override
   State<SendScreen> createState() => _SendScreenState();
@@ -65,6 +70,13 @@ class _SendScreenState extends State<SendScreen> {
     // TODO: implement initState
     super.initState();
 
+    if (widget.amount != null) {
+      amountC.text = widget.amount!;
+    }
+
+    if (widget.recipient != null) {
+      addressController.text = widget.recipient!;
+    }
     fetch_transactions();
   }
 
@@ -376,6 +388,7 @@ class _SendScreenState extends State<SendScreen> {
               ),
               InputFields2(
                 textController: amountC,
+                isEditable: widget.amount == null ? true : false,
                 suffixIcon: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.center,

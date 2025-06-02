@@ -412,17 +412,23 @@ class _ConformationScreenState extends State<ConformationScreen> {
     final total =
         BigInt.from(widget.amount * pow(10, widget.token.tokenDecimal ?? 8));
 
+    var blockHeight = BigInt.zero;
+
     try {
       // checking if its an ICP with Account Id token Transfer
       if (widget.token.tokenAddress == "ryjl3-tyaaa-aaaaa-aaaba-cai" &&
           WalletContext.verifyAccountId(text: widget.to_addr)) {
-        final blockHeigh =
+        blockHeight =
             await icService.icpAccountIdSend(to: widget.to_addr, amount: total);
       } else {
-        final blockHeight = await icService.send(
+        blockHeight = await icService.send(
             token: widget.token, to: widget.to_addr, amount: total);
       }
 
+      final notificationService = icService.createNotificationService();
+      notificationService.sendTransferMessage(ledgerCanisterId: widget.token.tokenAddress, blockHeight: blockHeight).then((value) {
+        ///
+      });
       Get.back();
       Get.bottomSheet(
           clipBehavior: Clip.antiAlias,
@@ -474,12 +480,11 @@ class _ConformationScreenState extends State<ConformationScreen> {
       
     } else {
       Get.to(() => PinScreen(
-          isSignin: false,
           onPinConfirm: (data) {
             Get.back();
             start_sending();
           },
-          onBiometric: (didAuth) {
+          onBiometric: (didAuth, phrase) {
             if (didAuth) {
               Get.back();
               start_sending();
@@ -565,5 +570,12 @@ class _ConformationScreenState extends State<ConformationScreen> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    nameAddreeC.dispose();
+    amountC.dispose();
+    super.dispose();
   }
 }

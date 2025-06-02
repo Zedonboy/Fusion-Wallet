@@ -11,5 +11,6 @@ pub mod nft_service;
 pub mod canister;
 pub mod cmc;
 pub mod payment_service;
+pub mod notification_service;
 #[cfg(test)]
 pub mod tests;

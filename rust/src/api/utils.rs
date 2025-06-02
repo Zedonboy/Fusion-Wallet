@@ -21,10 +21,19 @@ pub struct ICPayment{
     pub id: String
 }
 
+
+#[derive(CandidType, Deserialize)]
+pub struct PaymentLinkRequest {
+    pub amount: String,
+    pub token_address: String,
+    pub memo: String,
+}
+
+
 #[derive(CandidType, Deserialize, Clone, Default)]
 pub struct PaymentLink {
-    pub amount: String,
     pub qr_data: String,
+    pub amount : String,
     pub token_symbol: String,
     pub id: String,
     pub memo: String,

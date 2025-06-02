@@ -146,12 +146,11 @@ class _OpenLinkState extends State<OpenLink> {
 
   @override
   void dispose() {
+    urlController.dispose();
+    timer?.cancel();
+    webViewController?.dispose();
+    pullToRefreshController.dispose();
     super.dispose();
-    if (widget.fromPage == '') {
-      timer!.cancel();
-    }
-
-    //pusher.disconnect();
   }
 
   @override

@@ -1055,6 +1055,15 @@ impl WalletContext {
         Ok(acc.to_string())
     }
 
+    pub async fn get_token(tokenAddr : String) -> anyhow::Result<WalletToken> {
+        let agent = ic_agent::Agent::builder()
+        .with_url(IC_HOST_URL)
+        .build()?;
+        let ic_service = ICWalletService::new(Arc::new(agent));
+        let token = ic_service.get_token(&tokenAddr, None).await?;
+        Ok(token)
+    }
+
     pub async fn get_token_worth(token_symbol: String, amount: f64) -> f64 {
         let symbol = if token_symbol.starts_with("ck") {
             token_symbol.strip_prefix("ck").unwrap()

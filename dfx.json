@@ -48,6 +48,15 @@
           "build/onchain_web/"
         ],
         "type": "assets"
+      },
+
+      "fusion-notify": {
+        "candid": "src/fusion_notify/fusion_notify.did",
+        "declarations": {
+          "node_compatibility": true
+        },
+        "package": "fusion_notify",
+        "type": "rust"
       }
     },
     "defaults": {

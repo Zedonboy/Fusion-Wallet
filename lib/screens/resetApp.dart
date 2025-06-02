@@ -159,8 +159,7 @@ class _ResetAppState extends State<ResetApp> {
                           onPinConfirm: (data) {
                             clear_app_data();
                         },
-                        isSignin: false,
-                        onBiometric: (auth) {
+                        onBiometric: (auth, phrase) {
                           if (auth) {
                             clear_app_data();
                           }

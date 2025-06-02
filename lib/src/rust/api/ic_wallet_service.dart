@@ -7,6 +7,7 @@ import '../frb_generated.dart';
 import 'canister.dart';
 import 'cmc.dart';
 import 'nft_service.dart';
+import 'notification_service.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'payment_service.dart';
 import 'wallet.dart';
@@ -27,6 +28,8 @@ abstract class IcWalletService implements RustOpaqueInterface {
   IcCollectionService createCollectionService();
 
   CyclesService createCyclesService();
+
+  NotificationService createNotificationService();
 
   PaymentService createPaymentService();
 

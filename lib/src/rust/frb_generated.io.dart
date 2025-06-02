@@ -8,6 +8,7 @@ import 'api/cmc.dart';
 import 'api/http_service.dart';
 import 'api/ic_wallet_service.dart';
 import 'api/nft_service.dart';
+import 'api/notification_service.dart';
 import 'api/payment_service.dart';
 import 'api/simple.dart';
 import 'api/utils.dart';
@@ -46,6 +47,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   CrossPlatformFinalizerArg
       get rust_arc_decrement_strong_count_IcWalletServicePtr => wire
           ._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerICWalletServicePtr;
+
+  CrossPlatformFinalizerArg
+      get rust_arc_decrement_strong_count_NotificationServicePtr => wire
+          ._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNotificationServicePtr;
 
   CrossPlatformFinalizerArg
       get rust_arc_decrement_strong_count_OnChainWalletPtr => wire
@@ -87,6 +92,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   IcWalletService
       dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerICWalletService(
+          dynamic raw);
+
+  @protected
+  NotificationService
+      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNotificationService(
           dynamic raw);
 
   @protected
@@ -132,6 +142,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   IcWalletService
       dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerICWalletService(
+          dynamic raw);
+
+  @protected
+  NotificationService
+      dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNotificationService(
           dynamic raw);
 
   @protected
@@ -187,6 +202,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           dynamic raw);
 
   @protected
+  NotificationService
+      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNotificationService(
+          dynamic raw);
+
+  @protected
   OnChainWallet
       dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnChainWallet(
           dynamic raw);
@@ -222,16 +242,22 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   AllowanceResponse dco_decode_allowance_response(dynamic raw);
 
   @protected
+  AppInfo dco_decode_app_info(dynamic raw);
+
+  @protected
   bool dco_decode_bool(dynamic raw);
 
   @protected
   DelegationParams dco_decode_box_autoadd_delegation_params(dynamic raw);
 
   @protected
+  double dco_decode_box_autoadd_f_32(dynamic raw);
+
+  @protected
   double dco_decode_box_autoadd_f_64(dynamic raw);
 
   @protected
-  PaymentLink dco_decode_box_autoadd_payment_link(dynamic raw);
+  PaymentLinkRequest dco_decode_box_autoadd_payment_link_request(dynamic raw);
 
   @protected
   int dco_decode_box_autoadd_u_32(dynamic raw);
@@ -250,6 +276,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   CanisterMetric dco_decode_canister_metric(dynamic raw);
+
+  @protected
+  CanisterPermission dco_decode_canister_permission(dynamic raw);
 
   @protected
   CollectMetaValue dco_decode_collect_meta_value(dynamic raw);
@@ -275,6 +304,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   IcpXdrConversionRateResponse dco_decode_icp_xdr_conversion_rate_response(
       dynamic raw);
+
+  @protected
+  List<CanisterPermission> dco_decode_list_canister_permission(dynamic raw);
 
   @protected
   List<PaymentLink> dco_decode_list_payment_link(dynamic raw);
@@ -307,6 +339,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   String? dco_decode_opt_String(dynamic raw);
 
   @protected
+  double? dco_decode_opt_box_autoadd_f_32(dynamic raw);
+
+  @protected
   double? dco_decode_opt_box_autoadd_f_64(dynamic raw);
 
   @protected
@@ -326,6 +361,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   PaymentLink dco_decode_payment_link(dynamic raw);
+
+  @protected
+  PaymentLinkRequest dco_decode_payment_link_request(dynamic raw);
 
   @protected
   QuoteResponse dco_decode_quote_response(dynamic raw);
@@ -403,6 +441,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           SseDeserializer deserializer);
 
   @protected
+  NotificationService
+      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNotificationService(
+          SseDeserializer deserializer);
+
+  @protected
   OnChainWallet
       sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnChainWallet(
           SseDeserializer deserializer);
@@ -445,6 +488,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   IcWalletService
       sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerICWalletService(
+          SseDeserializer deserializer);
+
+  @protected
+  NotificationService
+      sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNotificationService(
           SseDeserializer deserializer);
 
   @protected
@@ -500,6 +548,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           SseDeserializer deserializer);
 
   @protected
+  NotificationService
+      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNotificationService(
+          SseDeserializer deserializer);
+
+  @protected
   OnChainWallet
       sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnChainWallet(
           SseDeserializer deserializer);
@@ -529,6 +582,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   AllowanceResponse sse_decode_allowance_response(SseDeserializer deserializer);
 
   @protected
+  AppInfo sse_decode_app_info(SseDeserializer deserializer);
+
+  @protected
   bool sse_decode_bool(SseDeserializer deserializer);
 
   @protected
@@ -536,10 +592,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  double sse_decode_box_autoadd_f_32(SseDeserializer deserializer);
+
+  @protected
   double sse_decode_box_autoadd_f_64(SseDeserializer deserializer);
 
   @protected
-  PaymentLink sse_decode_box_autoadd_payment_link(SseDeserializer deserializer);
+  PaymentLinkRequest sse_decode_box_autoadd_payment_link_request(
+      SseDeserializer deserializer);
 
   @protected
   int sse_decode_box_autoadd_u_32(SseDeserializer deserializer);
@@ -559,6 +619,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   CanisterMetric sse_decode_canister_metric(SseDeserializer deserializer);
+
+  @protected
+  CanisterPermission sse_decode_canister_permission(
+      SseDeserializer deserializer);
 
   @protected
   CollectMetaValue sse_decode_collect_meta_value(SseDeserializer deserializer);
@@ -584,6 +648,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   IcpXdrConversionRateResponse sse_decode_icp_xdr_conversion_rate_response(
+      SseDeserializer deserializer);
+
+  @protected
+  List<CanisterPermission> sse_decode_list_canister_permission(
       SseDeserializer deserializer);
 
   @protected
@@ -619,6 +687,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   String? sse_decode_opt_String(SseDeserializer deserializer);
 
   @protected
+  double? sse_decode_opt_box_autoadd_f_32(SseDeserializer deserializer);
+
+  @protected
   double? sse_decode_opt_box_autoadd_f_64(SseDeserializer deserializer);
 
   @protected
@@ -638,6 +709,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   PaymentLink sse_decode_payment_link(SseDeserializer deserializer);
+
+  @protected
+  PaymentLinkRequest sse_decode_payment_link_request(
+      SseDeserializer deserializer);
 
   @protected
   QuoteResponse sse_decode_quote_response(SseDeserializer deserializer);
@@ -719,6 +794,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void
+      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNotificationService(
+          NotificationService self, SseSerializer serializer);
+
+  @protected
+  void
       sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnChainWallet(
           OnChainWallet self, SseSerializer serializer);
 
@@ -761,6 +841,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void
       sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerICWalletService(
           IcWalletService self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNotificationService(
+          NotificationService self, SseSerializer serializer);
 
   @protected
   void
@@ -816,6 +901,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void
+      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNotificationService(
+          NotificationService self, SseSerializer serializer);
+
+  @protected
+  void
       sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnChainWallet(
           OnChainWallet self, SseSerializer serializer);
 
@@ -845,6 +935,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       AllowanceResponse self, SseSerializer serializer);
 
   @protected
+  void sse_encode_app_info(AppInfo self, SseSerializer serializer);
+
+  @protected
   void sse_encode_bool(bool self, SseSerializer serializer);
 
   @protected
@@ -852,11 +945,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       DelegationParams self, SseSerializer serializer);
 
   @protected
+  void sse_encode_box_autoadd_f_32(double self, SseSerializer serializer);
+
+  @protected
   void sse_encode_box_autoadd_f_64(double self, SseSerializer serializer);
 
   @protected
-  void sse_encode_box_autoadd_payment_link(
-      PaymentLink self, SseSerializer serializer);
+  void sse_encode_box_autoadd_payment_link_request(
+      PaymentLinkRequest self, SseSerializer serializer);
 
   @protected
   void sse_encode_box_autoadd_u_32(int self, SseSerializer serializer);
@@ -878,6 +974,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_canister_metric(
       CanisterMetric self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_canister_permission(
+      CanisterPermission self, SseSerializer serializer);
 
   @protected
   void sse_encode_collect_meta_value(
@@ -906,6 +1006,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_icp_xdr_conversion_rate_response(
       IcpXdrConversionRateResponse self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_canister_permission(
+      List<CanisterPermission> self, SseSerializer serializer);
 
   @protected
   void sse_encode_list_payment_link(
@@ -942,6 +1046,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_opt_String(String? self, SseSerializer serializer);
 
   @protected
+  void sse_encode_opt_box_autoadd_f_32(double? self, SseSerializer serializer);
+
+  @protected
   void sse_encode_opt_box_autoadd_f_64(double? self, SseSerializer serializer);
 
   @protected
@@ -962,6 +1069,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_payment_link(PaymentLink self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_payment_link_request(
+      PaymentLinkRequest self, SseSerializer serializer);
 
   @protected
   void sse_encode_quote_response(QuoteResponse self, SseSerializer serializer);
@@ -1186,6 +1297,38 @@ class RustLibWire implements BaseWire {
           'frbgen_fusion_wallet_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerICWalletService');
   late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerICWalletService =
       _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerICWalletServicePtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNotificationService(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNotificationService(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNotificationServicePtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_fusion_wallet_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNotificationService');
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNotificationService =
+      _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNotificationServicePtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNotificationService(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNotificationService(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNotificationServicePtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_fusion_wallet_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNotificationService');
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNotificationService =
+      _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNotificationServicePtr
           .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
 
   void

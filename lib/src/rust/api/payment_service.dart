@@ -11,7 +11,7 @@ import 'utils.dart';
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<PaymentService>>
 abstract class PaymentService implements RustOpaqueInterface {
-  Future<String> createPaymentLink({required PaymentLink arg});
+  Future<String> createPaymentLink({required PaymentLinkRequest arg});
 
   Future<List<PaymentLink>> getPaymentLink();
 }

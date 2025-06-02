@@ -97,7 +97,7 @@
             <h1 class="text-3xl font-bold mb-2 text-gray-800">{{ message }}</h1>
             <p class="text-gray-500">Scan QR code or use direct link below</p>
             <div class="hidden">
-              <input type="hidden" id="qr_data" name="qr_data" value="https://mobile.fusionwallet.me/sendScreen">
+              <input type="hidden" id="qr_data" name="qr_data" value="{{ qr_data }}">
             </div>
           </div>
       
@@ -107,7 +107,7 @@
       
           <div class="space-y-4">
             <a
-              href="https://mobile.fusionwallet.me/sendScreen?address={{ address }}&amount={{ amount }}"
+              href="{{ http_url }}"
               target="_blank"
               class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
             >

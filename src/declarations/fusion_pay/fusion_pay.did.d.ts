@@ -18,7 +18,10 @@ export interface HttpResponse {
 export interface PaymentLink {
   'id' : string,
   'token_symbol' : string,
-  'amount' : number,
+  'memo' : string,
+  'recipient' : string,
+  'created_at' : bigint,
+  'amount' : string,
   'qr_data' : string,
 }
 export type Result = { 'Ok' : string } |

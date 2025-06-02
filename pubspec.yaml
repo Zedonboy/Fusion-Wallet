@@ -39,13 +39,12 @@ dependencies:
   shared_preferences: ^2.2.0
   flutter_svg: ^2.0.10+1
   get: ^4.6.6
-  page_transition: ^2.1.0
+  # page_transition: ^2.1.0
   flutter_switch: ^0.3.2
-  qr_flutter: ^4.1.0
+  # qr_flutter: ^4.1.0
   local_auth: ^2.1.8
   # image_picker: ^1.1.2
   # device_info_plus: ^10.1.2
-  permission_handler: ^11.3.1
   # flutter_exif_rotation: ^0.5.1
   pin_dot: ^1.0.4
   # horizontal_stepper_flutter: ^1.0.3
@@ -56,11 +55,11 @@ dependencies:
   skeletonizer: ^1.4.2
   fluttertoast: ^8.2.10
   share_plus: ^10.1.3
-  custom_sliding_segmented_control: ^1.8.3
+  # custom_sliding_segmented_control: ^1.8.3
   qr_code_scanner_plus: ^2.0.10+1
   path: any
   intl: any
-  credential_manager: ^2.0.2
+  # credential_manager: ^2.0.2
   encrypt: ^5.0.3
   flutter_animate: ^4.5.2
   flutter_inappwebview: ^6.1.5
@@ -70,6 +69,15 @@ dependencies:
   version: ^3.0.0
   freezed_annotation: ^2.4.4
   universal_web: ^1.1.0+2
+  firebase_core: ^3.13.0
+  firebase_messaging: ^15.2.5
+  # flutter_local_notifications: ^19.2.0
+  # path_provider: ^2.1.0
+  hive_ce: ^2.11.2
+  hive_ce_flutter: ^2.3.1
+  visibility_detector: ^0.4.0+2
+  app_links: ^6.4.0
+ 
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -86,7 +94,8 @@ dev_dependencies:
   integration_test:
     sdk: flutter
   freezed: ^2.5.7
-  build_runner: ^2.4.13
+  build_runner: ^2.4.15
+  hive_ce_generator: ^1.9.1
 
 
 flutter_native_splash:
@@ -97,7 +106,7 @@ flutter_native_splash:
     image: assets/images/splash_banner.png
     icon_background_color: "#000000"
     branding: assets/images/built_on.png
-  web: false
+  web: true
     # image_dark: assets/splash_dark.png
     # icon_background_color_dark: "#121212"
 # For information on the generic Dart part of this file, see the

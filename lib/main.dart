@@ -17,21 +17,102 @@
 //  * You should have received a copy of the GNU General Public License
 //  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //  */
-// 
+//
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fusion_wallet/controllers/appController.dart';
+import 'package:fusion_wallet/controllers/utils.dart';
+import 'package:fusion_wallet/hive/hive_registrar.g.dart';
 import 'package:fusion_wallet/screens/DummyHomeScreen.dart';
+import 'package:fusion_wallet/screens/sendScreens/sendScreen.dart';
 import 'package:fusion_wallet/screens/splashScreen.dart';
+import 'package:fusion_wallet/src/rust/api/wallet.dart';
 import 'package:fusion_wallet/src/rust/frb_generated.dart';
 import 'package:get/get.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'firebase_options.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
+import 'package:hive_ce/hive.dart';
+
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // If you're going to use other Firebase services in the background, such as Firestore,
+  // make sure you call `initializeApp` before using other Firebase services.
+  // await Firebase.initializeApp();
+
+  await Hive.initFlutter();
+  Hive.registerAdapters();
+  await Hive.openBox<AppNotification>("notifications");
+
+  final box = Hive.box<AppNotification>("notifications");
+
+  final notification = AppNotification.fromRemoteMessage(message);
+
+  box.add(notification);
+
+  final prefs = await SharedPreferences.getInstance();
+  prefs.setBool('new_notification', true);
+
+  print("Handling a background message: ${message.messageId}");
+}
+
+ void _handleMessage(RemoteMessage message) {
+    // process here.
+    // Process the notification message
+    print("Handling notification: ${message.notification?.title}");
+
+    // Store notification in Hive box
+    final box = Hive.box<AppNotification>("notifications");
+    final notification = AppNotification.fromRemoteMessage(message);
+    box.add(notification);
+
+    final appController = Get.find<AppController>();
+
+    // Set new_notification flag to true in AppController
+    appController.new_notification.value = true;
+
+    // Vibrate the device
+    HapticFeedback.lightImpact();
+
+    // Play a notification sound
+    // Audio().play(AssetSource('sounds/notification.mp3'));
+
+    // Show a snackbar to alert the user about the new notification
+    Get.snackbar(
+      notification.title,
+      notification.body,
+      snackPosition: SnackPosition.TOP,
+      backgroundColor: const Color(0xFF252442),
+      colorText: Colors.white,
+      margin: const EdgeInsets.all(10),
+      duration: const Duration(seconds: 3),
+      borderRadius: 10,
+      icon: const Icon(Icons.notifications, color: Color(0xff5C87FF)),
+      onTap: (_) {
+        // Navigate to notifications screen when tapped
+      },
+    );
+  }
 
 Future<void> main() async {
   await RustLib.init();
   WidgetsFlutterBinding.ensureInitialized();
-  
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  await Hive.initFlutter();
+  Hive.registerAdapters();
+  await Hive.openBox<AppNotification>("notifications");
+  FirebaseMessaging.onMessage.listen(_handleMessage);
+
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   runApp(const MyApp());
 }
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -51,8 +132,8 @@ class MyApp extends StatelessWidget {
         if (constraints.maxWidth > 600) {
           return const DesktopVersionNotAvailable();
         }
-        return const StartingPage();
-      }),
+            return const StartingPage();
+          }),
     );
   }
 }
@@ -114,7 +195,8 @@ class DesktopVersionNotAvailable extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF70EDEF),
                   foregroundColor: const Color(0xFF1A1930),
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -135,7 +217,6 @@ class DesktopVersionNotAvailable extends StatelessWidget {
     );
   }
 }
-
 
 class DemoApp extends StatelessWidget {
   const DemoApp({super.key});

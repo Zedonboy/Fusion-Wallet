@@ -14,12 +14,14 @@ part 'canister.g.dart';
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ICCanisterInfoService>>
 abstract class IcCanisterInfoService implements RustOpaqueInterface {
-  Future<CanisterMetric> getCanisterStatus({required String canisterId});
+  Future<CanisterMetric> getCanisterStatus(
+      {required String canisterId, String? canisterName});
 }
 
 @freezed
 class CanisterMetric with _$CanisterMetric {
   const factory CanisterMetric({
+    String? canisterName,
     required BigInt memorySize,
     required BigInt cyclesBalance,
     required String status,

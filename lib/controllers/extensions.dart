@@ -45,7 +45,7 @@ extension UsdCurrencyFormatter on String {
 extension TokenDataPriceFormat on TokenData {
   String get formattedPrice {
     // Return placeholder if price is negative or zero
-    if (price < 0) return "---";
+    if (price == null || price! < 0) return "---";
 
     // Create a NumberFormat for USD currency
     final formatter = NumberFormat.currency(locale: 'en_US', symbol: '\$');

@@ -20,6 +20,7 @@ CanisterMetric _$CanisterMetricFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$CanisterMetric {
+  String? get canisterName => throw _privateConstructorUsedError;
   BigInt get memorySize => throw _privateConstructorUsedError;
   BigInt get cyclesBalance => throw _privateConstructorUsedError;
   String get status => throw _privateConstructorUsedError;
@@ -45,7 +46,8 @@ abstract class $CanisterMetricCopyWith<$Res> {
       _$CanisterMetricCopyWithImpl<$Res, CanisterMetric>;
   @useResult
   $Res call(
-      {BigInt memorySize,
+      {String? canisterName,
+      BigInt memorySize,
       BigInt cyclesBalance,
       String status,
       String canisterId,
@@ -69,6 +71,7 @@ class _$CanisterMetricCopyWithImpl<$Res, $Val extends CanisterMetric>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? canisterName = freezed,
     Object? memorySize = null,
     Object? cyclesBalance = null,
     Object? status = null,
@@ -78,6 +81,10 @@ class _$CanisterMetricCopyWithImpl<$Res, $Val extends CanisterMetric>
     Object? totalInboundBytes = null,
   }) {
     return _then(_value.copyWith(
+      canisterName: freezed == canisterName
+          ? _value.canisterName
+          : canisterName // ignore: cast_nullable_to_non_nullable
+              as String?,
       memorySize: null == memorySize
           ? _value.memorySize
           : memorySize // ignore: cast_nullable_to_non_nullable
@@ -119,7 +126,8 @@ abstract class _$$CanisterMetricImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {BigInt memorySize,
+      {String? canisterName,
+      BigInt memorySize,
       BigInt cyclesBalance,
       String status,
       String canisterId,
@@ -141,6 +149,7 @@ class __$$CanisterMetricImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? canisterName = freezed,
     Object? memorySize = null,
     Object? cyclesBalance = null,
     Object? status = null,
@@ -150,6 +159,10 @@ class __$$CanisterMetricImplCopyWithImpl<$Res>
     Object? totalInboundBytes = null,
   }) {
     return _then(_$CanisterMetricImpl(
+      canisterName: freezed == canisterName
+          ? _value.canisterName
+          : canisterName // ignore: cast_nullable_to_non_nullable
+              as String?,
       memorySize: null == memorySize
           ? _value.memorySize
           : memorySize // ignore: cast_nullable_to_non_nullable
@@ -186,7 +199,8 @@ class __$$CanisterMetricImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$CanisterMetricImpl implements _CanisterMetric {
   const _$CanisterMetricImpl(
-      {required this.memorySize,
+      {this.canisterName,
+      required this.memorySize,
       required this.cyclesBalance,
       required this.status,
       required this.canisterId,
@@ -197,6 +211,8 @@ class _$CanisterMetricImpl implements _CanisterMetric {
   factory _$CanisterMetricImpl.fromJson(Map<String, dynamic> json) =>
       _$$CanisterMetricImplFromJson(json);
 
+  @override
+  final String? canisterName;
   @override
   final BigInt memorySize;
   @override
@@ -214,7 +230,7 @@ class _$CanisterMetricImpl implements _CanisterMetric {
 
   @override
   String toString() {
-    return 'CanisterMetric(memorySize: $memorySize, cyclesBalance: $cyclesBalance, status: $status, canisterId: $canisterId, totalCalls: $totalCalls, totalOutboundBytes: $totalOutboundBytes, totalInboundBytes: $totalInboundBytes)';
+    return 'CanisterMetric(canisterName: $canisterName, memorySize: $memorySize, cyclesBalance: $cyclesBalance, status: $status, canisterId: $canisterId, totalCalls: $totalCalls, totalOutboundBytes: $totalOutboundBytes, totalInboundBytes: $totalInboundBytes)';
   }
 
   @override
@@ -222,6 +238,8 @@ class _$CanisterMetricImpl implements _CanisterMetric {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$CanisterMetricImpl &&
+            (identical(other.canisterName, canisterName) ||
+                other.canisterName == canisterName) &&
             (identical(other.memorySize, memorySize) ||
                 other.memorySize == memorySize) &&
             (identical(other.cyclesBalance, cyclesBalance) ||
@@ -239,8 +257,16 @@ class _$CanisterMetricImpl implements _CanisterMetric {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, memorySize, cyclesBalance,
-      status, canisterId, totalCalls, totalOutboundBytes, totalInboundBytes);
+  int get hashCode => Object.hash(
+      runtimeType,
+      canisterName,
+      memorySize,
+      cyclesBalance,
+      status,
+      canisterId,
+      totalCalls,
+      totalOutboundBytes,
+      totalInboundBytes);
 
   /// Create a copy of CanisterMetric
   /// with the given fields replaced by the non-null parameter values.
@@ -261,7 +287,8 @@ class _$CanisterMetricImpl implements _CanisterMetric {
 
 abstract class _CanisterMetric implements CanisterMetric {
   const factory _CanisterMetric(
-      {required final BigInt memorySize,
+      {final String? canisterName,
+      required final BigInt memorySize,
       required final BigInt cyclesBalance,
       required final String status,
       required final String canisterId,
@@ -272,6 +299,8 @@ abstract class _CanisterMetric implements CanisterMetric {
   factory _CanisterMetric.fromJson(Map<String, dynamic> json) =
       _$CanisterMetricImpl.fromJson;
 
+  @override
+  String? get canisterName;
   @override
   BigInt get memorySize;
   @override

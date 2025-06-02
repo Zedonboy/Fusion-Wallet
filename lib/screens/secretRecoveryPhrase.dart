@@ -380,16 +380,26 @@ class _SecretRecoveryPharaseState extends State<SecretRecoveryPharase> {
                           } else {
                             Get.to(PinScreen(
                               onPinConfirm: (phrase) {
-                                Navigator.pushReplacement(
-                                    context,
-                                    PageTransition(
-                                        duration: Duration(milliseconds: 100),
-                                        type: PageTransitionType.fade,
-                                        child: SecretRecoveryPharase2(
-                                          mnemonic: phrase,
-                                        )));
+                                Get.off(
+                                  () => SecretRecoveryPharase2(
+                                    mnemonic: phrase,
+                                  ),
+                                  transition: Transition.fade,
+                                  duration: Duration(milliseconds: 100),
+                                );
                               },
-                              isSignin: true));
+                              onBiometric: (auth, phrase) {
+                                if (auth) {
+                                  Get.off(
+                                    () => SecretRecoveryPharase2(
+                                      mnemonic: phrase!,
+                                    ),
+                                    transition: Transition.fade,
+                                    duration: Duration(milliseconds: 100),
+                                  );
+                                }
+                              },
+                              ));
                           }
                           // if (appController.enabledBiometric.value == true) {
                           //   Get.to(VerifyPassword(fromPage: 'send'))!.then((value) {

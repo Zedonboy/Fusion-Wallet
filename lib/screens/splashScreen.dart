@@ -40,12 +40,10 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: primaryAltBackgroundColor.value,
-      body: SizedBox(
-        width: Get.width,
-        height: Get.height,
-        child: Padding(
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: primaryAltBackgroundColor.value,
+        body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -196,7 +194,14 @@ class _StartingPageState extends State<StartingPage> {
               // Get.offAll(() => HomeScreen());
             },
             // onBiometric: (didAuth) {},
-            isSignin: true,
+            onBiometric: (didAuth, phrase) {
+              if (didAuth) {
+                final wallet = Wallet.fromSeed(seedPhrase: phrase!);
+                appController.active_wallet.value = wallet;
+
+                Get.offAll(() => BottomBar());
+              }
+            },
           ),
         );
       }

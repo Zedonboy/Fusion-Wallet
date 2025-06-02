@@ -43,7 +43,7 @@ impl HttpWalletService {
         Self { http_client: client }
     }
 
-    pub async fn get_price(&self, token: &WalletToken) -> f32 {
+    pub async fn get_price(&self, token: &WalletToken) -> Option<f32> {
         let symbol = if token.symbol.starts_with("ck") {
             token.symbol.strip_prefix("ck").unwrap()
         } else {
@@ -56,23 +56,23 @@ impl HttpWalletService {
         );
         let http_result = match self.http_client.get(url).send().await {
             Result::Ok(response) => response,
-            Err(_) => return -1.0,
+            Err(_) => return None,
         };
 
         let json: Value = match http_result.json().await {
             Result::Ok(j) => j,
-            Err(_) => return -1.0,
+            Err(_) => return None,
         };
 
         match json.get("data").and_then(|d| d.get("amount")) {
             Some(amount) => {
                 let amount_str = amount.as_str().unwrap_or("");
                 match amount_str.parse::<f32>() {
-                    Result::Ok(num) => num,
-                    Err(_) => -1.0,
+                    Result::Ok(num) => Some(num),
+                    Err(_) => None,
                 }
             }
-            None => -1.0,
+            None => None,
         }
     }
 

@@ -11,6 +11,7 @@ use serde::{Deserialize, Serialize};
 #[frb(json_serializable)]
 #[derive(Debug)]
 pub struct CanisterMetric {
+    pub canister_name: Option<String>,
     pub memory_size: u64,
     pub cycles_balance: u128,
     pub status: String,
@@ -33,7 +34,7 @@ impl ICCanisterInfoService {
         Self { ic_agent: agent }
     }
 
-    pub async fn get_canister_status(&self, canister_id: &str) -> anyhow::Result<CanisterMetric> {
+    pub async fn get_canister_status(&self, canister_id: &str, canister_name: Option<String>) -> anyhow::Result<CanisterMetric> {
         let management = ManagementCanister::create(&self.ic_agent);
         let canister_idx = Principal::from_text(canister_id)?;
         let (status,) = management.canister_status(&canister_idx).await?; 
@@ -47,7 +48,8 @@ impl ICCanisterInfoService {
             canister_id: canister_id.to_string(),
             total_calls: query_stats.num_calls_total.0.try_into().unwrap(),
             total_outbound_bytes: query_stats.response_payload_bytes_total.0.try_into().unwrap(),
-            total_inbound_bytes: query_stats.request_payload_bytes_total.0.try_into().unwrap()
+            total_inbound_bytes: query_stats.request_payload_bytes_total.0.try_into().unwrap(),
+            canister_name: canister_name
         };
 
         Ok(canister_metric)
@@ -63,7 +65,7 @@ mod tests {
     async fn test_is_controller() {
         let agent = Agent::builder().with_url("https://ic0.app").build().unwrap();
         let canister_info_service = ICCanisterInfoService::new(Arc::new(agent));
-        let result = canister_info_service.get_canister_status("oj6if-riaaa-aaaaq-aaeha-cai").await;
+        let result = canister_info_service.get_canister_status("oj6if-riaaa-aaaaq-aaeha-cai", Some("test".to_string())).await;
         println!("{:?}", result);
     }
 }

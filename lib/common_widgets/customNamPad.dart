@@ -85,7 +85,14 @@ class CustomNumPad extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               // Empty button
-              SizedBox(
+              onBiometric == null ? SizedBox(
+                  height: Get.width * 0.1,
+                  width: Get.width * 0.1,
+                  child: InkWell(
+                      onTap: () {
+                        onBiometric?.call();
+                      },
+                      child: SizedBox())) : SizedBox(
                   height: Get.width * 0.1,
                   width: Get.width * 0.1,
                   child: InkWell(

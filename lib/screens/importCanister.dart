@@ -29,8 +29,9 @@ class ImportCanister extends StatefulWidget {
 class _ImportCanisterState extends State<ImportCanister> {
   final appController = Get.find<AppController>();
   TextEditingController canisterIdController = TextEditingController();
-
+  TextEditingController canisterNameController = TextEditingController();
   var canisterIdErr = ''.obs;
+  var canisterNameErr = ''.obs;
   var importLoader = false.obs;
 
   @override
@@ -98,6 +99,19 @@ class _ImportCanisterState extends State<ImportCanister> {
                     SizedBox(
                       height: 32,
                     ),
+                    InputFields(
+                        headerText: "Canister Name",
+                        hintText: "",
+                        hasHeader: true,
+                        textController: canisterNameController,
+                        onChange: (v) {
+                          canisterNameErr.value = '';
+                        }),
+                    CommonWidgets.showErrorMessage(canisterIdErr.value),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    
                     InputFields(
                         headerText: "Canister ID",
                         hintText: "",
@@ -173,14 +187,16 @@ class _ImportCanisterState extends State<ImportCanister> {
   verify() async {
     if (canisterIdController.text.trim() == '') {
       canisterIdErr.value = 'Please enter a canister ID';
+    } else if (canisterNameController.text.trim() == '') {
+      canisterNameErr.value = 'Please enter a canister name';
     } else {
       importLoader.value = true;
       final icService = appController.ic_service!;
       final canisterId = canisterIdController.text.trim();
-      
+      final canisterName = canisterNameController.text.trim();
       try {
         final canisterMetric = icService.createCanisterInfoService();
-        final metric = await canisterMetric.getCanisterStatus(canisterId: canisterId);
+        final metric = await canisterMetric.getCanisterStatus(canisterId: canisterId, canisterName: canisterName);
         appController.addCanister(metric);
         showToast("Canister imported successfully");
         Get.back(result: 'added');

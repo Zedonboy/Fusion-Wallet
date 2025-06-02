@@ -8,7 +8,6 @@
  * (at your option) any later version.
  */
 
-
 import 'package:fusion_wallet/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -56,12 +55,13 @@ class _BottomBarState extends State<BottomBar> {
     return Obx(
       () => PopScope(
         canPop: true,
-        child: Scaffold(
+        child: SafeArea(
+            child: Scaffold(
           // backgroundColor: Colors.black,
           bottomNavigationBar: Obx(
             () => Container(
-              height: 70,
-              padding: EdgeInsets.symmetric(vertical: 3, horizontal: 0),
+              // height: 50,
+              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 0),
               decoration: BoxDecoration(
                   border: Border(
                     top: BorderSide(
@@ -70,10 +70,7 @@ class _BottomBarState extends State<BottomBar> {
                   color: appController.isDark.value
                       ? Color(0xff1A1930)
                       : primaryColor.value),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Row(
+              child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
@@ -108,8 +105,8 @@ class _BottomBarState extends State<BottomBar> {
                                 ),
                                 appController.selectedBOttomTabIndex.value == 0
                                     ? Container(
-                                        height: 6,
-                                        width: 6,
+                                        height: 5,
+                                        width: 5,
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
                                           color: greenCardColor.value,
@@ -157,8 +154,8 @@ class _BottomBarState extends State<BottomBar> {
                                 ),
                                 appController.selectedBOttomTabIndex.value == 1
                                     ? Container(
-                                        height: 6,
-                                        width: 6,
+                                        height: 5,
+                                        width: 5,
                                         decoration: BoxDecoration(
                                             shape: BoxShape.circle,
                                             gradient: LinearGradient(
@@ -211,8 +208,8 @@ class _BottomBarState extends State<BottomBar> {
                                 ),
                                 appController.selectedBOttomTabIndex.value == 2
                                     ? Container(
-                                        height: 6,
-                                        width: 6,
+                                        height: 5,
+                                        width: 5,
                                         decoration: BoxDecoration(
                                             shape: BoxShape.circle,
                                             gradient: LinearGradient(
@@ -299,7 +296,9 @@ class _BottomBarState extends State<BottomBar> {
                               children: [
                                 Icon(
                                   Icons.settings,
-                                  color: appController.selectedBOttomTabIndex.value == 3
+                                  color: appController
+                                              .selectedBOttomTabIndex.value ==
+                                          3
                                       ? greenCardColor.value
                                       : Color(0xff6C7CA7),
                                 ),
@@ -325,8 +324,8 @@ class _BottomBarState extends State<BottomBar> {
                                 ),
                                 appController.selectedBOttomTabIndex.value == 3
                                     ? Container(
-                                        height: 6,
-                                        width: 6,
+                                        height: 5,
+                                        width: 5,
                                         decoration: BoxDecoration(
                                             shape: BoxShape.circle,
                                             gradient: LinearGradient(
@@ -348,12 +347,10 @@ class _BottomBarState extends State<BottomBar> {
                       ),
                     ],
                   ),
-                ],
-              ),
             ),
           ),
           body: pages.elementAt(appController.selectedBOttomTabIndex.value),
-        ),
+        )),
       ),
     );
   }

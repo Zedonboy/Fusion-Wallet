@@ -8,20 +8,28 @@
  * (at your option) any later version.
  */
 
+import 'dart:async';
 import 'dart:math';
 
+import 'package:app_links/app_links.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fusion_wallet/common_widgets/PulsatingBattery.dart';
 import 'package:fusion_wallet/common_widgets/backupWidget.dart';
 import 'package:fusion_wallet/constants/colors.dart';
 import 'package:fusion_wallet/controllers/appController.dart';
 import 'package:fusion_wallet/controllers/extensions.dart';
+import 'package:fusion_wallet/controllers/uri_handler.dart';
 import 'package:fusion_wallet/controllers/utils.dart';
 import 'package:fusion_wallet/localization/language_constants.dart';
 import 'package:fusion_wallet/screens/CanisterMetricScreen.dart';
+import 'package:fusion_wallet/screens/NotificationScreen.dart';
 import 'package:fusion_wallet/screens/PosScreen.dart';
+import 'package:fusion_wallet/screens/QRcodeScreen.dart';
 import 'package:fusion_wallet/screens/importCanister.dart';
 import 'package:fusion_wallet/screens/receiveScreen.dart';
 import 'package:fusion_wallet/screens/selectToken.dart';
@@ -32,8 +40,10 @@ import 'package:fusion_wallet/screens/tokenScreenOption/option.dart';
 import 'package:fusion_wallet/src/rust/api/wallet.dart';
 import 'package:fusion_wallet/types/UpdateChecker.dart';
 import 'package:get/get.dart';
+import 'package:hive_ce/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:fusion_wallet/controllers/deferred_prompt.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../common_widgets/inputField.dart';
 
 // import '../nfts/nftsScreen.dart';
@@ -48,6 +58,10 @@ class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   var isVisible = false.obs;
   var isBackupReminderVisible = true.obs;
+
+  Worker? _worker;
+  Worker? _worker2;
+  StreamSubscription<RemoteMessage>? _messageStream;
 
   static const List<Tab> myTabs = <Tab>[
     Tab(
@@ -80,10 +94,88 @@ class _HomeScreenState extends State<HomeScreen>
 
   AppController appController = Get.find<AppController>();
 
+ 
+
+  void _handleInitialMessage(RemoteMessage message) {
+
+  }
+
+  Future<void> setupInteractedMessage() async {
+    // Get any messages which caused the application to open from
+    // a terminated state.
+    RemoteMessage? initialMessage =
+        await FirebaseMessaging.instance.getInitialMessage();
+
+    // If the message also contains a data property with a "type" of "chat",
+    // navigate to a chat screen
+    if (initialMessage != null) {
+      _handleInitialMessage(initialMessage);
+    }
+    // Also handle any interaction when the app is in the background via a
+    // Stream listener
+    _messageStream = FirebaseMessaging.onMessageOpenedApp.listen(_handleInitialMessage);
+    
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _worker?.dispose();
+    _worker2?.dispose();
+    _messageStream?.cancel();
+    _tabController.dispose();
+  }
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: myTabs.length, vsync: this);
+
+    print( "Notifications: ${appController.new_notification.value}");
+
+    setupInteractedMessage();
+
+    _worker = ever(appController.new_notification, (data) {
+      print( "Notifications: $data");
+      setState(() {
+        
+      });
+    });
+
+    _worker2 = ever(appController.token_data_map, (data) {
+      print( "Token Data Map: $data");
+      setState(() {
+        
+      });
+    });
+
+    final app_links = AppLinks();
+
+    app_links.getInitialLink().then((uri) {
+      if(uri != null) {
+        handle_uri_path(uri);
+      }
+    });
+
+    app_links.uriLinkStream.listen((uri) {
+      handle_uri_path(uri);
+    });
+
+
+
+    FirebaseMessaging.instance.onTokenRefresh.listen((token) async {
+      final notify_service =
+          appController.ic_service!.createNotificationService();
+      try {
+        await notify_service.addDeviceToken(token: token);
+      } catch (e) {
+        print("Error: $e");
+      }
+      // print("Token: $token");
+    });
+
+
+
     if (!kIsWeb) {
       UpdateChecker.checkForUpdate(context);
       appController.check_token_balances();
@@ -101,14 +193,14 @@ class _HomeScreenState extends State<HomeScreen>
       final tokenData = appController.token_data_map[token.tokenAddress];
       if (tokenData != null) {
         // Skip if we have invalid price data
-        if (tokenData.price <= 0) continue;
+        if (tokenData.price == null || tokenData.price! <= 0) continue;
 
         // Convert balance to decimal value considering token decimals
         double decimalAmount =
             tokenData.balance.toDouble() / pow(10, token.tokenDecimal ?? 8);
 
         // Calculate worth for this token and add to total
-        totalWorth += decimalAmount * tokenData.price;
+        totalWorth += decimalAmount * (tokenData.price ?? 0);
       }
     }
 
@@ -133,6 +225,36 @@ class _HomeScreenState extends State<HomeScreen>
     }
 
     return formatted;
+  }
+
+  void show_dialog(String message){
+     Get.dialog(
+      Dialog(
+        backgroundColor: shapeDecorationDarkColor.value,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(
+                color: primaryAltColor.value,
+              ),
+              SizedBox(height: 16),
+              Text(
+                message,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      barrierDismissible: false,
+    );
   }
 
   @override
@@ -231,7 +353,58 @@ class _HomeScreenState extends State<HomeScreen>
                                       SizedBox(
                                         width: 8,
                                       ),
-
+                                      InkWell(
+                                          onTap: () {
+                                           
+                                            Get.to(() => NotificationScreen());
+                                          },
+                                          child: Container(
+                                            height: 32,
+                                            width: 32,
+                                            // padding: EdgeInsets.all(8),
+                                            decoration: BoxDecoration(
+                                                color: appController
+                                                            .isDark.value ==
+                                                        true
+                                                    ? Color(0xff1A2B56)
+                                                    : inputFieldBackgroundColor
+                                                        .value,
+                                                borderRadius:
+                                                    BorderRadius.circular(8)),
+                                            child: Stack(
+                                              children: [
+                                                Center(
+                                                  child: Icon(
+                                                    Icons
+                                                        .notifications_none_outlined,
+                                                    color: appController
+                                                                .isDark.value ==
+                                                            true
+                                                        ? Color(0xffA2BBFF)
+                                                        : headingColor.value,
+                                                    size: 20,
+                                                  ),
+                                                ),
+                                                appController
+                                                    .new_notification.value ?
+                                                  Positioned(
+                                                    right: 0,
+                                                    top: 0,
+                                                    child: Container(
+                                                      width: 8,
+                                                      height: 8,
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.red,
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                    ),
+                                                  ) : SizedBox.shrink(),
+                                              ],
+                                            ),
+                                          )),
+                                      SizedBox(
+                                        width: 8,
+                                      ),
                                       Builder(builder: (context) {
                                         if (ONCHAIN_WEB &&
                                             appController
@@ -332,27 +505,43 @@ class _HomeScreenState extends State<HomeScreen>
 
                                         return SizedBox.shrink();
                                       }),
-
-                                      SizedBox(
-                                        width: 8,
-                                      ),
-                                      // InkWell( TODO (Qr Code scanner)
-                                      //     onTap: () {},
-                                      //     child: Container(
-                                      //       height: 32,
-                                      //       width: 32,
-                                      //       padding: EdgeInsets.all(8),
-                                      //       decoration: BoxDecoration(
-                                      //           color: appController.isDark.value == true
-                                      //               ? Color(0xff1A2B56)
-                                      //               : inputFieldBackgroundColor.value,
-                                      //           borderRadius: BorderRadius.circular(8)),
-                                      //       child: SvgPicture.asset(
-                                      //           "assets/svgs/ion_qr-code.svg",
-                                      //           color: appController.isDark.value == true
-                                      //               ? Color(0xffA2BBFF)
-                                      //               : headingColor.value),
-                                      //     ))
+                                      
+                                      InkWell(
+                                          onTap: () async {
+                                            final url = await Get.to(() => QRcodeScreen());
+                                            if (url != null) {
+                                              
+                                              final uri = Uri.parse(url);
+                                              if(uri.scheme != "fusion"){
+                                                showToast("Invalid QR Code");
+                                                return;
+                                              }
+                                              await handle_uri_path(uri);
+                                            } else {
+                                              showToast("Invalid QR Code");
+                                            }
+                                          },
+                                          child: Container(
+                                            height: 32,
+                                            width: 32,
+                                            padding: EdgeInsets.all(8),
+                                            decoration: BoxDecoration(
+                                                color: appController
+                                                            .isDark.value ==
+                                                        true
+                                                    ? Color(0xff1A2B56)
+                                                    : inputFieldBackgroundColor
+                                                        .value,
+                                                borderRadius:
+                                                    BorderRadius.circular(8)),
+                                            child: SvgPicture.asset(
+                                                "assets/svgs/ion_qr-code.svg",
+                                                color: appController
+                                                            .isDark.value ==
+                                                        true
+                                                    ? Color(0xffA2BBFF)
+                                                    : headingColor.value),
+                                          ))
                                     ],
                                   )
                                 ],
@@ -540,82 +729,82 @@ class _HomeScreenState extends State<HomeScreen>
                                       ],
                                     ),
                                   ),
-                                  // GestureDetector(
-                                  //   onTap: () {
-                                  //     Get.bottomSheet(
-                                  //         clipBehavior: Clip.antiAlias,
-                                  //         isScrollControlled: true,
-                                  //         backgroundColor:
-                                  //             appController.isDark.value == true
-                                  //                 ? Color(0xffA2BBFF)
-                                  //                 : primaryAltBackgroundColor
-                                  //                     .value,
-                                  //         shape: OutlineInputBorder(
-                                  //             borderSide: BorderSide.none,
-                                  //             borderRadius: BorderRadius.only(
-                                  //                 topRight: Radius.circular(32),
-                                  //                 topLeft:
-                                  //                     Radius.circular(32))),
-                                  //         selectToken(onSelect: (token) {
-                                  //       Get.back();
-                                  //       var addr = appController
-                                  //           .active_wallet.value
-                                  //           ?.toIcpPrincipal();
+                                  GestureDetector(
+                                    onTap: () {
+                                      Get.bottomSheet(
+                                          clipBehavior: Clip.antiAlias,
+                                          isScrollControlled: true,
+                                          backgroundColor:
+                                              appController.isDark.value == true
+                                                  ? Color(0xffA2BBFF)
+                                                  : primaryAltBackgroundColor
+                                                      .value,
+                                          shape: OutlineInputBorder(
+                                              borderSide: BorderSide.none,
+                                              borderRadius: BorderRadius.only(
+                                                  topRight: Radius.circular(32),
+                                                  topLeft:
+                                                      Radius.circular(32))),
+                                          selectToken(onSelect: (token) {
+                                        Get.back();
+                                        var addr = appController
+                                            .active_wallet.value
+                                            ?.toIcpPrincipal();
 
-                                  //       if (addr == null) {
-                                  //         showToast(
-                                  //             "No Address or Principal ID found");
-                                  //         return;
-                                  //       }
-                                  //       Get.to(() => PosScreen(token: token));
-                                  //     }));
-                                  //   },
-                                  //   child: Column(
-                                  //     children: [
-                                  //       Container(
-                                  //         height: 56,
-                                  //         width: 56,
-                                  //         padding: EdgeInsets.all(16),
-                                  //         decoration: BoxDecoration(
-                                  //             color:
-                                  //                 appController.isDark.value ==
-                                  //                         true
-                                  //                     ? Color(0xFF1A2B56)
-                                  //                     : primaryAltColor.value,
-                                  //             borderRadius:
-                                  //                 BorderRadius.circular(15)),
-                                  //         child: Center(
-                                  //             child: SvgPicture.asset(
-                                  //                 "assets/svgs/pos.svg",
-                                  //                 height: 28,
-                                  //                 width: 28,
-                                  //                 color: appController
-                                  //                             .isDark.value ==
-                                  //                         true
-                                  //                     ? Color(0xFFA2BBFF)
-                                  //                     : primaryAltBackgroundColor
-                                  //                         .value)),
-                                  //       ),
-                                  //       SizedBox(
-                                  //         height: 12,
-                                  //       ),
-                                  //       Text(
-                                  //         getTranslated(context, "PoS") ??
-                                  //             "PoS",
-                                  //         textAlign: TextAlign.start,
-                                  //         style: TextStyle(
-                                  //           fontSize: 16,
-                                  //           fontWeight: FontWeight.w600,
-                                  //           color: appController.isDark.value ==
-                                  //                   true
-                                  //               ? Color(0xffFDFCFD)
-                                  //               : primaryAltColor.value,
-                                  //           fontFamily: "dmsans",
-                                  //         ),
-                                  //       ),
-                                  //     ],
-                                  //   ),
-                                  // ),
+                                        if (addr == null) {
+                                          showToast(
+                                              "No Address or Principal ID found");
+                                          return;
+                                        }
+                                        Get.to(() => PosScreen(token: token));
+                                      }));
+                                    },
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                          height: 56,
+                                          width: 56,
+                                          padding: EdgeInsets.all(16),
+                                          decoration: BoxDecoration(
+                                              color:
+                                                  appController.isDark.value ==
+                                                          true
+                                                      ? Color(0xFF1A2B56)
+                                                      : primaryAltColor.value,
+                                              borderRadius:
+                                                  BorderRadius.circular(15)),
+                                          child: Center(
+                                              child: SvgPicture.asset(
+                                                  "assets/svgs/pos.svg",
+                                                  height: 28,
+                                                  width: 28,
+                                                  color: appController
+                                                              .isDark.value ==
+                                                          true
+                                                      ? Color(0xFFA2BBFF)
+                                                      : primaryAltBackgroundColor
+                                                          .value)),
+                                        ),
+                                        SizedBox(
+                                          height: 12,
+                                        ),
+                                        Text(
+                                          getTranslated(context, "PoS") ??
+                                              "PoS",
+                                          textAlign: TextAlign.start,
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                            color: appController.isDark.value ==
+                                                    true
+                                                ? Color(0xffFDFCFD)
+                                                : primaryAltColor.value,
+                                            fontFamily: "dmsans",
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                   // GestureDetector(
                                   //   onTap: () {
                                   //     // Get.bottomSheet(
@@ -844,7 +1033,7 @@ class _HomeScreenState extends State<HomeScreen>
                                                             .spaceBetween,
                                                     children: [
                                                       Text(
-                                                        canister.canisterId,
+                                                        canister.canisterName ?? canister.canisterId,
                                                         textAlign:
                                                             TextAlign.start,
                                                         style: TextStyle(

@@ -8,11 +8,11 @@
  * (at your option) any later version.
  */
 
-import 'package:credential_manager/credential_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fusion_wallet/common_widgets/bottomNavBar.dart';
 import 'package:fusion_wallet/common_widgets/bottomRectangularbtn.dart';
 import 'package:fusion_wallet/common_widgets/commonWidgets.dart';
@@ -318,25 +318,11 @@ class _ImportFromSeedState extends State<ImportFromSeed> {
   }
 
   save_to_credential() async {
-    final CredentialManager credentialManager = CredentialManager();
-    if (credentialManager.isSupportedPlatform) {
-      // Platform is supported, initialize the manager
-      await credentialManager.init(
-        preferImmediatelyAvailableCredentials: true,
-      );
+    final storage = FlutterSecureStorage();
 
-      try {
-        await credentialManager.savePasswordCredentials(
-          PasswordCredential(
-            username: 'fusion_wallet_user',
-            password: widget.pin,
-          ),
-        );
-      } on CredentialException catch (e) {
-        // Handle the error
-        print('Error saving password credential: ${e.message}');
-      }
-    }
+    final pass_hash_key = WalletContext.hashData(data: widget.pin);
+
+    await storage.write(key: 'pin', value: pass_hash_key);
   }
 
   verifyFields() async {
@@ -406,5 +392,11 @@ class _ImportFromSeedState extends State<ImportFromSeed> {
         appController.enabledBiometric.value = val;
       });
     }
+  }
+
+  @override
+  void dispose() {
+    mnemonicController.dispose();
+    super.dispose();
   }
 }

@@ -10,11 +10,13 @@
 
 
 import 'dart:math';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 // import 'package:fluttertoast/fluttertoast_web.dart';
 import 'package:intl/intl.dart';
+import 'package:hive_ce/hive.dart';
 
 Future<void> copyToClipboard(String copiedText) async {
   await Clipboard.setData(ClipboardData(text: copiedText));
@@ -37,12 +39,12 @@ showToast(message, {Color color = Colors.red}) {
 // Token data class to hold all values
 class TokenData {
   final BigInt balance;
-  final double price;
+  final double? price;
   // final double usdWorth;
 
   TokenData({
     required this.balance,
-    required this.price,
+    this.price,
     // required this.usdWorth,
   });
 
@@ -55,6 +57,10 @@ class TokenData {
   factory TokenData.error() {
     return TokenData(balance: BigInt.from(-1), price: -1);
   }
+
+  factory TokenData.nullData() {
+    return TokenData(balance: BigInt.zero, price: null);
+  }
 }
 
 String address_shortener(String addr,
@@ -62,7 +68,12 @@ String address_shortener(String addr,
   return "${addr.substring(0, start_count)}...${addr.substring(addr.length - end_count)}";
 }
 
-String calculateUsdWorth(BigInt amount, int decimals, double usdPrice) {
+String calculateUsdWorth(BigInt amount, int decimals, double? usdPrice) {
+
+  if (usdPrice == null) {
+    return "---";
+  }
+
   if (amount == BigInt.zero || usdPrice <= 0) {
     return formatUsdPrice(0);
   }
@@ -179,6 +190,118 @@ String formatBytes(BigInt bytes, {int decimals = 2}) {
   
   // Format with the specified number of decimal places
   return "${value.toStringAsFixed(decimals)} ${suffixes[i]}";
+}
+
+String getPathAndQuery(Uri uri) {
+
+  if (uri.query.isEmpty) {
+    return uri.path;
+  }
+
+  return "${uri.path}?${uri.query}";
+}
+
+@HiveType(typeId: 0)
+class AppNotification extends HiveObject {
+  @HiveField(0)
+  String id;
+  @HiveField(1)
+  String title;
+  @HiveField(2)
+  String body;
+  @HiveField(3)
+  String? imageUrl;
+  @HiveField(4)
+  DateTime timestamp;
+  @HiveField(5)
+  Map<String, dynamic>? data;
+  @HiveField(6)
+  bool isRead = false;
+  @HiveField(7)
+  String? appName;
+  @HiveField(8)
+  String? canisterId;
+
+  AppNotification({
+    required this.id,
+    required this.title,
+    required this.body,
+    this.imageUrl,
+    required this.timestamp,
+    this.data,
+    this.isRead = false,
+    this.appName,
+    this.canisterId
+  });
+
+  // Create a Notification from a Firebase RemoteMessage
+  factory AppNotification.fromRemoteMessage(RemoteMessage message) {
+    return AppNotification(
+      id: message.messageId ?? DateTime.now().millisecondsSinceEpoch.toString(),
+      title: message.notification?.title ?? 'Notification',
+      body: message.notification?.body ?? '',
+      imageUrl: message.notification?.android?.imageUrl ?? message.notification?.apple?.imageUrl,
+      timestamp: message.sentTime ?? DateTime.now(),
+      data: message.data,
+      appName: message.data['appName'],
+      canisterId: message.data["canisterId"]
+    );
+  }
+
+  // Convert to a Map for Hive storage
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'title': title,
+      'body': body,
+      'imageUrl': imageUrl,
+      'timestamp': timestamp.millisecondsSinceEpoch,
+      'data': data,
+      'isRead': isRead,
+      'appName': appName,
+      'canisterId': canisterId
+    };
+  }
+
+  // Create a Notification from a Map (from Hive)
+  factory AppNotification.fromMap(Map<String, dynamic> map) {
+    return AppNotification(
+      id: map['id'],
+      title: map['title'],
+      body: map['body'],
+      imageUrl: map['imageUrl'],
+      timestamp: DateTime.fromMillisecondsSinceEpoch(map['timestamp']),
+      data: map['data'],
+      isRead: map['isRead'] ?? false,
+      appName: map['appName'],
+      canisterId: map['canisterId']
+    );
+  }
+
+  // Create a copy of the notification with updated fields
+  AppNotification copyWith({
+    String? id,
+    String? title,
+    String? body,
+    String? imageUrl,
+    DateTime? timestamp,
+    Map<String, dynamic>? data,
+    bool? isRead,
+    String? appName,
+    String? canisterId
+  }) {
+    return AppNotification(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      body: body ?? this.body,
+      imageUrl: imageUrl ?? this.imageUrl,
+      timestamp: timestamp ?? this.timestamp,
+      data: data ?? this.data,
+      isRead: isRead ?? this.isRead,
+      appName: appName ?? this.appName,
+      canisterId: canisterId ?? this.canisterId
+    );
+  }
 }
 
 

@@ -8,10 +8,14 @@
  * (at your option) any later version.
  */
 
+import 'dart:io';
+
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:fusion_wallet/screens/NotificationSettingScreen.dart';
 import 'package:fusion_wallet/screens/openLink.dart';
 import 'package:fusion_wallet/screens/resetApp.dart';
 import 'package:fusion_wallet/screens/secretRecoveryPhrase.dart';
@@ -33,551 +37,291 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  bool userFaceId = true;
-  bool isPasscode = true;
-
   final appController = Get.find<AppController>();
+  
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: primaryBackgroundColor.value,
-      body: SafeArea(
-        child: ListView(
-          padding: EdgeInsets.symmetric(horizontal: 16),
-          children: [
-            SizedBox(
-              height: 16,
-            ),
-            Container(
-              width: Get.width,
-              height: 44,
-              decoration: BoxDecoration(color: Colors.black.withOpacity(0)),
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: 8,
-                  ),
-                  Text(
-                    'Settings',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w500,
-                      height: 0.09,
+    return Obx(
+      () => Scaffold(
+        backgroundColor: primaryBackgroundColor.value,
+        body: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 22.0, vertical: 20),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Settings",
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        color: headingColor.value,
+                        fontFamily: "dmsans",
+                      ),
                     ),
-                  )
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 24,
-            ),
-            Container(
-              width: Get.width,
-              padding: EdgeInsets.all(16),
-              clipBehavior: Clip.antiAlias,
-              decoration: ShapeDecoration(
-                color: cardcolor.value,
-                shape: RoundedRectangleBorder(
-                  side: BorderSide(width: 1, color: Color(0xFF242438)),
-                  borderRadius: BorderRadius.circular(16),
+                  ],
                 ),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Builder(builder: (context) {
-                    if (ONCHAIN_WEB) {
-                      return SizedBox.shrink();
-                    } else {
-                      return GestureDetector(
-                        onTap: () {
-                          // Navigator.push(
-                          //     context,
-                          //     PageTransition(
-                          //         duration: Duration(milliseconds: 100), type: PageTransitionType.topToBottom, child: SecretRecoveryPharase()));
+                SizedBox(height: 24),
+                Expanded(
+                  child: ListView(
+                    children: [
+                      // Security Section
+                      Container(
+                        width: Get.width,
+                        padding: EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: inputFieldBackgroundColor2.value,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(width: 1, color: inputFieldBackgroundColor.value)
+                        ),
+                        child: Column(
+                          children: [
+                            // Secret Recovery Phrase
+                            Builder(builder: (context) {
+                              if (ONCHAIN_WEB) {
+                                return SizedBox.shrink();
+                              } else {
+                                return Column(
+                                  children: [
+                                    _buildSettingItem(
+                                      containerColor: appController.isDark.value ? Color(0xff1A2B56) : inputFieldBackgroundColor.value,
+                                      iconAsset: "assets/images/solar_wallet-outline.png",
+                                      title: "Show Secret Recovery Phrase",
+                                      onTap: () => Get.to(SecretRecoveryPharase()),
+                                      showToggle: false,
+                                    ),
+                                    _buildDivider(),
+                                  ],
+                                );
+                              }
+                            }),
+                            
+                            // Help & Support
+                            _buildSettingItem(
+                              containerColor: appController.isDark.value ? Color(0xff1A2B56) : inputFieldBackgroundColor.value,
+                              iconAsset: "assets/images/helpandsupport.png",
+                              title: "Help & Support",
+                              onTap: () => Get.to(OpenLink(
+                                url: 'https://github.com/Zedonboy/Fusion-Wallet/issues',
+                                fromPage: 'Help & Support',
+                              )),
+                              showToggle: false,
+                            ),
+                            _buildDivider(),
+                            
+                            // About Fusion Wallet
+                            _buildSettingItem(
+                              containerColor: appController.isDark.value ? Color(0xff1A2B56) : inputFieldBackgroundColor.value,
+                              iconAsset: "assets/images/aboutCryptoWallet.png",
+                              title: "About Fusion Wallet",
+                              onTap: () => Get.to(OpenLink(
+                                url: 'https://fusionwallet.me/',
+                                fromPage: 'About',
+                              )),
+                              showToggle: false,
+                            ),
+                            _buildDivider(),
+                            
+                            // Biometric Authentication
+                            _buildSettingItem(
+                              containerColor: appController.isDark.value ? Color(0xff1A2B56) : inputFieldBackgroundColor.value,
+                              iconAsset: "assets/images/securityAndPrivacy.png",
+                              title: "Enable Biometric",
+                              showToggle: true,
+                              toggleValue: appController.enabledBiometric.value,
+                              onToggle: (val) {
+                                appController.enabledBiometric.value = val;
+                                enableBiometric(context, val);
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      
+                      SizedBox(height: 24),
+                      
+                      // Notifications Section
+                      Container(
+                        width: Get.width,
+                        padding: EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: inputFieldBackgroundColor2.value,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(width: 1, color: inputFieldBackgroundColor.value)
+                        ),
+                        child: Column(
+                          children: [
+                            // OnChain Notifications
+                            _buildSettingItem(
+                              containerColor: appController.isDark.value ? Color(0xff1A2B56) : inputFieldBackgroundColor.value,
+                              iconAsset: "assets/images/notifications.png",
+                              title: "OnChain Notification Settings",
+                              showToggle: false,
+                              onTap: () => Get.to(NotificationSettingScreen(), transition: Transition.rightToLeft),
+                            ),
+                            _buildDivider(),
+                            
+                            // Reset App
+                            _buildSettingItem(
+                              containerColor: appController.isDark.value ? Color(0xff1A2B56) : inputFieldBackgroundColor.value,
+                              // iconAsset: "assets/svg/resetApp.svg",
+                              iconWidget: SvgPicture.asset("assets/svg/resetApp.svg", color: Color(0xFFFF5C5C)),
+                              title: "Reset App",
+                              titleColor: Color(0xFFFF5C5C),
+                              onTap: () => Get.to(ResetApp(), transition: Transition.rightToLeft),
+                              showToggle: false,
+                              
+                            ),
+                            
+                            // Logout (Web only)
+                            Builder(builder: (context) {
+                              if (ONCHAIN_WEB) {
+                                return Column(
+                                  children: [
+                                    _buildDivider(),
+                                    _buildSettingItem(
+                                      containerColor: appController.isDark.value ? Color(0xff1A2B56) : inputFieldBackgroundColor.value,
+                                      iconAsset: "assets/images/2fa.png",
+                                      title: "Logout",
+                                      titleColor: Color(0xFFFF5C5C),
+                                      onTap: () => onchain_logout(),
+                                      showToggle: false,
+                                    ),
+                                  ],
+                                );
+                              } else {
+                                return SizedBox.shrink();
+                              }
+                            }),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
-                          Get.to(SecretRecoveryPharase());
-                        },
-                        child: Container(
-                          height: 40,
-                          color: Colors.transparent,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    padding: EdgeInsets.all(8),
-                                    decoration: ShapeDecoration(
-                                      color: Color(0x1970ECEF),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                    ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          width: 20,
-                                          height: 20,
-                                          clipBehavior: Clip.antiAlias,
-                                          decoration: BoxDecoration(),
-                                          child: SvgPicture.asset(
-                                              "assets/svg/solar_key-broken.svg"),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(width: 12),
-                                  Text(
-                                    'Show Secret Recovery Phrase',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: lightTextColor.value,
-                                      fontSize: 14,
-                                      fontFamily: 'Poppins',
-                                      fontWeight: FontWeight.w400,
-                                      height: 0.12,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Container(
-                                width: 24,
-                                height: 24,
-                                clipBehavior: Clip.antiAlias,
-                                decoration: BoxDecoration(),
-                                child: Icon(Icons.arrow_forward_ios_outlined,
-                                    size: 18, color: lightTextColor.value),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    }
-                  }),
-                  SizedBox(height: 8),
-                  Container(
-                    width: double.infinity,
-                    decoration: ShapeDecoration(
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                          width: 1,
-                          strokeAlign: BorderSide.strokeAlignCenter,
-                          color: Color(0xFF242438),
-                        ),
-                      ),
-                    ),
+  Widget _buildSettingItem({
+    String? iconAsset,
+    Widget? iconWidget,
+    required String title,
+    Color? titleColor,
+    Color? containerColor,
+    VoidCallback? onTap,
+    bool showToggle = false,
+    bool? toggleValue,
+    Function(bool)? onToggle,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 40,
+        color: Colors.transparent,
+        child: Row(
+          children: [
+            // Icon section
+            if (iconWidget != null)
+              iconWidget
+            else if (iconAsset != null)
+              Container(
+                height: 40,
+                width: 40,
+                padding: EdgeInsets.all(11),
+                decoration: BoxDecoration(
+                  color: containerColor ?? (appController.isDark.value ? Color(0xff1A2B56) : inputFieldBackgroundColor.value),
+                  borderRadius: BorderRadius.circular(12)
+                ),
+                child: Center(
+                  child: Image.asset(
+                    iconAsset,
+                    color: appController.isDark.value ? Color(0xffA2BBFF) : headingColor.value,
                   ),
-                  SizedBox(height: 8),
-                  GestureDetector(
-                    onTap: () {
-                      Get.to(OpenLink(
-                        url: 'https://github.com/Zedonboy/Fusion-Wallet/issues',
-                        fromPage: 'Help & Support',
-                      ));
-                    },
-                    child: Container(
-                      color: Colors.transparent,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Container(
-                                padding: EdgeInsets.all(8),
-                                decoration: ShapeDecoration(
-                                  color: Color(0x1970ECEF),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      width: 20,
-                                      height: 20,
-                                      clipBehavior: Clip.antiAlias,
-                                      decoration: BoxDecoration(),
-                                      child: SvgPicture.asset(
-                                          "assets/svg/material-symbols_help-outline.svg"),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(width: 12),
-                              Text(
-                                'Help & Support',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: lightTextColor.value,
-                                  fontSize: 14,
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.w400,
-                                  height: 0.12,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Container(
-                            width: 24,
-                            height: 24,
-                            clipBehavior: Clip.antiAlias,
-                            decoration: BoxDecoration(),
-                            child: Icon(Icons.arrow_forward_ios_outlined,
-                                size: 18, color: lightTextColor.value),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Container(
-                    width: double.infinity,
-                    decoration: ShapeDecoration(
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                          width: 1,
-                          strokeAlign: BorderSide.strokeAlignCenter,
-                          color: Color(0xFF242438),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  GestureDetector(
-                    onTap: () {
-                      Get.to(OpenLink(
-                        url: 'https://fusionwallet.me/',
-                        fromPage: 'About',
-                      ));
-                    },
-                    child: Container(
-                      color: Colors.transparent,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Container(
-                                padding: EdgeInsets.all(8),
-                                decoration: ShapeDecoration(
-                                  color: Color(0x1970ECEF),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      width: 20,
-                                      height: 20,
-                                      clipBehavior: Clip.antiAlias,
-                                      decoration: BoxDecoration(),
-                                      child: SvgPicture.asset(
-                                          "assets/svg/arrow-3.svg"),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(width: 12),
-                              Text(
-                                'About Fusion Wallet',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: lightTextColor.value,
-                                  fontSize: 14,
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.w400,
-                                  height: 0.12,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Container(
-                            width: 24,
-                            height: 24,
-                            clipBehavior: Clip.antiAlias,
-                            decoration: BoxDecoration(),
-                            child: Icon(Icons.arrow_forward_ios_outlined,
-                                size: 18, color: lightTextColor.value),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 24,
-            ),
-            SizedBox(
-              height: 24,
-            ),
-            Container(
-              width: Get.width,
-              padding: EdgeInsets.all(16),
-              clipBehavior: Clip.antiAlias,
-              decoration: ShapeDecoration(
-                color: cardcolor.value,
-                shape: RoundedRectangleBorder(
-                  side: BorderSide(width: 1, color: Color(0xFF242438)),
-                  borderRadius: BorderRadius.circular(16),
                 ),
               ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    width: Get.width,
-                    clipBehavior: Clip.antiAlias,
-                    decoration: ShapeDecoration(
-                      color: cardcolor.value,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Row(
-                          children: [
-                            SvgPicture.asset('assets/svg/faceID.svg'),
-                            SizedBox(
-                              width: 16,
-                            ),
-                            Expanded(
-                              child: Container(
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'Enable Biometric',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: lightTextColor.value,
-                                        fontSize: 14,
-                                        fontFamily: 'DM Sans',
-                                        fontWeight: FontWeight.w400,
-                                        height: 0.12,
-                                      ),
-                                    ),
-                                    FlutterSwitch(
-                                      width: 50.0,
-                                      height: 25.0,
-                                      valueFontSize: 20.0,
-                                      toggleSize: 20.0,
-                                      value:
-                                          appController.enabledBiometric.value,
-                                      borderRadius: 30.0,
-                                      toggleColor: lightColor,
-                                      activeColor: primaryAltColor.value,
-                                      inactiveColor: labelColor.value,
-                                      padding: 2.0,
-                                      showOnOff: false,
-                                      onToggle: (val) {
-                                        appController.enabledBiometric.value =
-                                            val;
-                                        enableBiometric(context, val);
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Container(
-                    width: double.infinity,
-                    decoration: ShapeDecoration(
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                          width: 1,
-                          strokeAlign: BorderSide.strokeAlignCenter,
-                          color: Color(0xFF242438),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  GestureDetector(
-                    onTap: () {
-                      Get.to(ResetApp(), transition: Transition.rightToLeft);
-                    },
-                    child: Row(
-                      children: [
-                        SvgPicture.asset('assets/svg/resetApp.svg'),
-                        SizedBox(
-                          width: 16,
-                        ),
-                        Expanded(
-                          child: Container(
-                            clipBehavior: Clip.antiAlias,
-                            decoration: ShapeDecoration(
-                              color: cardcolor.value,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                            ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                SizedBox(
-                                  width: double.infinity,
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        'Reset App',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          color: Color(0xFFFF5C5C),
-                                          fontSize: 14,
-                                          fontFamily: 'DM Sans',
-                                          fontWeight: FontWeight.w400,
-                                          height: 0.12,
-                                        ),
-                                      ),
-                                      SizedBox(width: 142),
-                                      Container(
-                                        width: 24,
-                                        height: 24,
-                                        clipBehavior: Clip.antiAlias,
-                                        decoration: BoxDecoration(),
-                                        child: Icon(
-                                            Icons.arrow_forward_ios_outlined,
-                                            size: 18,
-                                            color: lightTextColor.value),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Builder(builder: (context) {
-                    if (ONCHAIN_WEB) {
-                      return GestureDetector(
-                        onTap: () {
-                         onchain_logout();
-                        },
-                        child: Row(
-                          children: [
-                           
-                            Expanded(
-                              child: Container(
-                                clipBehavior: Clip.antiAlias,
-                                decoration: ShapeDecoration(
-                                  color: cardcolor.value,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-                                ),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    SizedBox(
-                                      width: double.infinity,
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            'Logout',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              color: Color(0xFFFF5C5C),
-                                              fontSize: 14,
-                                              fontFamily: 'DM Sans',
-                                              fontWeight: FontWeight.w400,
-                                              height: 0.12,
-                                            ),
-                                          ),
-                                          SizedBox(width: 142),
-                                          Container(
-                                            width: 24,
-                                            height: 24,
-                                            clipBehavior: Clip.antiAlias,
-                                            decoration: BoxDecoration(),
-                                            child: Icon(
-                                                Icons
-                                                    .arrow_forward_ios_outlined,
-                                                size: 18,
-                                                color: lightTextColor.value),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    } else {
-                      return SizedBox.shrink();
-                    }
-                  }),
-                  
-                ],
+            SizedBox(width: 12),
+            
+            // Title section
+            Expanded(
+              child: Text(
+                title,
+                style: TextStyle(
+                  color: titleColor ?? headingColor.value,
+                  fontSize: 14,
+                  fontFamily: 'dmsans',
+                  fontWeight: FontWeight.w400,
+                ),
               ),
             ),
+            
+            // Toggle or arrow section
+            if (showToggle && toggleValue != null && onToggle != null)
+              FlutterSwitch(
+                activeColor: appController.isDark.value ? primaryBackgroundColor.value : primaryColor.value,
+                inactiveColor: appController.isDark.value ? primaryBackgroundColor.value : headingColor.value,
+                width: 40.0,
+                toggleColor: appController.isDark.value ? Color(0xffA2BBFF) : primaryBackgroundColor.value,
+                height: 20.0,
+                valueFontSize: 10.0,
+                toggleSize: 18.0,
+                value: toggleValue,
+                borderRadius: 16.0,
+                padding: 2.0,
+                showOnOff: false,
+                onToggle: onToggle,
+              )
+            else
+              Icon(
+                Icons.arrow_forward_ios_outlined,
+                size: 18,
+                color: headingColor.value
+              ),
           ],
         ),
       ),
     );
+  }
+
+  Widget _buildDivider() {
+    return Column(
+      children: [
+        SizedBox(height: 8),
+        Container(
+          width: double.infinity,
+          decoration: ShapeDecoration(
+            shape: RoundedRectangleBorder(
+              side: BorderSide(
+                width: 1,
+                strokeAlign: BorderSide.strokeAlignCenter,
+                color: Color(0xFF242438),
+              ),
+            ),
+          ),
+        ),
+        SizedBox(height: 8),
+      ],
+    );
+  }
+
+  enableOnChainNotifications(context, val) async {
+    FirebaseMessaging messaging_service = FirebaseMessaging.instance;
+
+    if(Platform.isAndroid){
+      final notificationPermission = await messaging_service.requestPermission(provisional: true);
+      if(notificationPermission.authorizationStatus == AuthorizationStatus.authorized){
+        final fcmToken = await messaging_service.getToken();
+        
+        print('notificationPermission============$notificationPermission');
+      }
+    }
   }
 
   enableBiometric(context, val) async {

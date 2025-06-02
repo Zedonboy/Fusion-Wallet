@@ -26,11 +26,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AppController extends GetxController {
   var isDark = true.obs;
+  var new_notification = false.obs;
   RxInt selectedBOttomTabIndex = RxInt(0);
   Rx<IWallet?> active_wallet = Rx(null);
   var enabledBiometric = false.obs;
   RxMap<String, WalletToken> tokens_map = RxMap();
   RxMap<String, CanisterMetric> canister_map = RxMap();
+  var notificationsEnabled = false.obs;
   // RxList<WalletToken> tokens = WalletContext.getInitialSupportedTokens().obs;
   IcWalletService? ic_service;
   var token_image_map = RxMap<String, Widget?>();
@@ -71,6 +73,21 @@ class AppController extends GetxController {
       ic_service = data?.createIcService();
       start_balance_monitor();
       start_canister_monitor();
+    });
+
+    ever(notificationsEnabled, (data) async {
+     final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('notifications_enabled', data);
+    });
+
+    ever(new_notification, (data) async {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('new_notification', data);
+    });
+
+    ever(enabledBiometric, (data) async {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool("FingerPrintEnable", data);
     });
   }
 
@@ -150,6 +167,8 @@ class AppController extends GetxController {
     final prefs = await SharedPreferences.getInstance();
     // Load biometric preference
     enabledBiometric.value = prefs.getBool('FingerPrintEnable') ?? false;
+    new_notification.value = prefs.getBool('new_notification') ?? false;
+    notificationsEnabled.value = prefs.getBool('notifications_enabled') ?? false;
   }
 
   void load() async {
@@ -165,41 +184,33 @@ class AppController extends GetxController {
     var icService = ic_service!;
     var httpService = WalletContext.createHttpService();
     var address = active_wallet.value!.toIcpPrincipal();
-
+    var wasUpdated = false;
     Future.wait(tokens_map.values.map((token) async {
-      bool wasUpdated = false;
 
       try {
-        // Get price from coinbase
         final coinbasePrice = await httpService.getPrice(token: token);
-        if (coinbasePrice > 0) {
-          // Only update if we got a valid price
-          final currentData = token_data_map[token.tokenAddress];
-          final newBalance = currentData?.balance ?? BigInt.from(-1);
-          token_data_map[token.tokenAddress] =
-              TokenData(balance: newBalance, price: coinbasePrice);
-          wasUpdated = true;
-        }
-      } catch (err) {
-        print("Error fetching price for ${token.symbol}: $err");
-      }
-
-      try {
         // Get balance from IC
         final icBalance =
             await icService.getBalance(token: token, account: address);
         final currentData = token_data_map[token.tokenAddress];
+        if (currentData != null) {
+          // Check if both balance and price are the same
+          if (currentData.balance == icBalance && 
+              currentData.price == coinbasePrice) {
+            return; // Skip update if values haven't changed
+          }
+        }
+
         token_data_map[token.tokenAddress] =
-            TokenData(balance: icBalance, price: currentData?.price ?? -1.0);
+            TokenData(balance: icBalance, price: coinbasePrice);
         wasUpdated = true;
       } catch (e) {
+        token_data_map[token.tokenAddress] = TokenData.nullData();
         print("Error fetching balance for ${token.symbol}: $e");
       }
-
-      return wasUpdated;
     })).then((results) {
       // Only refresh if at least one token was updated successfully
-      if (results.any((wasUpdated) => wasUpdated)) {
+      if (wasUpdated) {
         token_data_map.refresh();
       }
     });

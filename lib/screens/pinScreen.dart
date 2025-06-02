@@ -8,13 +8,15 @@
  * (at your option) any later version.
  */
 
-import 'package:credential_manager/credential_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fusion_wallet/common_widgets/customNamPad.dart';
 import 'package:fusion_wallet/constants/colors.dart';
+import 'package:fusion_wallet/constants/config.dart';
 import 'package:fusion_wallet/controllers/appController.dart';
+import 'package:fusion_wallet/controllers/utils.dart';
 import 'package:fusion_wallet/localization/language_constants.dart';
 import 'package:fusion_wallet/src/rust/api/wallet.dart';
 import 'package:get/get.dart';
@@ -23,12 +25,10 @@ import 'package:pin_dot/pin_dot.dart';
 
 class PinScreen extends StatefulWidget {
   final Function(String)? onPinConfirm;
-  final Function(bool)? onBiometric;
-  final bool isSignin;
+  final Function(bool, String?)? onBiometric;
   const PinScreen(
       {super.key,
       required this.onPinConfirm,
-      required this.isSignin,
       this.onBiometric});
   @override
   State<PinScreen> createState() => _PinScreenState();
@@ -52,11 +52,9 @@ class _PinScreenState extends State<PinScreen>
     _pinController.clear();
 
     if (!kIsWeb) {
-      if (widget.isSignin) {
-        _checkCredentials();
-      } else if (appController.enabledBiometric.value) {
+     if (appController.enabledBiometric.value) {
         _checkBiometrics();
-      }
+      } 
     }
   }
 
@@ -68,35 +66,55 @@ class _PinScreenState extends State<PinScreen>
         final bool didAuthenticate = await auth.authenticate(
             localizedReason: 'Confirm your identity',
             options: const AuthenticationOptions(biometricOnly: true));
-        widget.onBiometric?.call(didAuthenticate);
+        if (didAuthenticate) {
+          final storage = FlutterSecureStorage();
+          final pin_hash_key = await storage.read(key: PIN_HASH_KEY);
+
+          if (pin_hash_key == null) {
+            showToast("Use PIN to authenticate");
+            return;
+          }
+
+          final phrase = await appController.decryptMnemonic(pin_hash_key);
+
+          if (phrase == null) {
+            showToast("Use PIN to authenticate");
+            return;
+          }
+
+          widget.onBiometric?.call(didAuthenticate, phrase);
+        } else {
+          showToast("Use PIN to authenticate");
+          return;
+        }
       } catch (e) {
-        widget.onBiometric?.call(false);
+        showToast("Use PIN to authenticate");
       }
     }
   }
 
-  _checkCredentials() async {
-    final CredentialManager credentialManager = CredentialManager();
-    if (!credentialManager.isSupportedPlatform) return;
-    try {
-      await credentialManager.init(
-        preferImmediatelyAvailableCredentials: false,
-      );
+  // _checkCredentials() async {
+  //   final CredentialManager credentialManager = CredentialManager();
+  //   if (!credentialManager.isSupportedPlatform) return;
+  //   try {
+  //     await credentialManager.init(
+  //       preferImmediatelyAvailableCredentials: false,
+  //     );
 
-      Credentials credential = await credentialManager.getCredentials(
-        fetchOptions: FetchOptionsAndroid(passwordCredential: true),
-      );
+  //     Credentials credential = await credentialManager.getCredentials(
+  //       fetchOptions: FetchOptionsAndroid(passwordCredential: true),
+  //     );
 
-      if (credential.passwordCredential == null) return;
-      var pin = credential.passwordCredential!.password;
-      if (pin == null) return;
-      _pinController.text = pin;
-      process_pin(pin);
-    } on CredentialException catch (e) {
-      // Handle the error
-      print(e);
-    }
-  }
+  //     if (credential.passwordCredential == null) return;
+  //     var pin = credential.passwordCredential!.password;
+  //     if (pin == null) return;
+  //     _pinController.text = pin;
+  //     process_pin(pin);
+  //   } on CredentialException catch (e) {
+  //     // Handle the error
+  //     print(e);
+  //   }
+  // }
 
   void _showError() async {
     _errorMessage.value = "Invalid PIN";
@@ -114,6 +132,7 @@ class _PinScreenState extends State<PinScreen>
 
   @override
   void dispose() {
+    _pinController.dispose();
     // _controller.dispose();
     super.dispose();
   }

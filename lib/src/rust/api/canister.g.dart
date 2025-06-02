@@ -8,6 +8,7 @@ part of 'canister.dart';
 
 _$CanisterMetricImpl _$$CanisterMetricImplFromJson(Map<String, dynamic> json) =>
     _$CanisterMetricImpl(
+      canisterName: json['canisterName'] as String?,
       memorySize: BigInt.parse(json['memorySize'] as String),
       cyclesBalance: BigInt.parse(json['cyclesBalance'] as String),
       status: json['status'] as String,
@@ -20,6 +21,7 @@ _$CanisterMetricImpl _$$CanisterMetricImplFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$$CanisterMetricImplToJson(
         _$CanisterMetricImpl instance) =>
     <String, dynamic>{
+      'canisterName': instance.canisterName,
       'memorySize': instance.memorySize.toString(),
       'cyclesBalance': instance.cyclesBalance.toString(),
       'status': instance.status,
